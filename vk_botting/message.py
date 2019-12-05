@@ -1,0 +1,116 @@
+from user import get_pages
+from abstract import Messageable
+from general import vk_request
+from exceptions import VKApiError, MissingPermissions
+from attachments import get_attachment, get_user_attachments
+
+from random import randint
+
+
+async def build_msg(msg, bot):
+    res = Message(msg)
+    if res.attachments:
+        for i in range(len(res.attachments)):
+            res.attachments[i] = await get_attachment(bot.token, res.attachments[i])
+    if res.fwd_messages:
+        for i in range(len(res.fwd_messages)):
+            res.fwd_messages[i] = await build_msg(res.fwd_messages[i], bot)
+    res.bot = bot
+    return res
+
+
+async def build_user_msg(msg, bot):
+    res = UserMessage(msg)
+    if res.attachments:
+        res.attachments = await get_user_attachments(bot.token, res.attachments)
+    res.bot = bot
+    return res
+
+
+class Message(Messageable):
+
+    async def _get_conversation(self):
+        return self.peer_id
+
+    def __init__(self, data):
+        self._unpack(data)
+
+    def _unpack(self, data):
+        self.id = data.get('id')
+        self.date = data.get('date')
+        self.update_time = data.get('update_time')
+        self.peer_id = data.get('peer_id')
+        self.from_id = data.get('from_id')
+        self.text = data.get('text')
+        self.random_id = data.get('random_id')
+        self.ref = data.get('ref')
+        self.ref_source = data.get('ref_source')
+        self.attachments = data.get('attachments')
+        self.important = data.get('important')
+        self.geo = data.get('geo')
+        self.payload = data.get('payload')
+        self.keyboard = data.get('keyboard')
+        self.fwd_messages = data.get('fwd_messages')
+        self.reply_message = data.get('reply_message')
+        self.action = data.get('action')
+
+    async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
+        if self.id == 0:
+            raise VKApiError('I honestly don`t know but VK just doesn`t return message_id when message is sent into conversation\nIf you tried to edit message in conversation then this error is expected')
+        params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
+                  'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets}
+        res = await vk_request('messages.edit', self.bot.token, **params)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+        return res
+
+    async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
+        peer_id = await self._get_conversation()
+        return await self.bot.send_message(peer_id, message, attachment=attachment, reply_to=self.id, sticker_id=sticker_id, keyboard=keyboard)
+
+    async def fetch_author(self):
+        author = await get_pages(self.bot.token, self.from_id)
+        return author[0]
+
+
+class UserMessage(Messageable):
+
+    async def _get_conversation(self):
+        return self.peer_id
+
+    def __init__(self, data):
+        self._unpack(data)
+
+    def _unpack(self, data):
+        self.id = data.get('id')
+        self.date = data.get('date')
+        self.peer_id = data.get('peer_id')
+        self.text = data.get('text')
+        self.attachments = data.get('attachments')
+        self.important = data.get('important')
+        self.payload = data.get('payload')
+        self.keyboard = data.get('keyboard')
+
+    async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
+        params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
+                  'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets}
+        res = await vk_request('messages.edit', self.bot.token, **params)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+        return res
+
+    async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
+        peer_id = await self._get_conversation()
+        params = {'group_id': self.bot.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
+                  'reply_to': self.id, 'sticker_id': sticker_id, 'keyboard': keyboard}
+        res = await vk_request('messages.send', self.bot.token, **params)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+        params['id'] = res['response']
+        return await build_msg(params, self.bot)
+
+    async def get_user(self):
+        user = await get_pages(self.bot.token, self.from_id)
+        if user:
+            return user[0]
+        return None
