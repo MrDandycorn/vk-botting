@@ -1,4 +1,4 @@
-from exceptions import UnexpectedQuoteError, InvalidEndOfQuotedStringError, ExpectedClosingQuoteError
+from vk_botting.exceptions import UnexpectedQuoteError, InvalidEndOfQuotedStringError, ExpectedClosingQuoteError
 
 _quotes = {
     '"': '"',

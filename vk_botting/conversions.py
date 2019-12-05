@@ -1,4 +1,4 @@
-from exceptions import BadArgument
+from vk_botting.exceptions import BadArgument
 
 
 def _convert_to_bool(argument):

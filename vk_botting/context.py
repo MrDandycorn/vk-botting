@@ -1,5 +1,5 @@
-from abstract import Messageable
-from user import get_pages
+from vk_botting.abstract import Messageable
+from vk_botting.user import get_pages
 
 
 class Context(Messageable):

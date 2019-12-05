@@ -1,6 +1,6 @@
 import asyncio
 
-from general import vk_request
+from vk_botting.general import vk_request
 
 
 def _typing_done_callback(fut):

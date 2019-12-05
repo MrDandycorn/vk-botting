@@ -5,14 +5,14 @@ import aiohttp
 import enum
 from random import randint
 
-from general import vk_request
-from user import get_own_page, get_pages, get_users, get_blocked_user, get_unblocked_user, User
-from group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
+from vk_botting.general import vk_request
+from vk_botting.user import get_own_page, get_pages, get_users, get_blocked_user, get_unblocked_user, User
+from vk_botting.group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
     get_deleted_video_comment, get_deleted_board_comment, get_deleted_market_comment, get_deleted_wall_comment, get_officers_edit, get_poll_vote, get_groups, Group
-from attachments import get_photo, get_video, get_audio
-from message import build_msg, build_user_msg
-from states import get_state
-from exceptions import VKApiError, LoginError
+from vk_botting.attachments import get_photo, get_video, get_audio
+from vk_botting.message import build_msg, build_user_msg
+from vk_botting.states import get_state
+from vk_botting.exceptions import VKApiError, LoginError
 
 
 class UserMessageFlags(enum.IntFlag):

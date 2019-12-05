@@ -1,16 +1,16 @@
-from exceptions import CommandError, CommandInvokeError, ClientException, ConversionError, BadArgument, BadUnionArgument, MissingRequiredArgument, TooManyArguments, \
-    CheckFailure, DisabledCommand, CommandOnCooldown
-import conversions as converters
-from cooldowns import CooldownMapping
-from utils import async_all, maybe_coroutine
-from _types import _BaseCommand
-from cog import Cog
-
 import asyncio
 import functools
 import inspect
 import typing
 import datetime
+
+from vk_botting.exceptions import CommandError, CommandInvokeError, ClientException, ConversionError, BadArgument, BadUnionArgument, MissingRequiredArgument, TooManyArguments, \
+    CheckFailure, DisabledCommand, CommandOnCooldown
+import vk_botting.conversions as converters
+from vk_botting.cooldowns import CooldownMapping
+from vk_botting.utils import async_all, maybe_coroutine
+from vk_botting._types import _BaseCommand
+from vk_botting.cog import Cog
 
 
 def wrap_callback(coro):

@@ -1,9 +1,9 @@
-from general import vk_request
-from abstract import Messageable
+from vk_botting.general import vk_request
+from vk_botting.abstract import Messageable
 
 
 async def get_own_page(token):
-    from group import Group
+    from vk_botting.group import Group
     user = await vk_request('users.get', token)
     if not user.get('response'):
         group = await vk_request('groups.getById', token)
@@ -18,7 +18,7 @@ async def get_users(token, *uids):
 
 
 async def get_pages(token, *ids):
-    from group import get_groups
+    from vk_botting.group import get_groups
     g = []
     u = []
     for pid in ids:

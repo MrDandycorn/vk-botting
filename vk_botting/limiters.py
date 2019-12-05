@@ -1,5 +1,5 @@
-from exceptions import NotInUserList
-from commands import Command
+from vk_botting.exceptions import NotInUserList
+from vk_botting.commands import Command
 
 
 def check(predicate):

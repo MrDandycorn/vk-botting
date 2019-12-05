@@ -1,5 +1,6 @@
 import inspect
-from _types import _BaseCommand
+
+from vk_botting._types import _BaseCommand
 
 __all__ = (
     'CogMeta',
@@ -106,7 +107,7 @@ class Cog(metaclass=CogMeta):
             return cleaned
 
     def walk_commands(self):
-        from .commands import GroupMixin
+        from vk_botting.commands import GroupMixin
         for command in self.__cog_commands__:
             if command.parent is None:
                 yield command

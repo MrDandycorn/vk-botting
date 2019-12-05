@@ -1,7 +1,5 @@
 from inspect import isawaitable
 import json
-import datetime
-from email.utils import parsedate_to_datetime
 
 
 async def async_all(gen, *, check=isawaitable):

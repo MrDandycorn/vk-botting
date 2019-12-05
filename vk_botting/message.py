@@ -1,10 +1,10 @@
-from user import get_pages
-from abstract import Messageable
-from general import vk_request
-from exceptions import VKApiError, MissingPermissions
-from attachments import get_attachment, get_user_attachments
-
 from random import randint
+
+from vk_botting.user import get_pages
+from vk_botting.abstract import Messageable
+from vk_botting.general import vk_request
+from vk_botting.exceptions import VKApiError
+from vk_botting.attachments import get_attachment, get_user_attachments
 
 
 async def build_msg(msg, bot):

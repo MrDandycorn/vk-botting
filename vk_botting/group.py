@@ -1,5 +1,5 @@
-from general import vk_request
-from user import get_pages
+from vk_botting.general import vk_request
+from vk_botting.user import get_pages
 
 
 async def get_groups(token, *gids):

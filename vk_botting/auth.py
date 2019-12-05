@@ -1,7 +1,7 @@
-from exceptions import LoginError
-
 from random import choice
 import requests
+
+from vk_botting.exceptions import LoginError
 
 
 class VKClient:

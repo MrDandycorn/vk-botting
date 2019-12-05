@@ -1,4 +1,4 @@
-from user import get_pages
+from vk_botting.user import get_pages
 
 
 async def get_photo(token, obj):
