@@ -55,7 +55,7 @@ def _is_submodule(parent, child):
 
 class BotBase(GroupMixin):
     def __init__(self, token, command_prefix, description=None, **options):
-        super().__init__(token, options.pop('old_longpoll', False), options.pop('v', '5.999'), options.pop('force', False))
+        super().__init__(token, **options)
         self.command_prefix = command_prefix
         self.extra_events = {}
         self.__cogs = {}

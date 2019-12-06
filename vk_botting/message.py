@@ -1,4 +1,5 @@
 from random import randint
+from datetime import datetime
 
 from vk_botting.user import get_pages
 from vk_botting.abstract import Messageable
@@ -37,7 +38,7 @@ class Message(Messageable):
 
     def _unpack(self, data):
         self.id = data.get('id')
-        self.date = data.get('date')
+        self.date = datetime.fromtimestamp(data.get('date', 0))
         self.update_time = data.get('update_time')
         self.peer_id = data.get('peer_id')
         self.from_id = data.get('from_id')

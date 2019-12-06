@@ -50,16 +50,16 @@ class _ClientEventTask(asyncio.Task):
 
 class Client:
 
-    def __init__(self, token, old_longpoll, v, force):
+    def __init__(self, token, **kwargs):
         self.token = token
-        self.v = v
-        self.force = force
+        self.v = kwargs.get('v', '5.999')
+        self.force = kwargs.get('force', False)
         self.loop = asyncio.get_event_loop()
         self.user = None
         self.group = None
         self.key = None
         self.server = None
-        self.old_longpoll = old_longpoll
+        self.old_longpoll = kwargs.get('old_longpoll', False)
         self._listeners = {}
         timeout = aiohttp.ClientTimeout(total=100, connect=10)
         self.session = aiohttp.ClientSession(timeout=timeout)
@@ -72,6 +72,23 @@ class Client:
 
     class botCommandException(Exception):
         pass
+
+    def wait_for(self, event, *, check=None, timeout=None):
+        future = self.loop.create_future()
+        if check is None:
+            def _check(*args):
+                return True
+            check = _check
+
+        ev = event.lower()
+        try:
+            listeners = self._listeners[ev]
+        except KeyError:
+            listeners = []
+            self._listeners[ev] = listeners
+
+        listeners.append((future, check))
+        return asyncio.wait_for(future, timeout, loop=self.loop)
 
     async def general_request(self, url, post=False, **params):
         for param in list(params):

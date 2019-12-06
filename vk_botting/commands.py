@@ -7,7 +7,7 @@ import datetime
 from vk_botting.exceptions import CommandError, CommandInvokeError, ClientException, ConversionError, BadArgument, BadUnionArgument, MissingRequiredArgument, TooManyArguments, \
     CheckFailure, DisabledCommand, CommandOnCooldown
 import vk_botting.conversions as converters
-from vk_botting.cooldowns import CooldownMapping
+from vk_botting.cooldowns import CooldownMapping, Cooldown, BucketType
 from vk_botting.utils import async_all, maybe_coroutine
 from vk_botting._types import _BaseCommand
 from vk_botting.cog import Cog
@@ -53,7 +53,7 @@ def hooked_wrapped_callback(command, ctx, coro):
 class GroupMixin:
 
     def __init__(self, *args, **kwargs):
-        case_insensitive = kwargs.get('case_insensitive', False)
+        case_insensitive = kwargs.pop('case_insensitive', False)
         self.all_commands = _CaseInsensitiveDict() if case_insensitive else {}
         self.case_insensitive = case_insensitive
         super().__init__(*args, **kwargs)
@@ -571,7 +571,7 @@ class Command(_BaseCommand):
 
     def _prepare_cooldowns(self, ctx):
         if self._buckets.valid:
-            current = ctx.message.created_at.replace(tzinfo=datetime.timezone.utc).timestamp()
+            current = ctx.message.date.replace(tzinfo=datetime.timezone.utc).timestamp()
             bucket = self._buckets.get_bucket(ctx.message, current)
             retry_after = bucket.update_rate_limit(current)
             if retry_after:
@@ -726,3 +726,14 @@ class Command(_BaseCommand):
             return await async_all(predicate(ctx) for predicate in predicates)
         finally:
             ctx.command = original
+
+
+def cooldown(rate, per, type=BucketType.default):
+
+    def decorator(func):
+        if isinstance(func, Command):
+            func._buckets = CooldownMapping(Cooldown(rate, per, type))
+        else:
+            func.__commands_cooldown__ = Cooldown(rate, per, type)
+        return func
+    return decorator
