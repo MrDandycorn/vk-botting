@@ -13,7 +13,7 @@ __title__ = 'vk_botting'
 __author__ = 'MrDandycorn'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2019 MrDandycorn'
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 from collections import namedtuple
 import logging
@@ -28,7 +28,7 @@ from vk_botting.auth import TokenReceiverKate, TokenReceiverOfficial
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 
-version_info = VersionInfo(major=0, minor=4, micro=1, releaselevel='development', serial=0)
+version_info = VersionInfo(major=0, minor=4, micro=2, releaselevel='development', serial=0)
 
 try:
     from logging import NullHandler
