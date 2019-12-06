@@ -34,6 +34,7 @@ release = '0.4.1'
 extensions = [
     'sphinx_rtd_theme'
 ]
+master_doc = 'index'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
