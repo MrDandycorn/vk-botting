@@ -50,8 +50,7 @@ class _ClientEventTask(asyncio.Task):
 
 class Client:
 
-    def __init__(self, token, **kwargs):
-        self.token = token
+    def __init__(self, **kwargs):
         self.v = kwargs.get('v', '5.999')
         self.force = kwargs.get('force', False)
         self.loop = asyncio.get_event_loop()
@@ -414,6 +413,7 @@ class Client:
                     print(f'Ignoring exception in longpoll cycle:\n{e}', file=sys.stderr)
                     ts = await self.get_longpoll_server()
 
-    def run(self, owner_id=None):
+    def run(self, token, owner_id=None):
+        self.token = token
         self.loop.create_task(self._run(owner_id))
         self.loop.run_forever()

@@ -54,8 +54,8 @@ def _is_submodule(parent, child):
 
 
 class BotBase(GroupMixin):
-    def __init__(self, token, command_prefix, description=None, **options):
-        super().__init__(token, **options)
+    def __init__(self, command_prefix, description=None, **options):
+        super().__init__(**options)
         self.command_prefix = command_prefix
         self.extra_events = {}
         self.__cogs = {}
