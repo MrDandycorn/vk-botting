@@ -1,0 +1,244 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, MrDandycorn
+# This file is distributed under the same license as the vk-botting package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: vk-botting \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-07 00:54+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../quickstart.rst:6
+msgid "Quickstart"
+msgstr "Быстрый старт"
+
+#: ../../quickstart.rst:8
+msgid ""
+"This page gives a brief introduction to the library. It assumes you have "
+"the library installed, if you don't check the :ref:`installing` portion."
+msgstr ""
+"На этой странице показано небольшое вступление к библиотеке. "
+"Предпологается, что она у вас уже установлена. Если нет, посмотрите :ref"
+":`vk-intro`."
+
+#: ../../quickstart.rst:12
+msgid "A Minimal Bot"
+msgstr "Простейший бот"
+
+#: ../../quickstart.rst:14
+msgid ""
+"Let's make a bot that replies to a specific message and walk you through "
+"it."
+msgstr ""
+"Давайте сделаем бота, который отвечает на конкретное сообщение, и "
+"посмотрим, как все работает."
+
+#: ../../quickstart.rst:16
+msgid "It looks something like this:"
+msgstr "Выглядит он примерно так:"
+
+#: ../../quickstart.rst:38
+msgid "Let's name this file ``example_bot.py``."
+msgstr "Назовем файл ``example_bot.py``."
+
+#: ../../quickstart.rst:40
+msgid "There's a lot going on here, so let's walk you through it step by step."
+msgstr "Тут много чего происходит, так что разложим все по полкам."
+
+#: ../../quickstart.rst:42
+msgid ""
+"The first line just imports the library, if this raises a "
+"`ModuleNotFoundError` or `ImportError` then head on over to "
+":ref:`installing` section to properly install."
+msgstr ""
+"Первая строка просто импортирует библиотеку. Если при этом вылетает "
+"`ModuleNotFoundError` или `ImportError`, тогда вам стоит посмотреть "
+"раздел :ref:`vk-intro`."
+
+#: ../../quickstart.rst:44
+msgid ""
+"Next, we create an instance of a :class:`Bot`. This bot is our connection"
+" to VK."
+msgstr ""
+"Дальше, мы создаем экземпляр класса :class:`Bot`. Этот бот и связывает "
+"нас с ВК."
+
+#: ../../quickstart.rst:45
+msgid ""
+"We then use the :meth:`Bot.listen()` decorator to register an event. This"
+" library has many events. Since this library is asynchronous, we do "
+"things in a \"callback\" style manner."
+msgstr ""
+"Потом мы используем :meth:`Bot.listen()`, чтобы ловить события. В этой "
+"библиотеке куча событий. Эта библиотека асинхронная, так что все "
+"происходит в стиле \"обратного вызова\"."
+
+#: ../../quickstart.rst:48
+msgid ""
+"A callback is essentially a function that is called when something "
+"happens. In our case, the :func:`on_ready` event is called when the bot "
+"has finished logging in and setting things up and the "
+":func:`on_message_new` event is called when the bot has received a "
+"message."
+msgstr ""
+"Функция обратного вызова, по сути, это функция, которая вызывается, когда"
+" что-то происходит. В нашем случае, событие :func:`on_ready` вызывается "
+"когда бот закончил входить и настраивать все, а :func:`on_message_new` - "
+"когда бот получает сообщение."
+
+#: ../../quickstart.rst:51
+msgid ""
+"Afterwards, we check if the :class:`Message.text` starts with "
+"``'$hello'``. If it is, then we reply to the sender with ``'Hello!'``."
+msgstr ""
+"После мы проверяем, начинается ли :class:`Message.text` с ``'$hello'``. "
+"Если да, то мы отправляем ответное ``'Hello!'``."
+
+#: ../../quickstart.rst:53
+msgid ""
+"Finally, we run the bot with our login token. If you need help getting "
+"your token or creating a bot, look in the :ref:`vk-intro` section."
+msgstr ""
+"Наконец, мы запускаем бота с ключом доступа. Если у вас сложности с "
+"созданием бота или получением ключа доступа, посмотрите :ref:`vk-intro`."
+
+#: ../../quickstart.rst:57
+msgid ""
+"Now that we've made a bot, we have to *run* the bot. Luckily, this is "
+"simple since this is just a Python script, we can run it directly."
+msgstr ""
+"Теперь, когда мы сделали бота, его надо *запустить*. Но все просто. Так "
+"как это просто скрипт на Python, его можно запустить напрямую."
+
+#: ../../quickstart.rst:60
+msgid "On Windows:"
+msgstr "Для Windows:"
+
+#: ../../quickstart.rst:66
+msgid "On other systems:"
+msgstr "Для других систем:"
+
+#: ../../quickstart.rst:72
+msgid "Now you can try playing around with your basic bot."
+msgstr "А теперь можете попробовать нового бота."
+
+#: ../../quickstart.rst:76
+msgid "Commands usage"
+msgstr "Использование команд"
+
+#: ../../quickstart.rst:78
+msgid ""
+"vk-botting package has a lot of possibilities for creating commands "
+"easily."
+msgstr "vk-botting - библиотека с уймой возможностей для создания команд."
+
+#: ../../quickstart.rst:80
+msgid "Look at this example:"
+msgstr "Посмотрите на этот пример:"
+
+#: ../../quickstart.rst:107
+msgid "As you can see, this is a slightly modified version of previous bot."
+msgstr ""
+"Как вы, наверное, заметили, это просто слегка модифицированный предыдущий"
+" бот."
+
+#: ../../quickstart.rst:109
+msgid "The difference is the :func:`bot.command` part"
+msgstr "Вся разница заключается в части, начинающейся с :func:`bot.command`"
+
+#: ../../quickstart.rst:111
+msgid ""
+"The commands are automatically processed messages. You may have noticed "
+"that we used a prefix when creating our bot, and the commands are what "
+"this prefix is needed for."
+msgstr ""
+"Команды - это автоматически обрабатываемые сообщения. Вы могли заметить, "
+"что при создании бота мы использовали префикс. Именно тут он и "
+"используется."
+
+#: ../../quickstart.rst:115
+msgid ""
+"They are created using :func:`Bot.command` decorator, that can take "
+"several arguments, for example :attr:`name` we used here. By default it "
+"will be function name, so we didn't really need it here, but it is just "
+"more human-readable this way"
+msgstr ""
+"Команды создаются с помощью декоратора :func:`Bot.command`, который может"
+" принимать несколько аргументов, к примеру :attr:`name`, который мы тут и"
+" использовали. По умолчанию он и так примет значения имени функции, так "
+"что тут он не особо нужен, но так читабельней"
+
+#: ../../quickstart.rst:120
+msgid ""
+"So, for example, let's say your prefix of choice was ``'!'``. It can "
+"really be anything, but we will talk about that later."
+msgstr ""
+"Предположим, что вы выбрали ``'!'`` как префикс. Он может быть любым, но "
+"об этом позже."
+
+#: ../../quickstart.rst:123
+msgid ""
+"So, now when user sends ``!greet`` to the bot, the bot will reply with "
+"``Greetings!``"
+msgstr ""
+"Тогда теперь, когда пользователь отправляет ``!greet`` боту, тот пришлет "
+"``Greetings!`` в ответ"
+
+#: ../../quickstart.rst:126
+#, fuzzy
+msgid ""
+":attr:`context` here is the instance of the :class:`Context` class , "
+"which is automatically put into every command's first argument, so be "
+"aware of it."
+msgstr ""
+":attr:`context` тут - экземпляр класса :class:`Context` , который "
+"автоматически передается как первый аргумент к каждой команде, так что "
+"будьте на чеку."
+
+#: ../../quickstart.rst:129
+msgid ""
+":class:`Context` has all the information you need to process the command "
+"You can find more information in the Context class reference"
+msgstr ""
+":class:`Context` содержит всю информацию, необходимую для обработки "
+"сообщения. Больше можно найти в отделенном ему разделе в описании классов"
+
+#: ../../quickstart.rst:132
+msgid "Commands can also take arguments, as shown here"
+msgstr "Команды могут принимать аргументы, как показано тут:"
+
+#: ../../quickstart.rst:141
+msgid ""
+"Now user can call command like ``!greet Santa`` and the bot will reply "
+"with ``Greetings, Santa``. Arguments taken are positional, and separated "
+"with space by default, so if user will call ``!greet Santa Claus`` bot "
+"will still reply with just ``Greetings, Santa``."
+msgstr ""
+"Теперь пользователь может вызывать команду как ``!greet Santa``, а бот "
+"ответит ``Greetings, Santa``. Принимаемые аргументы позиционны и "
+"разделяются пробелами, так что если пользователь вызовет ``!greet Santa "
+"Claus`` бот все равно ответит ``Greetings, Santa``."
+
+#: ../../quickstart.rst:146
+msgid ""
+"If you want to get all of the text user sent after certain argument (or "
+"even after the command call), you can set up arguments like this"
+msgstr ""
+"Если необходимо получить в один аргумент весь текст после определенного "
+"аргумента (или даже весь вообще), то можно сделать так:"
+
+#: ../../quickstart.rst:155
+msgid ""
+"Now bot will put everything after the command call into :attr:`name` "
+"variable so now you can greet someone with longer name"
+msgstr "Теперь бот запишет весь полученный текст в :attr:`name`"
+

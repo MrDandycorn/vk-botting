@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, MrDandycorn
+# This file is distributed under the same license as the vk-botting package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: vk-botting \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-07 00:01+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../vk.rst:6
+msgid "Creating a Bot"
+msgstr "Создание Бота"
+
+#: ../../vk.rst:8
+msgid ""
+"In order to work with the library and the VK API in general, we must "
+"first create a VK Bot."
+msgstr "Для работы с библиотекой и VK API в целом необходимо сначала создать бота."
+
+#: ../../vk.rst:10
+msgid "Creating a Bot is a pretty straightforward process."
+msgstr "Создание бота довольно прямолинейно."
+
+#: ../../vk.rst:12
+msgid "Make sure you're logged on to the `VK website <https://vk.com/>`_."
+msgstr "Убедитесь, что вы залогинены на `сайте ВК <https://vk.com/>`_."
+
+#: ../../vk.rst:13
+msgid "Go to the group you are administrator of."
+msgstr "Зайдите на страницу группы, администратором которой являетесь."
+
+#: ../../vk.rst:14
+msgid "Navigate to the Manage -> Messages."
+msgstr "Перейдите в Управление -> Сообщения."
+
+#: ../../vk.rst:15
+msgid "Enable \"Community messages\"."
+msgstr "Включите \"Сообщения сообщества\"."
+
+#: ../../vk.rst:16
+msgid "Navigate to the Settings -> API usage -> Access tokens."
+msgstr "Перейдите в Настройки -> Работа с API -> Ключи доступа."
+
+#: ../../vk.rst:17
+msgid "Click on the \"Create token\" button."
+msgstr "Нажмите на кнопку \"Создать ключ\"."
+
+#: ../../vk.rst:18
+msgid "Allow everything you see necessary and click on the \"Create\" button."
+msgstr "Разрешите все, что видите нужным, и нажмите на кнопку \"Создать\"."
+
+#: ../../vk.rst:19
+msgid "Confirm the action if prompted."
+msgstr "Подтвердите действие, если требуется."
+
+#: ../../vk.rst:20
+msgid "Copy the new access token and store it somewhere safe."
+msgstr "Скопируйте токен в какое-нибудь безопасное место."
+
+#: ../../vk.rst:24
+msgid ""
+"It should be worth noting that this token is essentially your bot's "
+"password. You should **never** share this to someone else. In doing so, "
+"someone can log in to your bot and do malicious things, such as removing "
+"wall posts, spamming messages or even banning all members."
+msgstr ""
+"Важно отметить, что токен по сути равносилен паролю бота. **Никогда** не "
+"отправляйте его кому бы то ни было. Если вы так сделаете, человек сможет "
+"использовать его во вредоносных целях. Он может поудалять все посты, "
+"заспамить пользователей сообщениями или даже просто всех забанить."
+
+#: ../../vk.rst:29
+msgid "The possibilities are endless, so **do not share this token.**"
+msgstr ""
+"Возможности безграничны, так что **никогда не передавайте токен третьим "
+"лицам.**"
+
+#: ../../vk.rst:31
+msgid ""
+"If you accidentally leaked your token, click the \"Delete token\" button "
+"as soon as possible. This revokes your old token and you can then "
+"generate a new one. Now you need to use the new token to login."
+msgstr ""
+"Если вы случайно слили ваш токен, нажмите кнопку \"Удалить ключ\" как "
+"можно скорее. Это удалит ваш старый токен, и вам надо будет создать новый"
+" и использовать его для бота."
+
+#: ../../vk.rst:35
+msgid ""
+"And that's it. You now have a bot account and you can login with that "
+"token."
+msgstr "Все. Теперь у вас есть бот и вы можете использовать его токен."
+

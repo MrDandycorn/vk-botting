@@ -16,8 +16,6 @@ Documentation Contents
    intro
    quickstart
    vk
-   :caption: Contents:
-
 
 
 Indices and tables

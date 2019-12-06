@@ -36,7 +36,7 @@ libraries than the ones installed on the system. You might also not have permiss
 For this purpose, the standard library as of Python 3.3 comes with a concept called "Virtual Environment"s to
 help maintain these separate versions.
 
-A more in-depth tutorial is found on :doc:`py:tutorial/venv`.
+A more in-depth tutorial is found on `Virtual Environments and Packages <https://docs.python.org/3/tutorial/venv.html>`_.
 
 However, for the quick and dirty:
 

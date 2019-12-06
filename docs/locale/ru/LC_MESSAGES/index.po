@@ -1,0 +1,50 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, MrDandycorn
+# This file is distributed under the same license as the vk-botting package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: vk-botting \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-07 00:03+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../index.rst:7
+msgid "Welcome to vk-botting"
+msgstr "Добро пожаловать в vk-botting"
+
+#: ../../index.rst:8
+msgid "vk-botting is a basic package to build async VK chatbots"
+msgstr "vk-botting - базовый пакет для создания асинхронных чат-ботов для ВК"
+
+#: ../../index.rst:12
+msgid "Documentation Contents"
+msgstr "Содержание"
+
+#: ../../index.rst:22
+msgid "Indices and tables"
+msgstr "Таблицы и индексы"
+
+#: ../../index.rst:24
+msgid ":ref:`genindex`"
+msgstr ""
+
+#: ../../index.rst:25
+msgid ":ref:`modindex`"
+msgstr ""
+
+#: ../../index.rst:26
+msgid ":ref:`search`"
+msgstr ""
+
+#~ msgid "TEST to vk-botting"
+#~ msgstr ""
+

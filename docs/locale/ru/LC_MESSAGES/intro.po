@@ -1,0 +1,122 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, MrDandycorn
+# This file is distributed under the same license as the vk-botting package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: vk-botting \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-07 00:03+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../intro.rst:6
+msgid "Introduction"
+msgstr "Вступление"
+
+#: ../../intro.rst:8
+msgid ""
+"This is the documentation for vk-botting, a library for Python to aid in "
+"creating applications that utilise the VK API."
+msgstr ""
+"Это документация для vk-botting - библиотеки, призванной помочь создавать "
+"чат-ботов, использующих VK API."
+
+#: ../../intro.rst:12
+msgid "Prerequisites"
+msgstr "Требования"
+
+#: ../../intro.rst:14
+msgid ""
+"vk-botting works with Python 3.6.0 or higher. Support for earlier "
+"versions of Python is not provided. Python 2.7 or lower is not supported."
+msgstr "vk-botting работает с Python 3.6.0 или выше. Более низкие версии не поддерживаются. Python 2.7 и ниже тоже."
+
+#: ../../intro.rst:21
+msgid "Installing"
+msgstr "Установка"
+
+#: ../../intro.rst:23
+msgid "You can get the library directly from PyPI: ::"
+msgstr "Библиотеку можно скачать прямо с PyPi: ::"
+
+#: ../../intro.rst:27
+msgid "If you are using Windows, then the following should be used instead: ::"
+msgstr "Если вы используете Windows, то можно сделать так: ::"
+
+#: ../../intro.rst:32
+msgid "Virtual Environments"
+msgstr "Виртуальные среды"
+
+#: ../../intro.rst:34
+msgid ""
+"Sometimes you want to keep libraries from polluting system installs or "
+"use a different version of libraries than the ones installed on the "
+"system. You might also not have permissions to install libaries system-"
+"wide. For this purpose, the standard library as of Python 3.3 comes with "
+"a concept called \"Virtual Environment\"s to help maintain these separate"
+" versions."
+msgstr ""
+"Иногда необходимо использовать библиотеки с версией отличной от "
+"установленных в системе или просто не хочется засорять систему. Или, "
+"возможно, у вас нет доступа к установке библиотек в систему. В таком "
+"случае, начиная с Python 3.3 в стандартную библиотеку входят так "
+"называемые \"Virtual Environment\"s, которые могут помочь решить подобные"
+" проблемы."
+
+#: ../../intro.rst:39
+msgid ""
+"A more in-depth tutorial is found on `Virtual Environments and Packages "
+"<https://docs.python.org/3/tutorial/venv.html>`_."
+msgstr "Более детальную информацию можно найти на `Virtual Environments and Packages <https://docs.python.org/3/tutorial/venv.html>`_."
+
+#: ../../intro.rst:41
+msgid "However, for the quick and dirty:"
+msgstr "Но, для тех, кому лень читать:"
+
+#: ../../intro.rst:43
+msgid "Go to your project's working directory:"
+msgstr "Зайдите в папку своего проекта:"
+
+#: ../../intro.rst:50
+msgid "Activate the virtual environment:"
+msgstr "Активируйте виртуальную среду:"
+
+#: ../../intro.rst:56
+msgid "On Windows you activate it with:"
+msgstr "Если вы используете Windows, то так:"
+
+#: ../../intro.rst:62
+msgid "Use pip like usual:"
+msgstr "И можно использовать pip как обычно:"
+
+#: ../../intro.rst:68
+msgid "Congratulations. You now have a virtual environment all set up."
+msgstr "Поздравляю, у вас есть готовая виртуальная среда."
+
+#: ../../intro.rst:71
+msgid "Basic Concepts"
+msgstr "Базовые концепты"
+
+#: ../../intro.rst:73
+msgid ""
+"vk-botting revolves around the concept of :ref:`events <vk-api-events>`. "
+"An event is something you listen to and then respond to. For example, "
+"when a message happens, you will receive an event about it that you can "
+"respond to."
+msgstr ""
+"vk-botting основан на :ref:`событиях <vk-api-events>`. События можно "
+"ловить и обрабатывать. Например, когда приходит сообщение, вы узнаете об "
+"этом и сможете ответить."
+
+#: ../../intro.rst:77
+msgid "A quick example to showcase how events work:"
+msgstr "Небольшой пример работы событий:"
+

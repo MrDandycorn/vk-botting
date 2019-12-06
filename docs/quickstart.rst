@@ -48,12 +48,9 @@ There's a lot going on here, so let's walk you through it step by step.
    A callback is essentially a function that is called when something happens. In our case,
    the :func:`on_ready` event is called when the bot has finished logging in and setting things
    up and the :func:`on_message_new` event is called when the bot has received a message.
-4. Since the :func:`on_message_new` event triggers for *every* message received, we have to make
-   sure that we ignore messages from ourselves. We do this by checking if the :attr:`Message.from_id`
-   is the same as the :attr:`-Bot.group.id`, negative because group_id is negative in message.
-5. Afterwards, we check if the :class:`Message.text` starts with ``'$hello'``. If it is,
+4. Afterwards, we check if the :class:`Message.text` starts with ``'$hello'``. If it is,
    then we reply to the sender with ``'Hello!'``.
-6. Finally, we run the bot with our login token. If you need help getting your token or creating a bot,
+5. Finally, we run the bot with our login token. If you need help getting your token or creating a bot,
    look in the :ref:`vk-intro` section.
 
 
@@ -126,7 +123,7 @@ anything, but we will talk about that later.
 So, now when user sends ``!greet`` to the bot, the bot will reply with
 ``Greetings!``
 
-:attr:`context` here is the object of the :class:`Context` class , which is automatically
+:attr:`context` here is the instance of the :class:`Context` class , which is automatically
 put into every command's first argument, so be aware of it.
 
 :class:`Context` has all the information you need to process the command
