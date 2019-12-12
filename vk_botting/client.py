@@ -201,6 +201,9 @@ class Client:
         if t == 'message_new':
             obj = update['object'] if self.old_longpoll else update['object']['message']
             msg = await build_msg(obj, self)
+            payload = obj.get('payload')
+            if payload and payload == '{"command":"start"}':
+                return self.dispatch('conversation_start', msg)
             return self.dispatch(t, msg)
         elif t == 'message_reply' and 'on_message_reply' in self.extra_events:
             obj = update['object']
@@ -298,7 +301,7 @@ class Client:
             obj = update['object']
             edit = await get_officers_edit(self.token, obj)
             return self.dispatch(t, edit)
-        elif 'on_unknown' in self.extra_events:
+        elif t not in self._implemented_events and 'on_unknown' in self.extra_events:
             return self.dispatch('unknown', update)
 
     async def handle_user_update(self, update):
