@@ -29,7 +29,6 @@ import aiohttp
 import enum
 from random import randint
 
-from vk_botting.general import vk_request
 from vk_botting.user import get_own_page, get_pages, get_users, get_blocked_user, get_unblocked_user, User
 from vk_botting.group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
     get_deleted_video_comment, get_deleted_board_comment, get_deleted_market_comment, get_deleted_wall_comment, get_officers_edit, get_poll_vote, get_groups, Group
@@ -390,9 +389,11 @@ class Client:
         return None
 
     async def send_message(self, peer_id=None, message=None, *, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None):
+        if attachment:
+            attachment = ','.join(map(str, attachment))
         params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
-        res = await vk_request('messages.send', self.token, **params)
+        res = await self.vk_request('messages.send', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']

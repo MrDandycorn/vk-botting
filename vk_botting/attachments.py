@@ -22,7 +22,57 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from enum import Enum
+from aiohttp import ClientSession
+import os
+
 from vk_botting.user import get_pages
+
+
+class AttachmentType(Enum):
+    PHOTO = 'photo'
+    VIDEO = 'video'
+    AUDIO = 'audio'
+    DOCUMENT = 'doc'
+    WALL = 'wall'
+    MARKET = 'market'
+    POLL = 'poll'
+
+
+class DocType(Enum):
+    DOCUMENT = 'doc'
+    AUDIO_MESSAGE = 'audio_message'
+    GRAFFITI = 'graffiti'
+
+
+async def upload_document(bot, peer_id, file, type=DocType.DOCUMENT, title=None):
+    if isinstance(type, DocType):
+        type = type.value
+    async with ClientSession() as session:
+        r = await bot.vk_request('docs.getMessagesUploadServer', peer_id=peer_id, type=type)
+        imurl = r['response']['upload_url']
+        files = {'file': open(file, 'rb')}
+        r = await session.post(imurl, data=files)
+        r = await r.json()
+        filedata = r['file']
+        if title is None:
+            title = os.path.splitext(file)[0]
+        r = await bot.vk_request('docs.save', file=filedata, title=title)
+        doc = r['response']
+        doc = doc[doc['type']]
+    return Attachment(doc['owner_id'], doc['id'], AttachmentType.DOCUMENT)
+
+
+async def upload_photo(bot, peer_id, file):
+    async with ClientSession() as session:
+        r = await bot.vk_request('photos.getMessagesUploadServer', peer_id=peer_id)
+        imurl = r['response']['upload_url']
+        files = {'file': open(file, 'rb')}
+        r = await session.post(imurl, data=files)
+        r = await r.json(content_type='text/html')
+        r = await bot.vk_request('photos.saveMessagesPhoto', **r)
+        doc = r['response'][0]
+    return Attachment(doc['owner_id'], doc['id'], AttachmentType.PHOTO)
 
 
 async def get_photo(token, obj):
@@ -102,6 +152,9 @@ class Document:
         self.type = data.get('type')
         self.access_key = data.get('access_key')
 
+    def __str__(self):
+        return f'doc{self.owner_id}_{self.id}'
+
 
 class AudioMessage:
 
@@ -158,6 +211,9 @@ class Photo:
         self.width = data.get('width')
         self.height = data.get('height')
 
+    def __str__(self):
+        return f'photo{self.owner_id}_{self.id}'
+
 
 class DeletedPhoto:
 
@@ -190,6 +246,9 @@ class Audio:
         self.date = data.get('date')
         self.no_search = data.get('no_search')
         self.is_hq = data.get('is_hq')
+
+    def __str__(self):
+        return f'audio{self.owner_id}_{self.id}'
 
 
 class Video:
@@ -227,3 +286,16 @@ class Video:
         self.live = data.get('live')
         self.upcoming = data.get('upcoming')
         self.is_favorite = data.get('is_favorite')
+
+    def __str__(self):
+        return f'video{self.owner_id}_{self.id}'
+
+
+class Attachment:
+    def __init__(self, owner_id, id, type):
+        self.id = id
+        self.owner_id = owner_id
+        self.type = type.value if isinstance(type, AttachmentType) else type
+
+    def __str__(self):
+        return f'{self.type}{self.owner_id}_{self.id}'

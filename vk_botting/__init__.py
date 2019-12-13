@@ -22,6 +22,7 @@ from vk_botting.bot import Bot, when_mentioned_or, when_mentioned_or_pm, when_me
 from vk_botting.attachments import *
 from vk_botting.limiters import *
 from vk_botting.commands import *
+from vk_botting.keyboard import *
 from vk_botting.message import Message, Messageable
 from vk_botting.exceptions import *
 from vk_botting.auth import TokenReceiverKate, TokenReceiverOfficial
