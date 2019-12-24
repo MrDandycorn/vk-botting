@@ -40,6 +40,8 @@ async def build_msg(msg, bot):
     if res.fwd_messages:
         for i in range(len(res.fwd_messages)):
             res.fwd_messages[i] = await build_msg(res.fwd_messages[i], bot)
+    if res.reply_message:
+        res.reply_message = await build_msg(res.reply_message, bot)
     res.bot = bot
     return res
 
