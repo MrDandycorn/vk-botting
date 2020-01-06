@@ -36,7 +36,7 @@ from vk_botting.utils import async_all, maybe_coroutine, find
 from vk_botting.exceptions import NoEntryPointError, ExtensionFailed, ExtensionAlreadyLoaded, ExtensionNotFound, ExtensionNotLoaded, CommandError, CommandNotFound
 from vk_botting.context import Context
 from vk_botting.view import StringView
-from vk_botting.client import Client
+from vk_botting.client import Client, UserClient
 from vk_botting.cog import Cog
 
 
@@ -411,4 +411,8 @@ class BotBase(GroupMixin):
 
 
 class Bot(BotBase, Client):
+    pass
+
+
+class UserBot(BotBase, UserClient):
     pass

@@ -117,22 +117,25 @@ async def get_user_attachments(token, atts):
     res = []
     for i in range(len(atts)//2):
         t = atts.get(f'attach{i}_type')
-        oid, aid = atts.get(f'attach{i}').split('_')
+        att = atts.get(f'attach{i}')
+        if not att:
+            continue
+        oid, aid = att.split('_')
         obj = {'owner_id': oid, 'id': aid}
         if t == 'audio_message':
-            res.append(AudioMessage(obj[t]))
+            res.append(AudioMessage(obj))
         elif t == 'photo':
-            res.append(Photo(obj[t]))
+            res.append(Photo(obj))
         elif t == 'sticker':
-            res.append(Sticker(obj[t]))
+            res.append(Sticker(obj))
         elif t == 'video':
-            res.append(Video(obj[t]))
+            res.append(Video(obj))
         elif t == 'audio':
-            res.append(Audio(obj[t]))
+            res.append(Audio(obj))
         elif t == 'doc':
-            res.append(Document(obj[t]))
+            res.append(Document(obj))
         else:
-            res.append(obj[t])
+            res.append(obj)
     return res
 
 

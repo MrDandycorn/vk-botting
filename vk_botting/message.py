@@ -111,6 +111,7 @@ class UserMessage(Messageable):
     def _unpack(self, data):
         self.id = data.get('id')
         self.date = data.get('date')
+        self.flags = data.get('flags')
         self.peer_id = data.get('peer_id')
         self.text = data.get('text')
         self.attachments = data.get('attachments')
@@ -119,7 +120,7 @@ class UserMessage(Messageable):
         self.keyboard = data.get('keyboard')
 
     async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
-        params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
+        params = {'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
                   'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets}
         res = await vk_request('messages.edit', self.bot.token, **params)
         if 'error' in res.keys():
@@ -128,7 +129,7 @@ class UserMessage(Messageable):
 
     async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
         peer_id = await self._get_conversation()
-        params = {'group_id': self.bot.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
+        params = {'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': self.id, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await vk_request('messages.send', self.bot.token, **params)
         if 'error' in res.keys():

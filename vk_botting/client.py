@@ -143,6 +143,18 @@ class Client:
         res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.103', **events)
         return res
 
+    async def print_warnings(self):
+        res = await self.vk_request('groups.getLongPollSettings', group_id=self.group.id)
+        events = res.get('response').get('events')
+        if all([not events[event] for event in events]):
+            print('WARNING:  All longpoll events are disabled. Bot will not function until events are enabled', file=sys.stderr)
+        elif not events.get('message_new'):
+            print('WARNING:  message_new event is disabled. Commands will not function until message_new is enabled', file=sys.stderr)
+        api_ver = res.get('response').get('api_version')
+        minor = int(api_ver.split('.')[1])
+        if minor < 100:
+            print('WARNING:  You are using old LongPoll API version, consider upgrading to newer one', file=sys.stderr)
+
     async def get_longpoll_server(self):
         res = await self.vk_request('groups.getLongPollServer', group_id=self.group.id)
         error = res.get('error', None)
@@ -176,15 +188,21 @@ class Client:
         updates = res.get('updates', [])
         return ts, updates
 
+    async def handle_message(self, message):
+        msg = await build_msg(message, self)
+        payload = message.get('payload')
+        if payload and payload == '{"command":"start"}':
+            return self.dispatch('conversation_start', msg)
+        action = message.get('action')
+        if action:
+            action_type = action.get('type')
+            return self.dispatch(action_type, msg)
+        return self.dispatch('message_new', msg)
+
     async def handle_update(self, update):
         t = update['type']
         if t == 'message_new':
-            obj = update['object'] if self.old_longpoll else update['object']['message']
-            msg = await build_msg(obj, self)
-            payload = obj.get('payload')
-            if payload and payload == '{"command":"start"}':
-                return self.dispatch('conversation_start', msg)
-            return self.dispatch(t, msg)
+            return await self.handle_message(update['object']['message'])
         elif t == 'message_reply' and 'on_message_reply' in self.extra_events:
             obj = update['object']
             msg = await build_msg(obj, self)
@@ -377,6 +395,7 @@ class Client:
             if self.is_group and owner_id:
                 raise VKApiError('Owner_id passed together with group access_token')
             ts = await self.get_longpoll_server()
+            await self.print_warnings()
             self.dispatch('ready')
             updates = []
             while True:
@@ -464,11 +483,6 @@ class UserClient:
             return await self.vk_request(method, **kwargs)
         return res
 
-    async def enable_longpoll(self):
-        events = dict([(event, 1) for event in self._implemented_events])
-        res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.103', **events)
-        return res
-
     async def get_user_longpoll(self):
         res = await self.vk_request('messages.getLongPollServer', group_id=self.group.id, lp_version=3)
         error = res.get('error', None)
@@ -502,7 +516,7 @@ class UserClient:
 
     async def handle_user_update(self, update):
         t = update.pop(0)
-        if t == 4 and 'on_message_new' in self.extra_events:
+        if t == 4:
             data = {
                 'id': update.pop(0),
                 'flags': UserMessageFlags(update.pop(0)),
@@ -594,7 +608,7 @@ class UserClient:
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
-        params['from_id'] = -self.group.id
+        params['from_id'] = self.user.id
         return await build_msg(params, self)
 
     async def _run(self, owner_id):
