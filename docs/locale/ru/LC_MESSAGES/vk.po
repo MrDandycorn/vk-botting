@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vk-botting \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-07 00:01+0300\n"
+"POT-Creation-Date: 2020-01-06 20:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr "Для работы с библиотекой и VK API в целом н
 msgid "Creating a Bot is a pretty straightforward process."
 msgstr "Создание бота довольно прямолинейно."
 
-#: ../../vk.rst:12
+#: ../../vk.rst:12 ../../vk.rst:46
 msgid "Make sure you're logged on to the `VK website <https://vk.com/>`_."
 msgstr "Убедитесь, что вы залогинены на `сайте ВК <https://vk.com/>`_."
 
-#: ../../vk.rst:13
+#: ../../vk.rst:13 ../../vk.rst:47
 msgid "Go to the group you are administrator of."
 msgstr "Зайдите на страницу группы, администратором которой являетесь."
 
@@ -100,4 +100,54 @@ msgid ""
 "And that's it. You now have a bot account and you can login with that "
 "token."
 msgstr "Все. Теперь у вас есть бот и вы можете использовать его токен."
+
+# 2669df76ba2d421890735ab5c5498778
+#: ../../vk.rst:38
+msgid "Enabling Longpoll"
+msgstr "Включение Longpoll"
+
+# 67236f99b6df461992ce4da51e2094c3
+#: ../../vk.rst:40
+msgid "For the Bot to be able to catch events, you first have to enable Longpoll."
+msgstr "Для того, чтобы бот мог работать с событиями, надо включить Longpoll"
+
+# 1a928f1b954b480094bbed1e5b9de01d
+#: ../../vk.rst:44
+msgid "Library can do it automatically if you use :func:`force` parameter"
+msgstr ""
+"Библиотека может сделать это автоматически, для этого используйте "
+"параметр force при создании бота"
+
+#: ../../vk.rst:48
+#, fuzzy
+msgid "Navigate to the Manage -> Settings -> API usage -> Long Poll API."
+msgstr "Перейдите в Настройки -> Работа с API -> Ключи доступа."
+
+# fc667349cc294ff4901d32016f07475f
+#: ../../vk.rst:49
+msgid ""
+"Enable \"Long Poll API\" and set \"API version\" to latest possible "
+"(highest number after dot)."
+msgstr ""
+"Включите \"Long Poll API\" и установите параметр \"Версия API\" на "
+"последний доступный (наибольшее число после точки). "
+
+#: ../../vk.rst:50
+#, fuzzy
+msgid "Navigate to the \"Event types\" tab."
+msgstr "Перейдите в Управление -> Сообщения."
+
+# 3f9b885057d54cf2bf1a74b13b6c6295
+#: ../../vk.rst:51
+msgid ""
+"Check all of the events you need. If you do not know what to check, check"
+" everything."
+msgstr ""
+"Поставьте галочку на всех событиях, которые вам нужны. Если не знаете, "
+"куда ставить, поставьте везде."
+
+# 5788bf409e214938a86f706e133033c8
+#: ../../vk.rst:53
+msgid "Now you should be able to use the library."
+msgstr "Теперь вы можете использовать библиотеку"
 
