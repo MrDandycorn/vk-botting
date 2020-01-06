@@ -121,7 +121,7 @@ msgstr ""
 #: ../../vk.rst:48
 #, fuzzy
 msgid "Navigate to the Manage -> Settings -> API usage -> Long Poll API."
-msgstr "Перейдите в Настройки -> Работа с API -> Ключи доступа."
+msgstr "Перейдите в Управление -> Настройки -> Работа с API -> Long Poll API."
 
 # fc667349cc294ff4901d32016f07475f
 #: ../../vk.rst:49
@@ -135,7 +135,7 @@ msgstr ""
 #: ../../vk.rst:50
 #, fuzzy
 msgid "Navigate to the \"Event types\" tab."
-msgstr "Перейдите в Управление -> Сообщения."
+msgstr "Перейдите на вкладку \"Типы событий\"."
 
 # 3f9b885057d54cf2bf1a74b13b6c6295
 #: ../../vk.rst:51
