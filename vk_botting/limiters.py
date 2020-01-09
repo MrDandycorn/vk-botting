@@ -22,7 +22,6 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from vk_botting.exceptions import NotInUserList
 from vk_botting.commands import Command
 
 
@@ -47,6 +46,5 @@ def in_user_list(*ids):
     def predicate(ctx):
         if ctx.message.from_id in ids:
             return True
-        raise NotInUserList(f'{ctx.message.from_id} is not in provided user list')
 
     return check(predicate)

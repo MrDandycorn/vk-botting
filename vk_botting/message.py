@@ -95,9 +95,18 @@ class Message(Messageable):
         peer_id = await self._get_conversation()
         return await self.bot.send_message(peer_id, message, attachment=attachment, reply_to=self.id, sticker_id=sticker_id, keyboard=keyboard)
 
-    async def get_author(self):
+    async def get_user(self):
         author = await get_pages(self.bot.token, self.from_id)
         return author[0]
+
+    async def get_author(self):
+        return await self.get_user()
+
+    async def fetch_user(self):
+        return await self.get_user()
+
+    async def fetch_author(self):
+        return await self.get_user()
 
 
 class UserMessage(Messageable):
@@ -137,8 +146,17 @@ class UserMessage(Messageable):
         params['id'] = res['response']
         return await build_msg(params, self.bot)
 
-    async def get_author(self):
+    async def get_user(self):
         user = await get_pages(self.bot.token, self.from_id)
         if user:
             return user[0]
         return None
+
+    async def get_author(self):
+        return await self.get_user()
+
+    async def fetch_user(self):
+        return await self.get_user()
+
+    async def fetch_author(self):
+        return await self.get_user()

@@ -94,6 +94,15 @@ class Context(Messageable):
         user = await get_pages(self.bot.token, self.message.from_id)
         return user[0]
 
+    async def get_author(self):
+        return await self.get_user()
+
+    async def fetch_user(self):
+        return await self.get_user()
+
+    async def fetch_author(self):
+        return await self.get_user()
+
     @property
     def cog(self):
         if self.command is None:
@@ -104,14 +113,24 @@ class Context(Messageable):
     def valid(self):
         return self.prefix is not None and self.command is not None
 
-    async def _get_conversation(self):
-        return self.message.peer_id
-
-    def guild(self):
-        return self.message.guild
-
+    @property
     def author(self):
         return self.message.from_id
+
+    @property
+    def from_id(self):
+        return self.message.from_id
+
+    @property
+    def peer_id(self):
+        return self.message.peer_id
+
+    @property
+    def text(self):
+        return self.message.text
+
+    async def _get_conversation(self):
+        return self.message.peer_id
 
     def me(self):
         return self.bot.group or self.bot.user

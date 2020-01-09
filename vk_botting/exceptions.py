@@ -22,6 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+
 def flatten_error_dict(d, key=''):
     items = []
     for k, v in d.items():
@@ -40,15 +41,23 @@ def flatten_error_dict(d, key=''):
     return dict(items)
 
 
-class VKApiError(Exception):
+class VKException(Exception):
     pass
 
 
-class CommandError(Exception):
+class VKApiError(VKException):
     pass
 
 
-class CommandNotFound(Exception):
+class CommandError(VKException):
+    def __init__(self, message=None, *args):
+        if message is not None:
+            super().__init__(message, *args)
+        else:
+            super().__init__(*args)
+
+
+class CommandNotFound(VKException):
     pass
 
 
@@ -60,19 +69,21 @@ class CommandOnCooldown(CommandError):
     pass
 
 
-class CheckFailure(Exception):
+class CheckFailure(CommandError):
     pass
 
 
-class ClientException(Exception):
+class ClientException(VKException):
     pass
 
 
-class CommandInvokeError(Exception):
-    pass
+class CommandInvokeError(CommandError):
+    def __init__(self, e):
+        self.original = e
+        super().__init__('Command raised an exception: {0.__class__.__name__}: {0}'.format(e))
 
 
-class ArgumentError(Exception):
+class ArgumentError(VKException):
     pass
 
 
@@ -84,19 +95,19 @@ class BadUnionArgument(BadArgument):
     pass
 
 
-class MissingRequiredArgument(Exception):
+class MissingRequiredArgument(VKException):
     pass
 
 
-class TooManyArguments(Exception):
+class TooManyArguments(VKException):
     pass
 
 
-class ConversionError(Exception):
+class ConversionError(VKException):
     pass
 
 
-class ExtensionError(Exception):
+class ExtensionError(VKException):
     def __init__(self, message=None, *args, name):
         self.name = name
         m = message or 'Extension {!r} had an error.'.format(name)
@@ -150,7 +161,7 @@ class ExpectedClosingQuoteError(ArgumentError):
         super().__init__('Expected closing {}.'.format(close_quote))
 
 
-class HTTPException(Exception):
+class HTTPException(VKException):
 
     def __init__(self, response, message):
         self.response = response
@@ -184,15 +195,11 @@ class NotFound(HTTPException):
     pass
 
 
-class LoginError(Exception):
+class LoginError(VKException):
     pass
 
 
-class MissingPermissions(Exception):
+class MissingPermissions(VKException):
     def __init__(self, permission):
         self.permission = permission
         super().__init__(f'Missing permission: {self.permission}')
-
-
-class NotInUserList(Exception):
-    pass
