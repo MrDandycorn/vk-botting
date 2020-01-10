@@ -359,11 +359,14 @@ class Client:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
 
-    async def get_user(self, uid):
-        user = await get_users(self.token, uid)
+    async def get_user(self, uid, fields=None, name_case=None):
+        user = await get_users(self.token, uid, fields=fields, name_case=name_case)
         if user:
             return user[0]
         return None
+
+    async def fetch_user(self, *args, **kwargs):
+        return await self.get_user(*args, **kwargs)
 
     async def get_group(self, gid):
         group = await get_groups(self.token, gid)
