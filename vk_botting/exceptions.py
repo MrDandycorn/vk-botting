@@ -83,7 +83,7 @@ class CommandInvokeError(CommandError):
         super().__init__('Command raised an exception: {0.__class__.__name__}: {0}'.format(e))
 
 
-class ArgumentError(VKException):
+class ArgumentError(CommandError):
     pass
 
 
@@ -95,15 +95,15 @@ class BadUnionArgument(BadArgument):
     pass
 
 
-class MissingRequiredArgument(VKException):
+class MissingRequiredArgument(CommandError):
     pass
 
 
-class TooManyArguments(VKException):
+class TooManyArguments(CommandError):
     pass
 
 
-class ConversionError(VKException):
+class ConversionError(CommandError):
     pass
 
 
