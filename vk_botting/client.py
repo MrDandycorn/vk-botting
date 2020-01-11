@@ -130,12 +130,12 @@ class Client:
                 print(f'Got exception in request: {e}\nRetrying in {tries*2+1} seconds', file=sys.stderr)
                 await asyncio.sleep(tries*2+1)
 
-    async def vk_request(self, method, **kwargs):
-        res = await self.general_request(f'https://api.vk.com/method/{method}', **self.Payload(**kwargs))
+    async def vk_request(self, method, post=True, **kwargs):
+        res = await self.general_request(f'https://api.vk.com/method/{method}', post=post, **self.Payload(**kwargs))
         error = res.get('error', None)
         if error and error['error_code'] == 6:
             await asyncio.sleep(1)
-            return await self.vk_request(method, **kwargs)
+            return await self.vk_request(method, post=post, **kwargs)
         return res
 
     async def enable_longpoll(self):
@@ -478,12 +478,12 @@ class UserClient:
                 print(f'Got exception in request: {e}\nRetrying in {tries*2+1} seconds', file=sys.stderr)
                 await asyncio.sleep(tries*2+1)
 
-    async def vk_request(self, method, **kwargs):
-        res = await self.general_request(f'https://api.vk.com/method/{method}', **self.Payload(**kwargs))
+    async def vk_request(self, method, post=True, **kwargs):
+        res = await self.general_request(f'https://api.vk.com/method/{method}', post=post, **self.Payload(**kwargs))
         error = res.get('error', None)
         if error and error['error_code'] == 6:
             await asyncio.sleep(1)
-            return await self.vk_request(method, **kwargs)
+            return await self.vk_request(method, post=post, **kwargs)
         return res
 
     async def get_user_longpoll(self):
