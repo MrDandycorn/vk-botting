@@ -155,6 +155,15 @@ class GroupMixin:
 
         return decorator
 
+    def group_command(self, *args, **kwargs):
+        def decorator(func):
+            kwargs.setdefault('parent', self)
+            result = group_command(*args, **kwargs)(func)
+            self.add_command(result)
+            return result
+
+        return decorator
+
 
 def command(name=None, cls=None, **attrs):
     if cls is None:
@@ -166,6 +175,11 @@ def command(name=None, cls=None, **attrs):
         return cls(func, name=name, **attrs)
 
     return decorator
+
+
+def group_command(name=None, **attrs):
+    attrs.setdefault('cls', Group)
+    return command(name=name, **attrs)
 
 
 class _CaseInsensitiveDict(dict):
@@ -248,6 +262,7 @@ class Command(_BaseCommand):
         except AttributeError:
             self.checks = kwargs.get('checks', [])
         self.ignore_extra = kwargs.get('ignore_extra', True)
+        self.has_spaces = kwargs.get('has_spaces', False)
 
     @property
     def callback(self):
@@ -750,6 +765,82 @@ class Command(_BaseCommand):
             return await async_all(predicate(ctx) for predicate in predicates)
         finally:
             ctx.command = original
+
+
+class Group(GroupMixin, Command):
+    def __init__(self, *args, **attrs):
+        self.invoke_without_command = attrs.pop('invoke_without_command', False)
+        super().__init__(*args, **attrs)
+
+    def copy(self):
+        ret = super().copy()
+        for cmd in self.commands:
+            ret.add_command(cmd.copy())
+        return ret
+
+    async def invoke(self, ctx):
+        ctx.invoked_subcommand = None
+        early_invoke = not self.invoke_without_command
+        if early_invoke:
+            await self.prepare(ctx)
+
+        view = ctx.view
+        previous = view.index
+        view.skip_ws()
+        trigger = view.get_word()
+
+        if trigger:
+            ctx.subcommand_passed = trigger
+            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+
+        if early_invoke:
+            injected = hooked_wrapped_callback(self, ctx, self.callback)
+            await injected(*ctx.args, **ctx.kwargs)
+
+        if trigger and ctx.invoked_subcommand:
+            ctx.invoked_with = trigger
+            await ctx.invoked_subcommand.invoke(ctx)
+        elif not early_invoke:
+            view.index = previous
+            view.previous = previous
+            await super().invoke(ctx)
+
+    async def reinvoke(self, ctx, *, call_hooks=False):
+        ctx.invoked_subcommand = None
+        early_invoke = not self.invoke_without_command
+        if early_invoke:
+            ctx.command = self
+            await self._parse_arguments(ctx)
+
+            if call_hooks:
+                await self.call_before_hooks(ctx)
+
+        view = ctx.view
+        previous = view.index
+        view.skip_ws()
+        trigger = view.get_word()
+
+        if trigger:
+            ctx.subcommand_passed = trigger
+            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
+
+        if early_invoke:
+            try:
+                await self.callback(*ctx.args, **ctx.kwargs)
+            except:
+                ctx.command_failed = True
+                raise
+            finally:
+                if call_hooks:
+                    await self.call_after_hooks(ctx)
+
+        if trigger and ctx.invoked_subcommand:
+            ctx.invoked_with = trigger
+            await ctx.invoked_subcommand.reinvoke(ctx, call_hooks=call_hooks)
+        elif not early_invoke:
+            view.index = previous
+            view.previous = previous
+            await super().reinvoke(ctx, call_hooks=call_hooks)
 
 
 def cooldown(rate, per, type=BucketType.default):
