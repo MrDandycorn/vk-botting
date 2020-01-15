@@ -80,15 +80,23 @@ class Client:
         self.force = kwargs.get('force', False)
         self.loop = asyncio.get_event_loop()
         self.group = None
+        self.user = None
         self.key = None
         self.server = None
         self.old_longpoll = kwargs.get('old_longpoll', False)
         self._listeners = {}
         timeout = aiohttp.ClientTimeout(total=100, connect=10)
-        self.session = aiohttp.ClientSession(timeout=timeout)
+        user_agent = kwargs.get('user_agent', None)
+        if user_agent:
+            headers = {
+                'User-Agent': user_agent
+            }
+            self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout, headers=headers))
+        else:
+            self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout))
         self._implemented_events = ['message_new', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
         self.extra_events = []
-        self.token = ''
+        self.token = None
 
     def Payload(self, **kwargs):
         kwargs['access_token'] = self.token
@@ -423,14 +431,9 @@ class Client:
 class UserClient(Client):
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         user_agent = kwargs.get('user_agent', 'KateMobileAndroid/52.1 lite-445 (Android 4.4.2; SDK 19; x86; unknown Android SDK built for x86; en)')
-        self.user = None
-        timeout = aiohttp.ClientTimeout(total=100, connect=10)
-        headers = {
-            'User-Agent': user_agent
-        }
-        self.session = aiohttp.ClientSession(timeout=timeout, headers=headers)
+        kwargs.setdefault('user_agent', user_agent)
+        super().__init__(**kwargs)
 
     async def get_user_longpoll(self):
         res = await self.vk_request('messages.getLongPollServer', group_id=self.group.id, lp_version=3)
