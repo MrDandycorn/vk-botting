@@ -244,13 +244,6 @@ class Client:
         res.bot = self
         return res
 
-    async def build_user_msg(self, msg):
-        res = UserMessage(msg)
-        if res.attachments:
-            res.attachments = await get_user_attachments(res.attachments)
-        res.bot = self
-        return res
-
     async def enable_longpoll(self):
         events = dict([(event, 1) for event in self._implemented_events])
         res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.103', **events)
@@ -524,6 +517,13 @@ class UserClient(Client):
         user_agent = kwargs.get('user_agent', 'KateMobileAndroid/52.1 lite-445 (Android 4.4.2; SDK 19; x86; unknown Android SDK built for x86; en)')
         kwargs.setdefault('user_agent', user_agent)
         super().__init__(**kwargs)
+
+    async def build_user_msg(self, msg):
+        res = UserMessage(msg)
+        if res.attachments:
+            res.attachments = await get_user_attachments(res.attachments)
+        res.bot = self
+        return res
 
     async def get_user_longpoll(self):
         res = await self.vk_request('messages.getLongPollServer', group_id=self.group.id, lp_version=3)

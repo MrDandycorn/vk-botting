@@ -116,7 +116,7 @@ async def get_user_attachments(atts):
     for i in range(len(atts)//2):
         t = atts.get(f'attach{i}_type')
         att = atts.get(f'attach{i}')
-        if not att:
+        if not att or t == 'sticker':
             continue
         oid, aid = att.split('_')
         obj = {'owner_id': oid, 'id': aid}
