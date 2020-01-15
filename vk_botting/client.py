@@ -30,11 +30,12 @@ import enum
 from random import randint
 from collections.abc import Iterable
 
-from vk_botting.user import get_own_page, get_pages, get_users, get_blocked_user, get_unblocked_user, User
+from vk_botting.user import get_blocked_user, get_unblocked_user, User
 from vk_botting.group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
-    get_deleted_video_comment, get_deleted_board_comment, get_deleted_market_comment, get_deleted_wall_comment, get_officers_edit, get_poll_vote, get_groups, Group
+    get_deleted_video_comment, get_deleted_board_comment, get_deleted_market_comment, get_deleted_wall_comment, get_officers_edit, get_poll_vote, Group
 from vk_botting.attachments import get_photo, get_video, get_audio
-from vk_botting.message import build_msg, build_user_msg
+from vk_botting.message import Message, UserMessage
+from vk_botting.attachments import get_attachment, get_user_attachments
 from vk_botting.states import get_state
 from vk_botting.exceptions import VKApiError, LoginError
 from vk_botting.general import convert_params
@@ -139,9 +140,115 @@ class Client:
     async def vk_request(self, method, post=True, **kwargs):
         res = await self.general_request(f'https://api.vk.com/method/{method}', post=post, **self.Payload(**kwargs))
         error = res.get('error', None)
-        if error and error['error_code'] == 6:
+        if error and error.get('error_code') == 6:
             await asyncio.sleep(1)
             return await self.vk_request(method, post=post, **kwargs)
+        return res
+
+    async def get_users(self, *uids, fields=None, name_case=None):
+        if fields is None:
+            fields = ['photo_id', ' verified', ' sex', ' bdate', ' city', ' country', ' home_town', ' has_photo', ' photo_50', ' photo_100', ' photo_200_orig', ' photo_200',
+                      ' photo_400_orig', ' photo_max', ' photo_max_orig', ' online', ' domain', ' has_mobile', ' contacts', ' site', ' education', ' universities', ' schools',
+                      ' status', ' last_seen', ' followers_count', ' common_count', ' occupation', ' nickname', ' relatives', ' relation', ' personal', ' connections', ' exports',
+                      ' activities', ' interests', ' music', ' movies', ' tv', ' books', ' games', ' about', ' quotes', ' can_post', ' can_see_all_posts', ' can_see_audio',
+                      ' can_write_private_message', ' can_send_friend_request', ' is_favorite', ' is_hidden_from_feed', ' timezone', ' screen_name', ' maiden_name', ' crop_photo',
+                      ' is_friend', ' friend_status', ' career', ' military', ' blacklisted', ' blacklisted_by_me', ' can_be_invited_group']
+        if name_case is None:
+            name_case = 'nom'
+        users = await self.vk_request('users.get', user_ids=','.join(map(str, uids)), fields=fields, name_case=name_case)
+        if 'error' in users.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**users['error']))
+        users = users.get('response')
+        return [User(user) for user in users]
+
+    async def get_groups(self, *gids):
+        groups = await self.vk_request('groups.getById', group_ids=','.join(map(str, gids)))
+        if 'error' in groups.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**groups['error']))
+        groups = groups.get('response')
+        return [Group(group) for group in groups]
+
+    async def get_pages(self, *ids):
+        g = []
+        u = []
+        for pid in ids:
+            if pid < 0:
+                g.append(-pid)
+            else:
+                u.append(pid)
+        users = await self.get_users(*u)
+        groups = await self.get_groups(*g)
+        res = []
+        for pid in ids:
+            if pid < 0:
+                for group in groups:
+                    if -pid == group.id:
+                        res.append(group)
+                        break
+                else:
+                    res.append(None)
+            else:
+                for user in users:
+                    if pid == user.id:
+                        res.append(user)
+                        break
+                else:
+                    res.append(None)
+        return res
+
+    async def get_user(self, uid, fields=None, name_case=None):
+        user = await self.get_users(uid, fields=fields, name_case=name_case)
+        if user:
+            return user[0]
+        return None
+
+    async def fetch_user(self, *args, **kwargs):
+        return await self.get_user(*args, **kwargs)
+
+    async def get_group(self, gid):
+        group = await self.get_groups(gid)
+        if group:
+            return group[0]
+        return None
+
+    async def fetch_group(self, *args, **kwargs):
+        return await self.get_group(*args, **kwargs)
+
+    async def get_page(self, pid):
+        page = await self.get_pages(pid)
+        if page:
+            return page[0]
+        return None
+
+    async def fetch_page(self, *args, **kwargs):
+        return await self.get_page(*args, **kwargs)
+
+    async def get_own_page(self):
+        from vk_botting.group import Group
+        user = await self.vk_request('users.get')
+        if not user.get('response'):
+            group = await self.vk_request('groups.getById')
+            return Group(group.get('response')[0])
+        return User(user.get('response')[0])
+
+    async def build_msg(self, msg):
+        res = Message(msg)
+        if res.attachments:
+            for i in range(len(res.attachments)):
+                res.attachments[i] = await get_attachment(res.attachments[i])
+        if res.fwd_messages:
+            for i in range(len(res.fwd_messages)):
+                res.fwd_messages[i] = await self.build_msg(res.fwd_messages[i])
+        if res.reply_message:
+            res.reply_message = await self.build_msg(res.reply_message)
+        res.bot = self
+        return res
+
+    async def build_user_msg(self, msg):
+        res = UserMessage(msg)
+        if res.attachments:
+            res.attachments = await get_user_attachments(res.attachments)
+        res.bot = self
         return res
 
     async def enable_longpoll(self):
@@ -195,7 +302,7 @@ class Client:
         return ts, updates
 
     async def handle_message(self, message):
-        msg = await build_msg(message, self)
+        msg = await self.build_msg(message)
         payload = message.get('payload')
         if payload and payload == '{"command":"start"}':
             return self.dispatch('conversation_start', msg)
@@ -211,99 +318,99 @@ class Client:
             return await self.handle_message(update['object']['message'])
         elif t == 'message_reply' and 'on_message_reply' in self.extra_events:
             obj = update['object']
-            msg = await build_msg(obj, self)
+            msg = await self.build_msg(obj)
             return self.dispatch(t, msg)
         elif t == 'message_edit' and 'on_message_edit' in self.extra_events:
             obj = update['object']
-            msg = await build_msg(obj, self)
+            msg = await self.build_msg(obj)
             return self.dispatch(t, msg)
         elif t == 'message_typing_state' and 'on_message_typing_state' in self.extra_events:
             obj = update['object']
-            state = await get_state(self.token, obj)
+            state = await get_state(obj)
             return self.dispatch(t, state)
         elif t in ['message_allow', 'message_deny'] and any(event in self.extra_events for event in ['on_message_allow', 'on_message_deny']):
             obj = update['object']
-            user = await get_pages(self.token, obj)
+            user = await self.get_pages(obj)
             return self.dispatch(t, user[0])
         elif t == 'photo_new' and 'on_photo_new' in self.extra_events:
             obj = update['object']
-            photo = await get_photo(self.token, obj)
+            photo = await get_photo(self, obj)
             return self.dispatch(t, photo)
         elif t in ['photo_comment_new', 'photo_comment_edit', 'photo_comment_restore'] and any(event in self.extra_events for event in ['on_photo_comment_new', 'on_photo_comment_edit', 'on_photo_comment_restore']):
             obj = update['object']
-            comment = await get_photo_comment(self.token, obj)
+            comment = await get_photo_comment(self, obj)
             return self.dispatch(t, comment)
         elif t == 'photo_comment_delete' and 'on_photo_comment_delete' in self.extra_events:
             obj = update['object']
-            deleted = await get_deleted_photo_comment(self.token, obj)
+            deleted = await get_deleted_photo_comment(self, obj)
             return self.dispatch(t, deleted)
         elif t == 'audio_new' and 'on_audio_new' in self.extra_events:
             obj = update['object']
-            audio = await get_audio(self.token, obj)
+            audio = await get_audio(self, obj)
             return self.dispatch(t, audio)
         elif t == 'video_new' and 'on_video_new' in self.extra_events:
             obj = update['object']
-            video = await get_video(self.token, obj)
+            video = await get_video(self, obj)
             return self.dispatch(t, video)
         elif t in ['video_comment_new', 'video_comment_edit', 'video_comment_restore'] and any(event in self.extra_events for event in ['on_video_comment_new', 'on_video_comment_edit', 'on_video_comment_restore']):
             obj = update['object']
-            comment = get_video_comment(self.token, obj)
+            comment = get_video_comment(self, obj)
             return self.dispatch(t, comment)
         elif t == 'video_comment_delete' and 'on_video_comment_delete' in self.extra_events:
             obj = update['object']
-            deleted = await get_deleted_video_comment(self.token, obj)
+            deleted = await get_deleted_video_comment(self, obj)
             return self.dispatch(t, deleted)
         elif t in ['wall_post_new', 'wall_repost'] and any(event in self.extra_events for event in ['on_wall_post_new', 'on_wall_repost']):
             obj = update['object']
-            post = await get_post(self.token, obj)
+            post = await get_post(self, obj)
             return self.dispatch(t, post)
         elif t in ['wall_reply_new', 'wall_reply_edit', 'wall_reply_restore'] and any(event in self.extra_events for event in ['on_wall_reply_new', 'on_wall_reply_edit', 'on_wall_reply_restore']):
             obj = update['object']
-            comment = await get_wall_comment(self.token, obj)
+            comment = await get_wall_comment(self, obj)
             return self.dispatch(t, comment)
         elif t == 'wall_reply_delete' and 'on_wall_reply_delete' in self.extra_events:
             obj = update['object']
-            deleted = await get_deleted_wall_comment(self.token, obj)
+            deleted = await get_deleted_wall_comment(self, obj)
             return self.dispatch(t, deleted)
         elif t in ['board_post_new', 'board_post_edit', 'board_post_restore'] and any(event in self.extra_events for event in ['on_board_post_new', 'on_board_post_edit', 'on_board_post_restore']):
             obj = update['object']
-            comment = await get_board_comment(self.token, obj)
+            comment = await get_board_comment(self, obj)
             return self.dispatch(t, comment)
         elif t == 'board_post_delete' and 'on_board_post_delete' in self.extra_events:
             obj = update['object']
-            deleted = await get_deleted_board_comment(self.token, obj)
+            deleted = await get_deleted_board_comment(self, obj)
             return self.dispatch(t, deleted)
         elif t in ['market_comment_new', 'market_comment_edit', 'market_comment_restore'] and any(event in self.extra_events for event in ['on_market_comment_new', 'on_market_comment_edit', 'on_market_comment_restore']):
             obj = update['object']
-            comment = await get_market_comment(self.token, obj)
+            comment = await get_market_comment(self, obj)
             return self.dispatch(t, comment)
         elif t == 'market_comment_delete' and 'on_market_comment_delete' in self.extra_events:
             obj = update['object']
-            deleted = await get_deleted_market_comment(self.token, obj)
+            deleted = await get_deleted_market_comment(self, obj)
             return self.dispatch(t, deleted)
         elif t == 'group_leave' and 'on_group_leave' in self.extra_events:
             obj = update['object']
-            user = await get_pages(self.token, obj['user_id'])
+            user = await self.get_pages(obj['user_id'])
             return self.dispatch(t, (user[0], obj['self']))
         elif t == 'group_join' and 'on_group_join' in self.extra_events:
             obj = update['object']
-            user = await get_pages(self.token, obj['user_id'])
+            user = await self.get_pages(obj['user_id'])
             return self.dispatch(t, (user[0], obj['join_type']))
         elif t == 'user_block' and 'on_user_block' in self.extra_events:
             obj = update['object']
-            blocked = await get_blocked_user(self.token, obj)
+            blocked = await get_blocked_user(self, obj)
             return self.dispatch(t, blocked)
         elif t == 'user_unblock' and 'on_user_unblock' in self.extra_events:
             obj = update['object']
-            unblocked = await get_unblocked_user(self.token, obj)
+            unblocked = await get_unblocked_user(self, obj)
             return self.dispatch(t, unblocked)
         elif t == 'poll_vote_new' and 'on_poll_vote_new' in self.extra_events:
             obj = update['object']
-            vote = await get_poll_vote(self.token, obj)
+            vote = await get_poll_vote(self, obj)
             return self.dispatch(t, vote)
         elif t == 'group_officers_edit' and 'on_group_officers_edit' in self.extra_events:
             obj = update['object']
-            edit = await get_officers_edit(self.token, obj)
+            edit = await get_officers_edit(self, obj)
             return self.dispatch(t, edit)
         elif t not in self._implemented_events and 'on_unknown' in self.extra_events:
             return self.dispatch('unknown', update)
@@ -365,21 +472,6 @@ class Client:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
 
-    async def get_user(self, uid, fields=None, name_case=None):
-        user = await get_users(self.token, uid, fields=fields, name_case=name_case)
-        if user:
-            return user[0]
-        return None
-
-    async def fetch_user(self, *args, **kwargs):
-        return await self.get_user(*args, **kwargs)
-
-    async def get_group(self, gid):
-        group = await get_groups(self.token, gid)
-        if group:
-            return group[0]
-        return None
-
     async def send_message(self, peer_id=None, message=None, *, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None):
         if isinstance(attachment, str):
             pass
@@ -390,18 +482,16 @@ class Client:
         params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await self.vk_request('messages.send', **params)
-        if 'error' in res.keys():
-            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
         params['from_id'] = -self.group.id
-        return await build_msg(params, self)
+        return await self.build_msg(params)
 
     async def _run(self, owner_id):
         if owner_id and owner_id.__class__ is not int:
             raise TypeError(f'Owner_id must be positive integer, not {owner_id.__class__.__name__}')
         if owner_id and owner_id < 0:
             raise VKApiError(f'Owner_id must be positive integer')
-        user = await get_own_page(self.token)
+        user = await self.get_own_page()
         if isinstance(user, Group):
             self.is_group = True
             self.group = user
@@ -477,7 +567,7 @@ class UserClient(Client):
                 'text': update.pop(1),
                 'attachments': update.pop(1)
             }
-            msg = await build_user_msg(data, self)
+            msg = await self.build_user_msg(data)
             return self.dispatch('message_new', msg)
         elif 'on_unknown' in self.extra_events:
             return self.dispatch('unknown', update)
@@ -487,7 +577,7 @@ class UserClient(Client):
             raise TypeError(f'Owner_id must be positive integer, not {owner_id.__class__.__name__}')
         if owner_id and owner_id < 0:
             raise VKApiError(f'Owner_id must be positive integer')
-        user = await get_own_page(self.token)
+        user = await self.get_own_page()
         if isinstance(user, User):
             self.is_group = False
             self.group = Group({})

@@ -22,93 +22,84 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from vk_botting.general import vk_request
-from vk_botting.user import get_pages
 
-
-async def get_groups(token, *gids):
-    groups = await vk_request('groups.getById', token, group_ids=','.join(map(str, gids)))
-    groups = groups.get('response')
-    return [Group(group) for group in groups]
-
-
-async def get_post(token, obj):
+async def get_post(bot, obj):
     post = Post(obj)
-    post.author, post.creator, post.signer = await get_pages(token, post.from_id, post.created_by, post.signer_id)
+    post.author, post.creator, post.signer = await bot.get_pages(post.from_id, post.created_by, post.signer_id)
     return post
 
 
-async def get_wall_comment(token, obj):
+async def get_wall_comment(bot, obj):
     comment = WallComment(obj)
-    comment.author, comment.reply_to = await get_pages(token, comment.from_id, comment.reply_to_user)
+    comment.author, comment.reply_to = await bot.get_pages(comment.from_id, comment.reply_to_user)
     return comment
 
 
-async def get_deleted_wall_comment(token, obj):
+async def get_deleted_wall_comment(bot, obj):
     comment = DeletedWallComment(obj)
-    comment.deleter, comment.owner = await get_pages(token, comment.deleter_id, comment.owner_id)
+    comment.deleter, comment.owner = await bot.get_pages(comment.deleter_id, comment.owner_id)
     return comment
 
 
-async def get_board_comment(token, obj):
+async def get_board_comment(bot, obj):
     comment = BoardComment(obj)
-    author = await get_pages(token, comment.from_id)
+    author = await bot.get_pages(comment.from_id)
     comment.author = author[0]
     return comment
 
 
-async def get_deleted_board_comment(token, obj):
+async def get_deleted_board_comment(bot, obj):
     comment = DeletedBoardComment(obj)
-    topic_owner = await get_pages(token, comment.topic_owner_id)
+    topic_owner = await bot.get_pages(comment.topic_owner_id)
     comment.topic_owner = topic_owner[0]
     return comment
 
 
-async def get_video_comment(token, obj):
+async def get_video_comment(bot, obj):
     comment = VideoComment(obj)
-    comment.author, comment.reply_to = await get_pages(token, comment.from_id, comment.reply_to_user)
+    comment.author, comment.reply_to = await bot.get_pages(comment.from_id, comment.reply_to_user)
     return comment
 
 
-async def get_deleted_video_comment(token, obj):
+async def get_deleted_video_comment(bot, obj):
     comment = DeletedVideoComment(obj)
-    comment.deleter, comment.owner, comment.author = await get_pages(token, comment.deleter_id, comment.owner_id, comment.user_id)
+    comment.deleter, comment.owner, comment.author = await bot.get_pages(comment.deleter_id, comment.owner_id, comment.user_id)
     return comment
 
 
-async def get_photo_comment(token, obj):
+async def get_photo_comment(bot, obj):
     comment = PhotoComment(obj)
-    comment.author, comment.reply_to = await get_pages(token, comment.from_id, comment.reply_to_user)
+    comment.author, comment.reply_to = await bot.get_pages(comment.from_id, comment.reply_to_user)
     return comment
 
 
-async def get_deleted_photo_comment(token, obj):
+async def get_deleted_photo_comment(bot, obj):
     comment = DeletedPhotoComment(obj)
-    comment.deleter, comment.owner, comment.author = await get_pages(token, comment.deleter_id, comment.owner_id, comment.user_id)
+    comment.deleter, comment.owner, comment.author = await bot.get_pages(comment.deleter_id, comment.owner_id, comment.user_id)
     return comment
 
 
-async def get_market_comment(token, obj):
+async def get_market_comment(bot, obj):
     comment = MarketComment(obj)
-    comment.author, comment.reply_to = await get_pages(token, comment.from_id, comment.reply_to_user)
+    comment.author, comment.reply_to = await bot.get_pages(comment.from_id, comment.reply_to_user)
     return comment
 
 
-async def get_deleted_market_comment(token, obj):
+async def get_deleted_market_comment(bot, obj):
     comment = DeletedMarketComment(obj)
-    comment.deleter, comment.owner, comment.author = await get_pages(token, comment.deleter_id, comment.owner_id, comment.user_id)
+    comment.deleter, comment.owner, comment.author = await bot.get_pages(comment.deleter_id, comment.owner_id, comment.user_id)
     return comment
 
 
-async def get_poll_vote(token, obj):
+async def get_poll_vote(bot, obj):
     vote = PollVote(obj)
-    vote.owner, vote.user = await get_pages(token, vote.owner_id, vote.user_id)
+    vote.owner, vote.user = await bot.get_pages(vote.owner_id, vote.user_id)
     return vote
 
 
-async def get_officers_edit(token, obj):
+async def get_officers_edit(bot, obj):
     edit = OfficersEdit(obj)
-    edit.admin, edit.author = await get_pages(token, edit.admin_id, edit.user_id)
+    edit.admin, edit.author = await bot.get_pages(edit.admin_id, edit.user_id)
     return edit
 
 

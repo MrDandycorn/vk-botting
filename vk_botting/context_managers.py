@@ -24,8 +24,6 @@ DEALINGS IN THE SOFTWARE.
 
 import asyncio
 
-from vk_botting.general import vk_request
-
 
 def _typing_done_callback(fut):
     try:
@@ -41,7 +39,7 @@ class Typing:
         self.messageable = messageable
 
     async def send_typing(self, peer_id):
-        await vk_request('messages.setActivity', self.bot.token, group_id=self.bot.group.id, type='typing', peer_id=peer_id)
+        await self.bot.vk_request('messages.setActivity', group_id=self.bot.group.id, type='typing', peer_id=peer_id)
 
     async def do_typing(self):
         try:

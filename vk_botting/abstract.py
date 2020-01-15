@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
 
 import abc
 
-from vk_botting.general import vk_request
 from vk_botting.context_managers import Typing
 
 
@@ -41,7 +40,7 @@ class Messageable(metaclass=abc.ABCMeta):
 
     async def trigger_typing(self):
         peer_id = await self._get_conversation()
-        res = await vk_request('messages.setActivity', self.bot.token, group_id=self.bot.group.id, type='typing', peer_id=peer_id)
+        res = await self.bot.vk_request('messages.setActivity', group_id=self.bot.group.id, type='typing', peer_id=peer_id)
         return res
 
     def typing(self):

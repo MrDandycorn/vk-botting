@@ -22,7 +22,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-async def get_state(token, obj):
+
+async def get_state(obj):
     state = State(obj)
     return state
 

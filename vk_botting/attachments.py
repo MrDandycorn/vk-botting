@@ -26,8 +26,6 @@ from enum import Enum
 from aiohttp import ClientSession
 import os
 
-from vk_botting.user import get_pages
-
 
 class AttachmentType(Enum):
     PHOTO = 'photo'
@@ -75,27 +73,27 @@ async def upload_photo(bot, peer_id, file):
     return Attachment(doc['owner_id'], doc['id'], AttachmentType.PHOTO)
 
 
-async def get_photo(token, obj):
+async def get_photo(bot, obj):
     photo = Photo(obj)
-    photo.author, photo.owner = await get_pages(token, photo.user_id, photo.owner_id)
+    photo.author, photo.owner = await bot.get_pages(photo.user_id, photo.owner_id)
     return photo
 
 
-async def get_video(token, obj):
+async def get_video(bot, obj):
     video = Video(obj)
-    owner = await get_pages(token, video.owner_id)
+    owner = await bot.get_pages(video.owner_id)
     video.owner = owner[0]
     return video
 
 
-async def get_audio(token, obj):
+async def get_audio(bot, obj):
     audio = Audio(obj)
-    owner = await get_pages(token, audio.owner_id)
+    owner = await bot.get_pages(audio.owner_id)
     audio.owner = owner[0]
     return audio
 
 
-async def get_attachment(token, obj):
+async def get_attachment(obj):
     t = obj['type']
     if t == 'audio_message':
         return AudioMessage(obj[t])
@@ -113,7 +111,7 @@ async def get_attachment(token, obj):
         return obj[t]
 
 
-async def get_user_attachments(token, atts):
+async def get_user_attachments(atts):
     res = []
     for i in range(len(atts)//2):
         t = atts.get(f'attach{i}_type')

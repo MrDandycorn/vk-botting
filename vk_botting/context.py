@@ -23,7 +23,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from vk_botting.abstract import Messageable
-from vk_botting.user import get_pages
 
 
 class Context(Messageable):
@@ -91,7 +90,7 @@ class Context(Messageable):
         return await self.message.reply(message, attachment=attachment, sticker_id=sticker_id, keyboard=keyboard)
 
     async def get_user(self):
-        user = await get_pages(self.bot.token, self.message.from_id)
+        user = await self.bot.get_pages(self.message.from_id)
         return user[0]
 
     async def get_author(self):

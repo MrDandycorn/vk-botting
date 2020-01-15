@@ -22,73 +22,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from vk_botting.general import vk_request
 from vk_botting.abstract import Messageable
 
 
-async def get_own_page(token):
-    from vk_botting.group import Group
-    user = await vk_request('users.get', token)
-    if not user.get('response'):
-        group = await vk_request('groups.getById', token)
-        return Group(group.get('response')[0])
-    return User(user.get('response')[0])
-
-
-async def get_users(token, *uids, fields=None, name_case=None):
-    if fields is None:
-        fields = ['photo_id', ' verified', ' sex', ' bdate', ' city', ' country', ' home_town', ' has_photo', ' photo_50', ' photo_100', ' photo_200_orig', ' photo_200',
-                  ' photo_400_orig', ' photo_max', ' photo_max_orig', ' online', ' domain', ' has_mobile', ' contacts', ' site', ' education', ' universities', ' schools',
-                  ' status', ' last_seen', ' followers_count', ' common_count', ' occupation', ' nickname', ' relatives', ' relation', ' personal', ' connections', ' exports',
-                  ' activities', ' interests', ' music', ' movies', ' tv', ' books', ' games', ' about', ' quotes', ' can_post', ' can_see_all_posts', ' can_see_audio',
-                  ' can_write_private_message', ' can_send_friend_request', ' is_favorite', ' is_hidden_from_feed', ' timezone', ' screen_name', ' maiden_name', ' crop_photo',
-                  ' is_friend', ' friend_status', ' career', ' military', ' blacklisted', ' blacklisted_by_me', ' can_be_invited_group']
-    if name_case is None:
-        name_case = 'nom'
-    users = await vk_request('users.get', token, user_ids=','.join(map(str, uids)), fields=fields, name_case=name_case)
-    users = users.get('response')
-    return [User(user) for user in users]
-
-
-async def get_pages(token, *ids):
-    from vk_botting.group import get_groups
-    g = []
-    u = []
-    for pid in ids:
-        if pid < 0:
-            g.append(-pid)
-        else:
-            u.append(pid)
-    users = await get_users(token, *u)
-    groups = await get_groups(token, *g)
-    res = []
-    for pid in ids:
-        if pid < 0:
-            for group in groups:
-                if -pid == group.id:
-                    res.append(group)
-                    break
-            else:
-                res.append(None)
-        else:
-            for user in users:
-                if pid == user.id:
-                    res.append(user)
-                    break
-            else:
-                res.append(None)
-    return res
-
-
-async def get_blocked_user(token, obj):
+async def get_blocked_user(bot, obj):
     blocked = BlockedUser(obj)
-    blocked.admin, blocked.user = await get_pages(token, blocked.admin_id, blocked.user_id)
+    blocked.admin, blocked.user = await bot.get_pages(blocked.admin_id, blocked.user_id)
     return blocked
 
 
-async def get_unblocked_user(token, obj):
+async def get_unblocked_user(bot, obj):
     unblocked = UnblockedUser(obj)
-    unblocked.admin = await get_pages(token, unblocked.admin_id, unblocked.user_id)
+    unblocked.admin, unblocked.user = await bot.get_pages(unblocked.admin_id, unblocked.user_id)
     return unblocked
 
 

@@ -25,33 +25,8 @@ DEALINGS IN THE SOFTWARE.
 from random import randint
 from datetime import datetime
 
-from vk_botting.user import get_pages
 from vk_botting.abstract import Messageable
-from vk_botting.general import vk_request
 from vk_botting.exceptions import VKApiError
-from vk_botting.attachments import get_attachment, get_user_attachments
-
-
-async def build_msg(msg, bot):
-    res = Message(msg)
-    if res.attachments:
-        for i in range(len(res.attachments)):
-            res.attachments[i] = await get_attachment(bot.token, res.attachments[i])
-    if res.fwd_messages:
-        for i in range(len(res.fwd_messages)):
-            res.fwd_messages[i] = await build_msg(res.fwd_messages[i], bot)
-    if res.reply_message:
-        res.reply_message = await build_msg(res.reply_message, bot)
-    res.bot = bot
-    return res
-
-
-async def build_user_msg(msg, bot):
-    res = UserMessage(msg)
-    if res.attachments:
-        res.attachments = await get_user_attachments(bot.token, res.attachments)
-    res.bot = bot
-    return res
 
 
 class Message(Messageable):
@@ -86,7 +61,7 @@ class Message(Messageable):
             raise VKApiError('I honestly don`t know but VK just doesn`t return message_id when message is sent into conversation\nIf you tried to edit message in conversation then this error is expected')
         params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
                   'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets}
-        res = await vk_request('messages.edit', self.bot.token, **params)
+        res = await self.bot.vk_request('messages.edit', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         return res
@@ -96,7 +71,7 @@ class Message(Messageable):
         return await self.bot.send_message(peer_id, message, attachment=attachment, reply_to=self.id, sticker_id=sticker_id, keyboard=keyboard)
 
     async def get_user(self):
-        author = await get_pages(self.bot.token, self.from_id)
+        author = await self.bot.get_pages(self.from_id)
         return author[0]
 
     async def get_author(self):
@@ -131,7 +106,7 @@ class UserMessage(Messageable):
     async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
         params = {'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
                   'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets}
-        res = await vk_request('messages.edit', self.bot.token, **params)
+        res = await self.bot.vk_request('messages.edit', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         return res
@@ -140,14 +115,14 @@ class UserMessage(Messageable):
         peer_id = await self._get_conversation()
         params = {'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': self.id, 'sticker_id': sticker_id, 'keyboard': keyboard}
-        res = await vk_request('messages.send', self.bot.token, **params)
+        res = await self.bot.vk_request('messages.send', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
-        return await build_msg(params, self.bot)
+        return await self.bot.build_msg(params)
 
     async def get_user(self):
-        user = await get_pages(self.bot.token, self.from_id)
+        user = await self.bot.get_pages(self.from_id)
         if user:
             return user[0]
         return None
