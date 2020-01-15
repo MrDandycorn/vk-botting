@@ -28,6 +28,7 @@ import traceback
 import aiohttp
 import enum
 from random import randint
+from collections.abc import Iterable
 
 from vk_botting.user import get_own_page, get_pages, get_users, get_blocked_user, get_unblocked_user, User
 from vk_botting.group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
@@ -36,6 +37,7 @@ from vk_botting.attachments import get_photo, get_video, get_audio
 from vk_botting.message import build_msg, build_user_msg
 from vk_botting.states import get_state
 from vk_botting.exceptions import VKApiError, LoginError
+from vk_botting.general import convert_params
 
 
 class UserMessageFlags(enum.IntFlag):
@@ -85,6 +87,8 @@ class Client:
         timeout = aiohttp.ClientTimeout(total=100, connect=10)
         self.session = aiohttp.ClientSession(timeout=timeout)
         self._implemented_events = ['message_new', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
+        self.extra_events = []
+        self.token = ''
 
     def Payload(self, **kwargs):
         kwargs['access_token'] = self.token
@@ -97,7 +101,7 @@ class Client:
     def wait_for(self, event, *, check=None, timeout=None):
         future = self.loop.create_future()
         if check is None:
-            def _check(*args):
+            def _check(*_):
                 return True
             check = _check
 
@@ -112,13 +116,7 @@ class Client:
         return asyncio.wait_for(future, timeout, loop=self.loop)
 
     async def general_request(self, url, post=False, **params):
-        for param in list(params):
-            if params[param] is None:
-                params.pop(param)
-            elif not isinstance(params[param], (str, int)):
-                params[param] = str(params[param])
-            elif isinstance(params[param], bool):
-                params[param] = str(params[param])
+        params = convert_params(params)
         for tries in range(5):
             try:
                 req = self.session.post(url, data=params) if post else self.session.get(url, params=params)
@@ -152,7 +150,7 @@ class Client:
             print('WARNING:  message_new event is disabled. Commands will not function until message_new is enabled', file=sys.stderr)
         api_ver = res.get('response').get('api_version')
         minor = int(api_ver.split('.')[1])
-        if minor < 100:
+        if minor < 103:
             print('WARNING:  You are using old LongPoll API version, consider upgrading to newer one', file=sys.stderr)
 
     async def get_longpoll_server(self):
@@ -375,8 +373,12 @@ class Client:
         return None
 
     async def send_message(self, peer_id=None, message=None, *, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None):
-        if attachment:
+        if isinstance(attachment, str):
+            pass
+        elif isinstance(attachment, Iterable):
             attachment = ','.join(map(str, attachment))
+        else:
+            attachment = str(attachment)
         params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await self.vk_request('messages.send', **params)
@@ -418,73 +420,17 @@ class Client:
         self.loop.run_forever()
 
 
-class UserClient:
+class UserClient(Client):
 
     def __init__(self, **kwargs):
-        self.v = kwargs.get('v', '5.999')
-        self.user_agent = kwargs.get('user_agent', 'KateMobileAndroid/52.1 lite-445 (Android 4.4.2; SDK 19; x86; unknown Android SDK built for x86; en)')
-        self.force = kwargs.get('force', False)
-        self.loop = asyncio.get_event_loop()
+        super().__init__(**kwargs)
+        user_agent = kwargs.get('user_agent', 'KateMobileAndroid/52.1 lite-445 (Android 4.4.2; SDK 19; x86; unknown Android SDK built for x86; en)')
         self.user = None
-        self.key = None
-        self.server = None
-        self.old_longpoll = kwargs.get('old_longpoll', False)
-        self._listeners = {}
         timeout = aiohttp.ClientTimeout(total=100, connect=10)
-        self.session = aiohttp.ClientSession(timeout=timeout)
-        self._implemented_events = ['message_new']
-
-    def Payload(self, **kwargs):
-        kwargs['access_token'] = self.token
-        kwargs['v'] = self.v
-        return kwargs
-
-    class botCommandException(Exception):
-        pass
-
-    def wait_for(self, event, *, check=None, timeout=None):
-        future = self.loop.create_future()
-        if check is None:
-            def _check(*args):
-                return True
-            check = _check
-
-        ev = event.lower()
-        try:
-            listeners = self._listeners[ev]
-        except KeyError:
-            listeners = []
-            self._listeners[ev] = listeners
-
-        listeners.append((future, check))
-        return asyncio.wait_for(future, timeout, loop=self.loop)
-
-    async def general_request(self, url, post=False, **params):
-        for param in list(params):
-            if params[param] is None:
-                params.pop(param)
-            elif not isinstance(params[param], (str, int)):
-                params[param] = str(params[param])
-            elif isinstance(params[param], bool):
-                params[param] = str(params[param])
-        for tries in range(5):
-            try:
-                req = self.session.post(url, data=params) if post else self.session.get(url, params=params)
-                async with req as r:
-                    if r.content_type == 'application/json':
-                        return await r.json()
-                    return await r.text()
-            except Exception as e:
-                print(f'Got exception in request: {e}\nRetrying in {tries*2+1} seconds', file=sys.stderr)
-                await asyncio.sleep(tries*2+1)
-
-    async def vk_request(self, method, post=True, **kwargs):
-        res = await self.general_request(f'https://api.vk.com/method/{method}', post=post, **self.Payload(**kwargs))
-        error = res.get('error', None)
-        if error and error['error_code'] == 6:
-            await asyncio.sleep(1)
-            return await self.vk_request(method, post=post, **kwargs)
-        return res
+        headers = {
+            'User-Agent': user_agent
+        }
+        self.session = aiohttp.ClientSession(timeout=timeout, headers=headers)
 
     async def get_user_longpoll(self):
         res = await self.vk_request('messages.getLongPollServer', group_id=self.group.id, lp_version=3)
@@ -533,87 +479,6 @@ class UserClient:
         elif 'on_unknown' in self.extra_events:
             return self.dispatch('unknown', update)
 
-    def dispatch(self, event, *args, **kwargs):
-        method = 'on_' + event
-        listeners = self._listeners.get(event)
-        if listeners:
-            removed = []
-            for i, (future, condition) in enumerate(listeners):
-                if future.cancelled():
-                    removed.append(i)
-                    continue
-
-                try:
-                    result = condition(*args)
-                except Exception as exc:
-                    future.set_exception(exc)
-                    removed.append(i)
-                else:
-                    if result:
-                        if len(args) == 0:
-                            future.set_result(None)
-                        elif len(args) == 1:
-                            future.set_result(args[0])
-                        else:
-                            future.set_result(args)
-                        removed.append(i)
-
-            if len(removed) == len(listeners):
-                self._listeners.pop(event)
-            else:
-                for idx in reversed(removed):
-                    del listeners[idx]
-
-        try:
-            coro = getattr(self, method)
-        except AttributeError:
-            pass
-        else:
-            self._schedule_event(coro, method, *args, **kwargs)
-
-    async def on_error(self, event_method, *args, **kwargs):
-        print('Ignoring exception in {}'.format(event_method), file=sys.stderr)
-        traceback.print_exc()
-
-    async def _run_event(self, coro, event_name, *args, **kwargs):
-        try:
-            await coro(*args, **kwargs)
-        except asyncio.CancelledError:
-            pass
-        except Exception:
-            try:
-                await self.on_error(event_name, *args, **kwargs)
-            except asyncio.CancelledError:
-                pass
-
-    def _schedule_event(self, coro, event_name, *args, **kwargs):
-        wrapped = self._run_event(coro, event_name, *args, **kwargs)
-        return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
-
-    async def get_user(self, uid):
-        user = await get_users(self.token, uid)
-        if user:
-            return user[0]
-        return None
-
-    async def get_group(self, gid):
-        group = await get_groups(self.token, gid)
-        if group:
-            return group[0]
-        return None
-
-    async def send_message(self, peer_id=None, message=None, *, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None):
-        if attachment:
-            attachment = ','.join(map(str, attachment))
-        params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
-                  'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
-        res = await self.vk_request('messages.send', **params)
-        if 'error' in res.keys():
-            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
-        params['id'] = res['response']
-        params['from_id'] = self.user.id
-        return await build_msg(params, self)
-
     async def _run(self, owner_id):
         if owner_id and owner_id.__class__ is not int:
             raise TypeError(f'Owner_id must be positive integer, not {owner_id.__class__.__name__}')
@@ -637,8 +502,3 @@ class UserClient:
                     print(f'Ignoring exception in longpoll cycle:\n{e}', file=sys.stderr)
                     ts = await self.get_user_longpoll()
         raise LoginError('Group token passed to user client')
-
-    def run(self, token, owner_id=None):
-        self.token = token
-        self.loop.create_task(self._run(owner_id))
-        self.loop.run_forever()
