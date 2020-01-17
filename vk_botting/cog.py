@@ -33,6 +33,57 @@ __all__ = (
 
 
 class CogMeta(type):
+    """A metaclass for defining a cog.
+    
+    Note that you should probably not use this directly. It is exposed
+    purely for documentation purposes along with making custom metaclasses to intermix
+    with other metaclasses such as the :class:`abc.ABCMeta` metaclass.
+    
+    For example, to create an abstract cog mixin class, the following would be done.
+    
+    .. code-block:: python3
+    
+        import abc
+        class CogABCMeta(CogMeta, abc.ABCMeta):
+            pass
+        class SomeMixin(metaclass=abc.ABCMeta):
+            pass
+        class SomeCogMixin(SomeMixin, Cog, metaclass=CogABCMeta):
+            pass
+            
+    .. note::
+    
+        When passing an attribute of a metaclass that is documented below, note
+        that you must pass it as a keyword-only argument to the class creation
+        like the following example:
+        
+        .. code-block:: python3
+        
+            class MyCog(Cog, name='My Cog'):
+                pass
+                
+    Attributes
+    -----------
+    name: :class:`str`
+        The cog name. By default, it is the name of the class with no modification.
+    command_attrs: :class:`dict`
+        A list of attributes to apply to every command inside this cog. The dictionary
+        is passed into the :class:`Command` (or its subclass) options at ``__init__``.
+        If you specify attributes inside the command attribute in the class, it will
+        override the one specified inside this attribute. For example:
+        
+        .. code-block:: python3
+        
+            class MyCog(Cog, command_attrs=dict(hidden=True)):
+                @command()
+                async def foo(self, ctx):
+                    pass # hidden -> True
+                    
+                @command(hidden=False)
+                async def bar(self, ctx):
+                    pass # hidden -> False
+                    
+    """
     def __new__(mcs, *args, **kwargs):
         name, bases, attrs = args
         attrs['__cog_name__'] = kwargs.pop('name', name)
@@ -93,6 +144,15 @@ def _cog_special_method(func):
 
 
 class Cog(metaclass=CogMeta):
+    """The base class that all cogs must inherit from.
+    
+    A cog is a collection of commands, listeners, and optional state to
+    help group commands together. More information on them can be found on
+    the :ref:`vk_api_cogs` page.
+    
+    When inheriting from this class, the options shown in :class:`CogMeta`
+    are equally valid here.
+    """
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
         cmd_attrs = cls.__cog_settings__
@@ -120,10 +180,12 @@ class Cog(metaclass=CogMeta):
 
     @property
     def qualified_name(self):
+        """:class:`str`: Returns the cog's specified name, not the class name."""
         return self.__cog_name__
 
     @property
     def description(self):
+        """:class:`str`: Returns the cog's description, typically the cleaned docstring."""
         try:
             return self.__cog_cleaned_doc__
         except AttributeError:
@@ -131,6 +193,7 @@ class Cog(metaclass=CogMeta):
             return cleaned
 
     def walk_commands(self):
+        """An iterator that recursively walks through this cog's commands and subcommands."""
         from vk_botting.commands import GroupMixin
         for command in self.__cog_commands__:
             if command.parent is None:
@@ -139,14 +202,32 @@ class Cog(metaclass=CogMeta):
                     yield from command.walk_commands()
 
     def get_listeners(self):
+        """Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."""
         return [(name, getattr(self, method_name)) for name, method_name in self.__cog_listeners__]
 
     @classmethod
     def _get_overridden_method(cls, method):
+        """Return None if the method is not overridden. Otherwise returns the overridden method."""
         return getattr(method.__func__, '__cog_special_method__', method)
 
     @classmethod
     def listener(cls, name=None):
+        """A decorator that marks a function as a listener.
+        
+        This is the cog equivalent of :meth:`.Bot.listen`.
+        
+        Parameters
+        ------------
+        name: :class:`str`
+            The name of the event being listened to. If not provided, it
+            defaults to the function's name.
+            
+        Raises
+        --------
+        TypeError
+            The function is not a coroutine function or a string was not passed as
+            the name.
+        """
         if name is not None and not isinstance(name, str):
             raise TypeError('Cog.listener expected str but received {0.__class__.__name__!r} instead.'.format(name))
 
@@ -168,30 +249,90 @@ class Cog(metaclass=CogMeta):
 
     @_cog_special_method
     def cog_unload(self):
+        """A special method that is called when the cog gets removed.
+        
+        This function **cannot** be a coroutine. It must be a regular
+        function.
+        
+        Subclasses must replace this if they want special unloading behaviour.
+        """
         pass
 
     @_cog_special_method
     def bot_check_once(self, ctx):
+        """A special method that registers as a :meth:`.Bot.check_once`
+        check.
+        
+        This function **can** be a coroutine and must take a sole parameter,
+        ``ctx``, to represent the :class:`.Context`.
+        """
         return True
 
     @_cog_special_method
     def bot_check(self, ctx):
+        """A special method that registers as a :meth:`.Bot.check_once`
+        check.
+        
+        This function **can** be a coroutine and must take a sole parameter,
+        ``ctx``, to represent the :class:`.Context`.
+        """
         return True
 
     @_cog_special_method
     def cog_check(self, ctx):
+        """A special method that registers as a :func:`commands.check`
+        for every command and subcommand in this cog.
+        
+        This function **can** be a coroutine and must take a sole parameter,
+        ``ctx``, to represent the :class:`.Context`.
+        """
         return True
 
     @_cog_special_method
     def cog_command_error(self, ctx, error):
+        """A special method that is called whenever an error
+        is dispatched inside this cog.
+        
+        This is similar to :func:`.on_command_error` except only applying
+        to the commands inside this cog.
+        
+        This function **can** be a coroutine.
+        
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context where the error happened.
+        error: :class:`CommandError`
+            The error that happened.
+        """
         pass
 
     @_cog_special_method
     async def cog_before_invoke(self, ctx):
+        """A special method that acts as a cog local pre-invoke hook.
+        This is similar to :meth:`.Command.before_invoke`.
+        
+        This **must** be a coroutine.
+        
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context.
+        """
         pass
 
     @_cog_special_method
     async def cog_after_invoke(self, ctx):
+        """A special method that acts as a cog local post-invoke hook.
+        This is similar to :meth:`.Command.after_invoke`.
+        
+        This **must** be a coroutine.
+        
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context.
+        """
         pass
 
     def _inject(self, bot):
