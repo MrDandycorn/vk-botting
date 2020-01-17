@@ -384,11 +384,11 @@ class Client:
         elif t == 'group_leave' and 'on_group_leave' in self.extra_events:
             obj = update['object']
             user = await self.get_pages(obj['user_id'])
-            return self.dispatch(t, (user[0], obj['self']))
+            return self.dispatch(t, user[0], obj['self'])
         elif t == 'group_join' and 'on_group_join' in self.extra_events:
             obj = update['object']
             user = await self.get_pages(obj['user_id'])
-            return self.dispatch(t, (user[0], obj['join_type']))
+            return self.dispatch(t, user[0], obj['join_type'])
         elif t == 'user_block' and 'on_user_block' in self.extra_events:
             obj = update['object']
             blocked = await get_blocked_user(self, obj)
@@ -475,6 +475,11 @@ class Client:
         params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await self.vk_request('messages.send', **params)
+        if 'error' in res.keys():
+            if res['error'].get('error_code') == 9:
+                await asyncio.sleep(1)
+                return await self.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id,
+                                               keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
         params['id'] = res['response']
         params['from_id'] = -self.group.id
         return await self.build_msg(params)
