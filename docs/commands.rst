@@ -288,8 +288,7 @@ Checks
 -------
 
 There are cases when we don't want a user to use our commands. They don't have permissions to do so or maybe we blocked
-them from using our bot earlier. The commands extension comes with full support for these things in a concept called a
-:ref:`vk_api_checks`.
+them from using our bot earlier. The commands extension comes with full support for these things in a concept called a check.
 
 A check is a basic predicate that can take in a :class:`.Context` as its sole parameter. Within it, you have the following
 options:
