@@ -28,13 +28,14 @@ import os
 
 
 class AttachmentType(Enum):
-    PHOTO = 'photo'
-    VIDEO = 'video'
-    AUDIO = 'audio'
-    DOCUMENT = 'doc'
-    WALL = 'wall'
-    MARKET = 'market'
-    POLL = 'poll'
+    """Specifies the type of :class:`.Attachment`"""
+    PHOTO = 'photo'     #: Attached photo
+    VIDEO = 'video'     #: Attached video
+    AUDIO = 'audio'     #: Attached audio
+    DOCUMENT = 'doc'    #: Attached document
+    WALL = 'wall'       #: Attached wall post
+    MARKET = 'market'   #: Attached market good
+    POLL = 'poll'       #: Attached poll
 
 
 class DocType(Enum):
@@ -293,6 +294,19 @@ class Video:
 
 
 class Attachment:
+    """Represents VK Attachment.
+
+    You can get str(:class:`.Attachment`) to get string representation used by VK API or pass it to :meth:`.Bot.send_message`
+
+    Attributes
+    -----------
+    owner_id: :class:`int`
+        Id of attachment owner. Positive integer for users, negative for groups.
+    id: :class:`int`
+        Id of attachment itself. Positive integer.
+    type: :class:`str`
+        Type of an attachment. Can be value from :class:`.AttachmentType` enum.
+    """
     def __init__(self, owner_id, id, type):
         self.id = id
         self.owner_id = owner_id

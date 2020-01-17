@@ -1,4 +1,4 @@
-.. currentmodule:: vk-botting
+.. currentmodule:: vk_botting
 
 .. _intro:
 
@@ -70,7 +70,7 @@ Congratulations. You now have a virtual environment all set up.
 Basic Concepts
 ---------------
 
-vk-botting revolves around the concept of :ref:`events <vk-api-events>`.
+vk-botting revolves around the concept of :ref:`events <vk_api_events>`.
 An event is something you listen to and then respond to. For example, when a message
 happens, you will receive an event about it that you can respond to.
 

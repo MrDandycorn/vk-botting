@@ -38,6 +38,27 @@ async def get_unblocked_user(bot, obj):
 
 
 class User(Messageable):
+    """Represents a VK User.
+
+    This class has a lot of unused attributes that won't be listed here, they are mainly based on VK API fields, so you should use VK API docs for them.
+
+    All of the attributes can be None if not enough data is provided.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        Id of the user, positive integer
+    first_name: :class:`str`
+        User's first name
+    last_name: :class:`str`
+        User's last name
+    is_closed: :class:`bool`
+        ``True`` if user's page is closed
+    can_access_closed: :class:`bool`
+        ``True`` if bot can access user's page even if closed
+    sex: :class:`int`
+        1 for female, 2 for male, 0 for not specified
+    """
 
     async def _get_conversation(self):
         return self.id

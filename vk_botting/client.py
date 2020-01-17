@@ -75,6 +75,13 @@ class _ClientEventTask(asyncio.Task):
 
 
 class Client:
+    """Class that represent Client for interation with VK Api
+
+    .. warning::
+
+        Should not be used outside of :class:`.Bot`, as it is not intended and will probably not work
+
+    """
 
     def __init__(self, **kwargs):
         self.v = kwargs.get('v', '5.999')
@@ -84,7 +91,6 @@ class Client:
         self.user = None
         self.key = None
         self.server = None
-        self.old_longpoll = kwargs.get('old_longpoll', False)
         self._listeners = {}
         timeout = aiohttp.ClientTimeout(total=100, connect=10)
         user_agent = kwargs.get('user_agent', None)
@@ -108,6 +114,61 @@ class Client:
         pass
 
     def wait_for(self, event, *, check=None, timeout=None):
+        """|coro|
+
+        Waits for an event to be dispatched.
+
+        This could be used to wait for a user to reply to a message or to edit a message in a self-containedway.
+
+        The ``timeout`` parameter is passed onto :func:`asyncio.wait_for`. By default,
+        it does not timeout. Note that this does propagate the
+        :exc:`asyncio.TimeoutError` for you in case of timeout and is provided for
+        ease of use.
+
+        In case the event returns multiple arguments, a :class:`tuple` containing those
+        arguments is returned instead. Please check the
+        :ref:`documentation <vk_api_events>` for a list of events and their
+        parameters.
+
+        This function returns the **first event that meets the requirements**.
+
+        Examples
+        ---------
+        Waiting for a user reply: ::
+
+            @bot.command()
+            async def greet(ctx):
+                await ctx.send('Say hello!')
+                def check(m):
+                    return m.text == 'hello' and m.from_id == ctx.from_id
+                msg = await bot.wait_for('message_new', check=check)
+                await ctx.send('Hello {.from_id}!'.format(msg))
+
+        Parameters
+        ------------
+        event: :class:`str`
+            The event name, similar to the :ref:`event reference <vk_api_events>`,
+            but without the ``on_`` prefix, to wait for.
+        check: Optional[Callable[..., :class:`bool`]]
+            A predicate to check what to wait for. The arguments must meet the
+            parameters of the event being waited for.
+        timeout: Optional[:class:`float`]
+            The number of seconds to wait before timing out and raising
+            :exc:`asyncio.TimeoutError`.
+
+        Raises
+        -------
+        asyncio.TimeoutError
+            If a timeout is provided and it was reached.
+
+        Returns
+        --------
+        Any
+            Returns no arguments, a single argument, or a :class:`tuple` of multiple
+            arguments that mirrors the parameters passed in the
+            :ref:`event reference <vk_api_events>`.
+        """
+
         future = self.loop.create_future()
         if check is None:
             def _check(*_):
@@ -138,6 +199,28 @@ class Client:
                 await asyncio.sleep(tries*2+1)
 
     async def vk_request(self, method, post=True, **kwargs):
+        """|coro|
+
+        Implements abstract VK Api method request.
+
+        Parameters
+        ----------
+        method: :class:`str`
+            String representation of method name (e.g. 'users.get')
+        post: :class:`bool`
+            If request should be POST. Defaults to true. Changing this is not recommended
+        kwargs: :class:`dict`
+            Payload arguments to send along with request
+
+            .. note::
+
+                access_token and v parameters should not be passed as they are automatically added from current bot attributes
+
+        Returns
+        -------
+        :class:`dict`
+            Dict representation of json response received from the server
+        """
         res = await self.general_request(f'https://api.vk.com/method/{method}', post=post, **self.Payload(**kwargs))
         error = res.get('error', None)
         if error and error.get('error_code') == 6:
@@ -146,6 +229,29 @@ class Client:
         return res
 
     async def get_users(self, *uids, fields=None, name_case=None):
+        """|coro|
+
+        Alias for VK Api 'users.get' method call
+
+        Parameters
+        ----------
+        uids: List[:class:`int`]
+            List of user ids to request
+        fields: List[:class:`str`]
+            Optional. Fields that should be requested from VK Api. All possible by default
+        name_case: :class:`str`
+            Name case for user's name to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        -------
+        List[:class:`.User`]
+            List of :class:`.User` instances for requested users
+        """
         if fields is None:
             fields = ['photo_id', ' verified', ' sex', ' bdate', ' city', ' country', ' home_town', ' has_photo', ' photo_50', ' photo_100', ' photo_200_orig', ' photo_200',
                       ' photo_400_orig', ' photo_max', ' photo_max_orig', ' online', ' domain', ' has_mobile', ' contacts', ' site', ' education', ' universities', ' schools',
@@ -162,6 +268,25 @@ class Client:
         return [User(user) for user in users]
 
     async def get_groups(self, *gids):
+        """|coro|
+
+        Alias for VK Api 'groups.get' method call
+
+        Parameters
+        ----------
+        gids: List[:class:`int`]
+            List of group ids to request
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        -------
+        List[:class:`.Group`]
+            List of :class:`.Group` instances for requested groups
+        """
         groups = await self.vk_request('groups.getById', group_ids=','.join(map(str, gids)))
         if 'error' in groups.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**groups['error']))
@@ -169,6 +294,25 @@ class Client:
         return [Group(group) for group in groups]
 
     async def get_pages(self, *ids):
+        """|coro|
+
+        Gets pages for given ids, whether it is Group or User
+
+        Parameters
+        ----------
+        ids: List[:class:`int`]
+            List of ids to request
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        -------
+        List[Union[:class:`.Group`, :class:`.User`]]
+            List of :class:`.Group` or :class:`.User` instances for requested ids
+        """
         g = []
         u = []
         for pid in ids:
@@ -197,6 +341,29 @@ class Client:
         return res
 
     async def get_user(self, uid, fields=None, name_case=None):
+        """|coro|
+
+        Alias for VK Api 'users.get' method call that returns only one user.
+
+        Parameters
+        ----------
+        uid: :class:`int`
+            Id of user to request
+        fields: List[:class:`str`]
+            Optional. Fields that should be requested from VK Api. All possible by default
+        name_case: :class:`str`
+            Name case for user's name to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        -------
+        :class:`.User`
+            :class:`.User` instance for requested user
+        """
         user = await self.get_users(uid, fields=fields, name_case=name_case)
         if user:
             return user[0]
@@ -206,6 +373,25 @@ class Client:
         return await self.get_user(*args, **kwargs)
 
     async def get_group(self, gid):
+        """|coro|
+
+        Alias for VK Api 'groups.get' method call that returns only one group.
+
+        Parameters
+        ----------
+        gid: :class:`int`
+            Id of group to request
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        -------
+        :class:`.Group`
+            :class:`.Group` instance for requested group
+        """
         group = await self.get_groups(gid)
         if group:
             return group[0]
@@ -215,6 +401,25 @@ class Client:
         return await self.get_group(*args, **kwargs)
 
     async def get_page(self, pid):
+        """|coro|
+
+        Gets page for given id, whether it is Group or User
+
+        Parameters
+        ----------
+        pid: :class:`int`
+            Id of page to request
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        -------
+        Union[:class:`.Group`, :class:`.User`]
+            :class:`.Group` or :class:`.User` instance for requested id
+        """
         page = await self.get_pages(pid)
         if page:
             return page[0]
@@ -224,6 +429,20 @@ class Client:
         return await self.get_page(*args, **kwargs)
 
     async def get_own_page(self):
+        """|coro|
+
+        Gets page for current token, whether it is Group or User
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        -------
+        Union[:class:`.Group`, :class:`.User`]
+            :class:`.Group` or :class:`.User` instance for current token
+        """
         from vk_botting.group import Group
         user = await self.vk_request('users.get')
         if not user.get('response'):
@@ -232,6 +451,22 @@ class Client:
         return User(user.get('response')[0])
 
     async def build_msg(self, msg):
+        """|coro|
+
+        Build :class:`.Message` instance from message object :class:`dict`.
+
+        Normally should not be used at all.
+
+        Parameters
+        ----------
+        msg: :class:`dict`
+            :class:`dict` representation of Message object returned by VK API
+
+        Returns
+        -------
+        :class:`.Message`
+            :class:`.Message` instance representing original object
+        """
         res = Message(msg)
         if res.attachments:
             for i in range(len(res.attachments)):
@@ -447,6 +682,15 @@ class Client:
             self._schedule_event(coro, method, *args, **kwargs)
 
     async def on_error(self, event_method, *args, **kwargs):
+        """|coro|
+
+        The default error handler provided by the client.
+
+        By default this prints to :data:`sys.stderr` however it could be
+        overridden to have a different implementation.
+
+        Check :func:`vk_botting.on_error` for more details.
+        """
         print('Ignoring exception in {}'.format(event_method), file=sys.stderr)
         traceback.print_exc()
 
@@ -466,6 +710,46 @@ class Client:
         return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
 
     async def send_message(self, peer_id=None, message=None, *, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None):
+        """|coro|
+
+        Sends a message to the given destination with the text given.
+
+        The content must be a type that can convert to a string through ``str(message)``.
+
+        If the content is set to ``None`` (the default), then the ``attachment`` or ``sticker_id`` parameter must
+        be provided.
+
+        If the ``attachment`` parameter is provided, it must be :class:`str`, List[:class:`str`], :class:`.Attachment` or List[:class:`.Attachment`]
+
+        If the ``keyboard`` parameter is provided, it must be :class:`str` or :class:`.Keyboard` (recommended)
+
+        Parameters
+        ------------
+        peer_id: :class:`int`
+            Id of conversation to send message to
+        message: :class:`str`
+            The text of the message to send.
+        attachment: Union[List[:class:`str`], :class:`str`, List[:class:`.Attachment`], :class:`.Attachment`]
+            The attachment to the message sent.
+        sticker_id: Union[:class:`str`, :class:`int`]
+            Sticker_id to be sent.
+        keyboard: :class:`.Keyboard`
+            The keyboard to send along message.
+        reply_to: Union[:class:`str`, :class:`int`]
+            A message id to reply to.
+        forward_messages: Union[List[:class:`int`], List[:class:`str`]]
+            Message ids to be forwarded along with message.
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`.Message`
+            The message that was sent.
+        """
         if isinstance(attachment, str):
             pass
         elif isinstance(attachment, Iterable):
@@ -480,6 +764,7 @@ class Client:
                 await asyncio.sleep(1)
                 return await self.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id,
                                                keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
         params['from_id'] = -self.group.id
         return await self.build_msg(params)
@@ -511,6 +796,21 @@ class Client:
         raise LoginError('User token passed to group client')
 
     def run(self, token, owner_id=None):
+        """A blocking call that abstracts away the event loop
+        initialisation from you.
+
+        .. warning::
+            This function must be the last function to call due to the fact that it
+            is blocking. That means that registration of events or anything being
+            called after this function call will not execute until it returns.
+
+        Parameters
+        ----------
+        token: :class:`str`
+            Bot token. Should be group token or user token with access to group
+        owner_id: :class:`int`
+            Should only be passed alongside user token. Owner id of group to connect to
+        """
         self.token = token
         self.loop.create_task(self._run(owner_id))
         self.loop.run_forever()

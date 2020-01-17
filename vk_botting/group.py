@@ -104,6 +104,23 @@ async def get_officers_edit(bot, obj):
 
 
 class Group:
+    """Represents a VK Group
+
+    Attributes
+    ----------
+    id: :class:`int`
+        Id of group, positive int
+    name: :class:`str`
+        Display name of the group
+    screen_name: :class:`str`
+        Screen name of the group (link part after vk.com/)
+    is_closed: :class:`bool`
+        ``True`` if group is closed
+    type: :class:`str`
+        Can be either `event`, `group` or `page` depending on group type
+    photo: :class:`dict`
+        Has group photo urls with different sizes
+    """
 
     def __init__(self, data):
         self._unpack(data)

@@ -16,6 +16,8 @@ Documentation Contents
    intro
    quickstart
    vk
+   commands
+   api
 
 
 Indices and tables

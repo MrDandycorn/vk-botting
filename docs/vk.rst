@@ -1,4 +1,4 @@
-.. currentmodule:: vk-botting
+.. currentmodule:: vk_botting
 
 .. _vk-intro:
 

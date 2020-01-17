@@ -75,6 +75,17 @@ def hooked_wrapped_callback(command, ctx, coro):
 
 
 class GroupMixin:
+    """A mixin that implements common functionality for classes that behave
+    similar to :class:`.GroupCommand` and are allowed to register commands.
+
+    Attributes
+    -----------
+    all_commands: :class:`dict`
+        A mapping of command name to :class:`.Command` or subclass
+        objects.
+    case_insensitive: :class:`bool`
+        Whether the commands should be case insensitive. Defaults to ``False``.
+    """
 
     def __init__(self, *args, **kwargs):
         case_insensitive = kwargs.pop('case_insensitive', False)
@@ -94,6 +105,24 @@ class GroupMixin:
             self.remove_command(command.name)
 
     def add_command(self, command):
+        """Adds a :class:`.Command` or its subclasses into the internal list
+        of commands.
+
+        This is usually not called, instead the :meth:`~.GroupMixin.command` or
+        :meth:`~.GroupMixin.group_command` shortcut decorators are used instead.
+
+        Parameters
+        -----------
+        command: :class:`Command`
+            The command to add.
+
+        Raises
+        -------
+        :exc:`.ClientException`
+            If the command is already registered.
+        TypeError
+            If the command passed is not a subclass of :class:`.Command`.
+        """
 
         if not isinstance(command, Command):
             raise TypeError('The command passed must be a subclass of Command')
@@ -111,6 +140,22 @@ class GroupMixin:
             self.all_commands[alias] = command
 
     def remove_command(self, name):
+        """Remove a :class:`.Command` or subclasses from the internal list
+        of commands.
+
+        This could also be used as a way to remove aliases.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the command to remove.
+
+        Returns
+        --------
+        :class:`.Command` or subclass
+            The command that was removed. If the name is not valid then
+            `None` is returned instead.
+        """
         command = self.all_commands.pop(name, None)
 
         if command is None:
@@ -124,12 +169,33 @@ class GroupMixin:
         return command
 
     def walk_commands(self):
+        """An iterator that recursively walks through all commands and subcommands."""
         for command in tuple(self.all_commands.values()):
             yield command
             if isinstance(command, GroupMixin):
                 yield from command.walk_commands()
 
     def get_command(self, name):
+        """Get a :class:`.Command` or subclasses from the internal list
+        of commands.
+
+        This could also be used as a way to get aliases.
+
+        The name could be fully qualified (e.g. ``'foo bar'``) will get
+        the subcommand ``bar`` of the group command ``foo``. If a
+        subcommand is not found then ``None`` is returned just as usual.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the command to get.
+
+        Returns
+        --------
+        :class:`Command` or subclass
+            The command that was requested. If not found, returns ``None``.
+        """
+
         if ' ' not in name:
             return self.all_commands.get(name)
 
@@ -147,6 +213,9 @@ class GroupMixin:
         return obj
 
     def command(self, *args, **kwargs):
+        """A shortcut decorator that invokes :func:`.command` and adds it to
+        the internal command list via :meth:`~.GroupMixin.add_command`.
+        """
         def decorator(func):
             kwargs.setdefault('parent', self)
             result = command(*args, **kwargs)(func)
@@ -156,6 +225,9 @@ class GroupMixin:
         return decorator
 
     def group_command(self, *args, **kwargs):
+        """A shortcut decorator that invokes :func:`.group_command` and adds it to
+        the internal command list via :meth:`~.GroupMixin.add_command`.
+        """
         def decorator(func):
             kwargs.setdefault('parent', self)
             result = group_command(*args, **kwargs)(func)
@@ -166,6 +238,30 @@ class GroupMixin:
 
 
 def command(name=None, cls=None, **attrs):
+    """A decorator that transforms a function into a :class:`.Command`
+    or if called with :func:`.group_command`, :class:`.GroupCommand`.
+
+    All checks added using the :func:`.check` & co. decorators are added into
+    the function. There is no way to supply your own checks through this
+    decorator.
+
+    Parameters
+    -----------
+    name: :class:`str`
+        The name to create the command with. By default this uses the
+        function name unchanged.
+    cls
+        The class to construct with. By default this is :class:`.Command`.
+        You usually do not change this.
+    attrs
+        Keyword arguments to pass into the construction of the class denoted
+        by ``cls``.
+
+    Raises
+    -------
+    TypeError
+        If the function is not a coroutine or is already a command.
+    """
     if cls is None:
         cls = Command
 
@@ -178,7 +274,12 @@ def command(name=None, cls=None, **attrs):
 
 
 def group_command(name=None, **attrs):
-    attrs.setdefault('cls', Group)
+    """A decorator that transforms a function into a :class:`.GroupCommand`.
+
+    This is similar to the :func:`.command` decorator but the ``cls``
+    parameter is set to :class:`GroupCommand` by default.
+    """
+    attrs.setdefault('cls', GroupCommand)
     return command(name=name, **attrs)
 
 
@@ -203,6 +304,58 @@ class _CaseInsensitiveDict(dict):
 
 
 class Command(_BaseCommand):
+    r"""A class that implements the protocol for a bot text command.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is called.
+    aliases: :class:`list`
+        The list of aliases the command can be invoked under.
+    enabled: :class:`bool`
+        A boolean that indicates if the command is currently enabled.
+        If the command is invoked while it is disabled, then
+        :exc:`.DisabledCommand` is raised to the :func:`.on_command_error`
+        event. Defaults to ``True``.
+    parent: Optional[:class:`Command`]
+        The parent command that this command belongs to. ``None`` if there
+        isn't one.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[..., :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.Context` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.CommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_command_error`
+        event.
+    rest_is_raw: :class:`bool`
+        If ``False`` and a keyword-only argument is provided then the keyword
+        only argument is stripped and handled as if it was a regular argument
+        that handles :exc:`.MissingRequiredArgument` and default values in a
+        regular matter rather than passing the rest completely raw. If ``True``
+        then the keyword-only argument will pass in the rest of the arguments
+        in a completely raw matter. Defaults to ``False``.
+    invoked_subcommand: Optional[:class:`Command`]
+        The subcommand that was invoked, if any.
+    ignore_extra: :class:`bool`
+        If ``True``\, ignores extraneous strings passed to a command if all its
+        requirements are met (e.g. ``?foo a b c`` when only expecting ``a``
+        and ``b``). Otherwise :func:`.on_command_error` and local error handlers
+        are called with :exc:`.TooManyArguments`. Defaults to ``True``.
+    cooldown_after_parsing: :class:`bool`
+        If ``True``\, cooldown processing is done after argument parsing,
+        which calls converters. If ``False`` then cooldown processing is done
+        first and then the converters are called second. Defaults to ``False``.
+    has_spaces: :class:`bool`
+        Should be ``True`` if command has spaces in name, else it won't be processed.
+        Defaults to ``False``
+    """
 
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
@@ -264,6 +417,34 @@ class Command(_BaseCommand):
         self.ignore_extra = kwargs.get('ignore_extra', True)
         self.has_spaces = kwargs.get('has_spaces', False)
 
+    def add_check(self, func):
+        """Adds a check to the command.
+        This is the non-decorator interface to :func:`.check`.
+
+        Parameters
+        -----------
+        func
+            The function that will be used as a check.
+        """
+
+        self.checks.append(func)
+
+    def remove_check(self, func):
+        """Removes a check from the command.
+        This function is idempotent and will not raise an exception
+        if the function is not in the command's checks.
+
+        Parameters
+        -----------
+        func
+            The function to remove from the checks.
+        """
+
+        try:
+            self.checks.remove(func)
+        except ValueError:
+            pass
+
     @property
     def callback(self):
         return self._callback
@@ -281,6 +462,12 @@ class Command(_BaseCommand):
                 self.params[key] = value = value.replace(annotation=eval(value.annotation, function.__globals__))
 
     def update(self, **kwargs):
+        """Updates :class:`Command` instance with updated attribute.
+
+        This works similarly to the :func:`.command` decorator in terms
+        of parameters in that they are passed to the :class:`Command` or
+        subclass constructors, sans the name and callback.
+        """
         self.__init__(self.callback, **dict(self.__original_kwargs__, **kwargs))
 
     def _ensure_assignment_on_copy(self, other):
@@ -295,6 +482,7 @@ class Command(_BaseCommand):
         return other
 
     def copy(self):
+        """Creates a copy of this command."""
         ret = self.__class__(self.callback, **self.__original_kwargs__)
         return self._ensure_assignment_on_copy(ret)
 
@@ -473,6 +661,10 @@ class Command(_BaseCommand):
 
     @property
     def clean_params(self):
+        """Retrieves the parameter OrderedDict without the context or self parameters.
+
+        Useful for inspecting signature.
+        """
         result = self.params.copy()
         if self.cog is not None:
             result.popitem(last=False)
@@ -486,6 +678,11 @@ class Command(_BaseCommand):
 
     @property
     def full_parent_name(self):
+        """:class:`str`: Retrieves the fully qualified parent command name.
+
+        This the base command name required to execute it. For example,
+        in ``?one two three`` the parent name would be ``one two``.
+        """
         entries = []
         command = self
         while command.parent is not None:
@@ -496,6 +693,12 @@ class Command(_BaseCommand):
 
     @property
     def parents(self):
+        """:class:`Command`: Retrieves the parents of this command.
+
+        If the command has no parents then it returns an empty :class:`list`.
+
+        For example in commands ``?a b c test``, the parents are ``[c, b, a]``.
+        """
         entries = []
         command = self
         while command.parent is not None:
@@ -506,12 +709,24 @@ class Command(_BaseCommand):
 
     @property
     def root_parent(self):
+        """Retrieves the root parent of this command.
+
+        If the command has no parents then it returns ``None``.
+
+        For example in commands ``?a b c test``, the root parent is ``a``.
+        """
         if not self.parent:
             return None
         return self.parents[-1]
 
     @property
     def qualified_name(self):
+        """:class:`str`: Retrieves the fully qualified command name.
+
+        This is the full parent name with the command name as well.
+        For example, in ``?one two three`` the qualified name would be
+        ``one two three``.
+        """
         parent = self.full_parent_name
         if parent:
             return parent + ' ' + self.name
@@ -630,6 +845,18 @@ class Command(_BaseCommand):
         await self.call_before_hooks(ctx)
 
     def is_on_cooldown(self, ctx):
+        """Checks whether the command is currently on cooldown.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context to use when checking the commands cooldown status.
+
+        Returns
+        --------
+        :class:`bool`
+            A boolean indicating if the command is on cooldown.
+        """
         if not self._buckets.valid:
             return False
 
@@ -637,6 +864,13 @@ class Command(_BaseCommand):
         return bucket.get_tokens() == 0
 
     def reset_cooldown(self, ctx):
+        """Resets the cooldown on this command.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The invocation context to reset the cooldown under.
+        """
         if self._buckets.valid:
             bucket = self._buckets.get_bucket(ctx.message)
             bucket.reset()
@@ -665,6 +899,22 @@ class Command(_BaseCommand):
                 await self.call_after_hooks(ctx)
 
     def error(self, coro):
+        """A decorator that registers a coroutine as a local error handler.
+
+        A local error handler is an :func:`.on_command_error` event limited to
+        a single command. However, the :func:`.on_command_error` is still
+        invoked afterwards as the catch-all.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the local error handler.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError('The error handler must be a coroutine.')
 
@@ -672,6 +922,26 @@ class Command(_BaseCommand):
         return coro
 
     def before_invoke(self, coro):
+        """A decorator that registers a coroutine as a pre-invoke hook.
+
+        A pre-invoke hook is called directly before the command is
+        called. This makes it a useful function to set up database
+        connections or any type of set up required.
+
+        This pre-invoke hook takes a sole parameter, a :class:`.Context`.
+
+        See :meth:`.Bot.before_invoke` for more info.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the pre-invoke hook.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError('The pre-invoke hook must be a coroutine.')
 
@@ -679,6 +949,26 @@ class Command(_BaseCommand):
         return coro
 
     def after_invoke(self, coro):
+        """A decorator that registers a coroutine as a post-invoke hook.
+
+        A post-invoke hook is called directly after the command is
+        called. This makes it a useful function to clean-up database
+        connections or any type of clean up required.
+
+        This post-invoke hook takes a sole parameter, a :class:`.Context`.
+
+        See :meth:`.Bot.after_invoke` for more info.
+
+        Parameters
+        -----------
+        coro: :ref:`coroutine <coroutine>`
+            The coroutine to register as the post-invoke hook.
+
+        Raises
+        -------
+        TypeError
+            The coroutine passed is not actually a coroutine.
+        """
         if not asyncio.iscoroutinefunction(coro):
             raise TypeError('The post-invoke hook must be a coroutine.')
 
@@ -687,6 +977,7 @@ class Command(_BaseCommand):
 
     @property
     def cog_name(self):
+        """:class:`str`: The name of the cog this command belongs to. None otherwise."""
         return type(self.cog).__cog_name__ if self.cog is not None else None
 
     @property
@@ -710,6 +1001,7 @@ class Command(_BaseCommand):
 
     @property
     def signature(self):
+        """:class:`str`: Returns a POSIX-like signature useful for help command output."""
         if self.usage is not None:
             return self.usage
 
@@ -742,6 +1034,31 @@ class Command(_BaseCommand):
         return ' '.join(result)
 
     async def can_run(self, ctx):
+        """|coro|
+
+        Checks if the command can be executed by checking all the predicates
+        inside the :attr:`.checks` attribute. This also checks whether the
+        command is disabled.
+
+        Parameters
+        -----------
+        ctx: :class:`.Context`
+            The ctx of the command currently being invoked.
+
+        Raises
+        -------
+        :class:`CommandError`
+            Any command error that was raised during a check call will be propagated
+            by this function.
+
+        Returns
+        --------
+        :class:`bool`
+            A boolean indicating if the command can be invoked.
+        """
+
+        if not self.enabled:
+            raise DisabledCommand('{0.name} command is disabled'.format(self))
 
         original = ctx.command
         ctx.command = self
@@ -767,12 +1084,34 @@ class Command(_BaseCommand):
             ctx.command = original
 
 
-class Group(GroupMixin, Command):
+class GroupCommand(GroupMixin, Command):
+    """A class that implements a grouping protocol for commands to be
+    executed as subcommands.
+
+    This class is a subclass of :class:`.Command` and thus all options
+    valid in :class:`.Command` are valid in here as well.
+
+    Attributes
+    -----------
+    invoke_without_command: Optional[:class:`bool`]
+        Indicates if the group callback should begin parsing and
+        invocation only if no subcommand was found. Useful for
+        making it an error handling function to tell the user that
+        no subcommand was found or to have different functionality
+        in case no subcommand was found. If this is ``False``, then
+        the group callback will always be invoked first. This means
+        that the checks and the parsing dictated by its parameters
+        will be executed. Defaults to ``False``.
+    case_insensitive: Optional[:class:`bool`]
+        Indicates if the group's commands should be case insensitive.
+        Defaults to ``False``.
+    """
     def __init__(self, *args, **attrs):
         self.invoke_without_command = attrs.pop('invoke_without_command', False)
         super().__init__(*args, **attrs)
 
     def copy(self):
+        """Creates a copy of this :class:`GroupCommand`."""
         ret = super().copy()
         for cmd in self.commands:
             ret.add_command(cmd.copy())
@@ -844,6 +1183,33 @@ class Group(GroupMixin, Command):
 
 
 def cooldown(rate, per, type=BucketType.default):
+    """A decorator that adds a cooldown to a :class:`.Command`
+    or its subclasses.
+
+    A cooldown allows a command to only be used a specific amount
+    of times in a specific time frame. These cooldowns can be based
+    either on a per-guild, per-channel, per-user, per-role or global basis.
+
+    Denoted by the third argument of ``type`` which must be of enum
+    type ``BucketType`` which could be either:
+    - ``BucketType.default`` for a global basis.
+    - ``BucketType.user`` for a per-user basis.
+    - ``BucketType.conversation`` for a per-conversation basis.
+
+    If a cooldown is triggered, then :exc:`.CommandOnCooldown` is triggered in
+    :func:`.on_command_error` and the local error handler.
+
+    A command can only have a single cooldown.
+
+    Parameters
+    ------------
+    rate: :class:`int`
+        The number of times a command can be used before triggering a cooldown.
+    per: :class:`float`
+        The amount of seconds to wait for a cooldown when it's been triggered.
+    type: ``BucketType``
+        The type of cooldown to have.
+    """
 
     def decorator(func):
         if isinstance(func, Command):

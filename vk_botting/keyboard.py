@@ -29,20 +29,33 @@ from vk_botting.exceptions import VKApiError
 
 
 class KeyboardColor(Enum):
-    PRIMARY = 'primary'
-    SECONDARY = 'secondary'
-    NEGATIVE = 'negative'
-    POSITIVE = 'positive'
+    """Represents Keyboard colors"""
+    PRIMARY = 'primary'         #: Primary color (blue)
+    SECONDARY = 'secondary'     #: Secondary color (gray)
+    NEGATIVE = 'negative'       #: Negative color (red)
+    POSITIVE = 'positive'       #: Positive color (green)
 
 
 class KeyboardButton(Enum):
-    TEXT = "text"
-    LOCATION = "location"
-    VKPAY = "vkpay"
-    VKAPPS = "open_app"
+    """Represents Keyboard button type"""
+    TEXT = "text"           #: Text type (default)
+    LOCATION = "location"   #: Location type
+    VKPAY = "vkpay"         #: VKPay type
+    VKAPPS = "open_app"     #: Open App type
 
 
 class Keyboard(object):
+    """Class for easier creation and changing of Bot Keyboards.
+
+    Can be used in :meth:`.Bot.send_message` as it is
+
+    Attributes
+    ----------
+    one_time: :class:`bool`
+        If keyboard is one-time (should disappear after one usage)
+    inline: :class:`bool`
+        If keyboard should be inline. Restricts keyboard to be only 6x5
+    """
     def __init__(self, one_time=False, inline=False):
         self.one_time = one_time
         self.inline = inline
@@ -59,11 +72,28 @@ class Keyboard(object):
 
     @classmethod
     def get_empty_keyboard(cls):
+        """Classmethod for getting empty keyboard. Useful when keyboard should be cleared"""
         keyboard = cls()
         keyboard.keyboard['buttons'] = []
         return keyboard
 
     def add_button(self, label, color=KeyboardColor.PRIMARY, payload=None):
+        """Adds button to current line
+
+        Parameters
+        ----------
+        label: :class:`str`
+            Button label to be displayed
+        color: :class:`str`
+            Button color. Can be value from :class:`.KeyboardColor` enum
+        payload: :class:`dict`
+            Optional. Should be used for some buttons
+
+        Raises
+        ------
+        vk_botting.VKApiError
+            When there are already too many buttons on one line
+        """
         current_line = self.lines[-1]
 
         if len(current_line) > 4:
@@ -84,6 +114,18 @@ class Keyboard(object):
         })
 
     def add_location_button(self, payload=None):
+        """Adds location button to current line
+
+        Parameters
+        ----------
+        payload: :class:`dict`
+            Payload for a location button
+
+        Raises
+        ------
+        vk_botting.VKApiError
+            When there are already too many buttons on one line
+        """
         current_line = self.lines[-1]
         if len(current_line) != 0:
             raise VKApiError('This type of button takes the entire width of the line')
@@ -101,6 +143,20 @@ class Keyboard(object):
         })
 
     def add_vkpay_button(self, hash, payload=None):
+        """Adds button to current line
+
+        Parameters
+        ----------
+        hash: :class:`str`
+            Hash for a VKPay button
+        payload: :class:`dict`
+            Payload for a VKPay button
+
+        Raises
+        ------
+        vk_botting.VKApiError
+            When there are already too many buttons on one line
+        """
         current_line = self.lines[-1]
 
         if len(current_line) != 0:
@@ -120,6 +176,26 @@ class Keyboard(object):
         })
 
     def add_vkapps_button(self, app_id, owner_id, label, hash, payload=None):
+        """Adds button to current line
+
+        Parameters
+        ----------
+        app_id: :class:`int`
+            Id of VK App
+        owner_id: :class:`int`
+            Id of VK App owner
+        label: :class:`str`
+            Button label to be displayed
+        hash: :class:`str`
+            Hash for a VK App button
+        payload: :class:`dict`
+            Optional. Should be used for some button types
+
+        Raises
+        ------
+        vk_botting.VKApiError
+            When there are already too many buttons on one line
+        """
         current_line = self.lines[-1]
 
         if len(current_line) != 0:
@@ -142,6 +218,13 @@ class Keyboard(object):
         })
 
     def add_line(self):
+        """Adds new line to the keyboard
+
+        Raises
+        ------
+        vk_botting.VKApiError
+            When there are already too many lines in a keyboard
+        """
         if (len(self.lines) > 5 and self.inline) or len(self.lines) > 9:
             num = 6 if self.inline else 10
             raise VKApiError(f'Max {num} lines')

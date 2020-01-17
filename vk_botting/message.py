@@ -30,6 +30,38 @@ from vk_botting.exceptions import VKApiError
 
 
 class Message(Messageable):
+    """Represents any message sent or received by bot.
+
+    Should only be created using :meth:`.Bot.build_msg`
+
+    Attributes
+    ----------
+    id: :class:`str`
+        Id of the message in conversation
+
+        .. warning::
+
+            Do not try to use this parameter in conversations with Bot, as it will always be 0 and cause errors.
+
+    date: :class:`datetime.datetime`
+        Datetime when message was sent
+    update_time: :class:`datetime.datetime`
+        Datetime when message was updated
+    peer_id: :class:`int`
+        Id of conversation where message was sent
+    from_id: :class:`int`
+        Id of message author
+    text: :class:`str`
+        Text of the message. Can be empty
+    attachments: List[:class:`.Attachment`]
+        List of attachments delivered with message
+    fwd_messages: List[:class:`.Message`]
+        List of forwarded messages
+    reply_message: :class:`.Message`
+        Message that this message replied to
+    action: :class:`dict`
+        Action payload
+    """
 
     async def _get_conversation(self):
         return self.peer_id
@@ -40,7 +72,7 @@ class Message(Messageable):
     def _unpack(self, data):
         self.id = data.get('id')
         self.date = datetime.fromtimestamp(data.get('date', 0))
-        self.update_time = data.get('update_time')
+        self.update_time = datetime.fromtimestamp(data.get('update_time', 0))
         self.peer_id = data.get('peer_id')
         self.from_id = data.get('from_id')
         self.text = data.get('text')
@@ -57,6 +89,35 @@ class Message(Messageable):
         self.action = data.get('action')
 
     async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
+        """|coro|
+
+        Coroutine to edit the message. Depends on message_id.
+
+        .. warning::
+
+            As it depends on message id, it does not work in conversations. At least as long as VK API does not return message_id in conversations
+
+        Parameters
+        ----------
+        message: :class:`str`
+            New text of the message.
+        attachment: Union[List[:class:`str`], :class:`str`, List[:class:`.Attachment`], :class:`.Attachment`]
+            New attachment to the message.
+        keep_forward_messages: :class:`bool`
+            ``True`` if fwd_messages should be kept. Defaults to ``True``
+        keep_snippets: :class:`bool`
+            ``True`` if snippets should be kept. Defaults to ``True``
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`.Message`
+            The message that was sent.
+        """
         if self.id == 0:
             raise VKApiError('I honestly don`t know but VK just doesn`t return message_id when message is sent into conversation\nIf you tried to edit message in conversation then this error is expected')
         params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
@@ -67,20 +128,70 @@ class Message(Messageable):
         return res
 
     async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
+        """|coro|
+
+        Sends a message to the destination as a reply to original message.
+
+        .. warning::
+
+            As it depends on message id, it does not work in conversations. At least as long as VK API does not return message_id in conversations
+
+        The content must be a type that can convert to a string through ``str(message)``.
+
+        If the content is set to ``None`` (the default), then the ``attachment`` or ``sticker_id`` parameter must
+        be provided.
+
+        If the ``attachment`` parameter is provided, it must be :class:`str`, List[:class:`str`], :class:`.Attachment` or List[:class:`.Attachment`]
+
+        If the ``keyboard`` parameter is provided, it must be :class:`str` or :class:`.Keyboard` (recommended)
+
+        Parameters
+        ------------
+        message: :class:`str`
+            The text of the message to send.
+        attachment: Union[List[:class:`str`], :class:`str`, List[:class:`.Attachment`], :class:`.Attachment`]
+            The attachment to the message sent.
+        sticker_id: Union[:class:`str`, :class:`int`]
+            Sticker_id to be sent.
+        keyboard: :class:`.Keyboard`
+            The keyboard to send along message.
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`.Message`
+            The message that was sent.
+        """
         peer_id = await self._get_conversation()
         return await self.bot.send_message(peer_id, message, attachment=attachment, reply_to=self.id, sticker_id=sticker_id, keyboard=keyboard)
 
     async def get_user(self):
+        """|coro|
+        Returns the author of original message as instance of :class:`.User` class
+        """
         author = await self.bot.get_pages(self.from_id)
         return author[0]
 
     async def get_author(self):
+        """|coro|
+        Alternative for :meth:`.Message.get_user`
+        """
         return await self.get_user()
 
     async def fetch_user(self):
+        """|coro|
+        Alternative for :meth:`.Message.get_user`
+        """
         return await self.get_user()
 
     async def fetch_author(self):
+        """|coro|
+        Alternative for :meth:`.Message.get_user`
+        """
         return await self.get_user()
 
 

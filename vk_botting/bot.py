@@ -41,6 +41,9 @@ from vk_botting.cog import Cog
 
 
 def when_mentioned(bot, msg):
+    r"""A callable that implements a command prefix equivalent to being mentioned.
+    These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
+    """
     match = re.match(rf'\[club{bot.group.id}\|[^\]]+\] ', msg.text)
     if match and msg.text.startswith(match.group()):
         return [match.group()]
@@ -48,6 +51,34 @@ def when_mentioned(bot, msg):
 
 
 def when_mentioned_or(*prefixes):
+    """A callable that implements when mentioned or other prefixes provided.
+    These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
+
+    Example
+    --------
+
+    .. code-block:: python3
+
+        bot = Bot(command_prefix=commands.when_mentioned_or('!'))
+
+
+    .. note::
+        This callable returns another callable, so if this is done inside a custom
+        callable, you must call the returned callable, for example:
+
+        .. code-block:: python3
+
+            async def get_prefix(bot, message):
+                extras = await prefixes_for(message.peer_id) # returns a list
+                return commands.when_mentioned_or(*extras)(bot, message)
+
+
+    See Also
+    ----------
+    :func:`.when_mentioned`
+    :func:`.when_mentioned_or_pm`
+    :func:`.when_mentioned_or_pm_or`
+    """
     def inner(bot, msg):
         r = list(prefixes)
         r = when_mentioned(bot, msg) + r
@@ -59,6 +90,7 @@ def when_mentioned_or(*prefixes):
 def when_mentioned_or_pm():
     """A callable that implements when mentioned or bot gets pm.
     These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
+
     Example
     --------
     
@@ -83,6 +115,7 @@ def when_mentioned_or_pm():
 def when_mentioned_or_pm_or(*prefixes):
     """A callable that implements when mentioned, pm or other prefixes provided.
     These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
+
     Example
     --------
     
@@ -96,6 +129,7 @@ def when_mentioned_or_pm_or(*prefixes):
         callable, you must call the returned callable, for example:
         
         .. code-block:: python3
+
             async def get_prefix(bot, message):
                 extras = await prefixes_for(message.peer_id) # returns a list
                 return commands.when_mentioned_or(*extras)(bot, message)
@@ -410,6 +444,7 @@ class BotBase(GroupMixin):
             @bot.listen('on_message_new')
             async def my_message(message):
                 print('two')
+
         Would print one and two in an unspecified order.
         Raises
         -------
@@ -653,7 +688,7 @@ class BotBase(GroupMixin):
         
         Parameters
         -----------
-        message: :class:`vk_botting.message.Message`
+        message: :class:`.Message`
             The message context to get the prefix of.
             
         Returns
@@ -694,7 +729,7 @@ class BotBase(GroupMixin):
         
         Parameters
         -----------
-        message: :class:`vk_botting.message.Message`
+        message: :class:`.Message`
             The message to get the invocation context from.
         cls
             The factory class that will be used to create the context.
@@ -796,7 +831,7 @@ class BotBase(GroupMixin):
         
         Parameters
         -----------
-        message: :class:`vk_botting.message.Message`
+        message: :class:`.Message`
             The message to process commands for.
         """
         if message.peer_id == self.group.id:
@@ -824,7 +859,7 @@ class Bot(BotBase, Client):
         The command prefix is what the message content must contain initially
         to have a command invoked. This prefix could either be a string to
         indicate what the prefix should be, or a callable that takes in the bot
-        as its first parameter and :class:`vk_botting.message.Message` as its second
+        as its first parameter and :class:`.Message` as its second
         parameter and returns the prefix. This is to facilitate "dynamic"
         command prefixes. This callable can be either a regular function or
         a coroutine.
@@ -853,6 +888,15 @@ class Bot(BotBase, Client):
         If ``True``, the bot will only listen to commands invoked by itself rather
         than ignoring itself. If ``False`` (the default) then the bot will ignore
         itself. This cannot be changed once initialised.
+    v: :class:`str`
+        VK API version. Defaults to '5.999' (current latest)
+
+        .. warning::
+
+            Library is not intended to use with API Version lower than '5.103'
+
+    force: :class:`bool`
+        If bot should force optimal longpoll settings automatically
     """
     pass
 
@@ -872,7 +916,7 @@ class UserBot(BotBase, UserClient):
         The command prefix is what the message content must contain initially
         to have a command invoked. This prefix could either be a string to
         indicate what the prefix should be, or a callable that takes in the bot
-        as its first parameter and :class:`vk_botting.message.Message` as its second
+        as its first parameter and :class:`.Message` as its second
         parameter and returns the prefix. This is to facilitate "dynamic"
         command prefixes. This callable can be either a regular function or
         a coroutine.
@@ -895,11 +939,20 @@ class UserBot(BotBase, UserClient):
             
     case_insensitive: :class:`bool`
         Whether the commands should be case insensitive. Defaults to ``False``. This
-        attribute does not carry over to groups. You must set it to every group if
+        attribute does not carry over to group commands. You must set it to every group command if
         you require group commands to be case insensitive as well.
     self_bot: :class:`bool`
         If ``True``, the bot will only listen to commands invoked by itself rather
         than ignoring itself. If ``False`` (the default) then the bot will ignore
         itself. This cannot be changed once initialised.
+    v: :class:`str`
+        VK API version. Defaults to '5.999' (current latest)
+
+        .. warning::
+
+            Library is not intended to use with API Version lower than '5.103'
+
+    force: :class:`bool`
+        If bot should force optimal longpoll settings automatically
     """
     pass

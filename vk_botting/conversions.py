@@ -27,9 +27,9 @@ from vk_botting.exceptions import BadArgument
 
 def _convert_to_bool(argument):
     lowered = argument.lower()
-    if lowered in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
+    if lowered in ('yes', 'y', 'true', 't', '1', 'enable', 'on', 'да', 'включить', 'правда'):
         return True
-    elif lowered in ('no', 'n', 'false', 'f', '0', 'disable', 'off'):
+    elif lowered in ('no', 'n', 'false', 'f', '0', 'disable', 'off', 'нет', 'выключить', 'ложь'):
         return False
     else:
         raise BadArgument(lowered + ' is not a recognised boolean option')
