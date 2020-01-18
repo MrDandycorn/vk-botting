@@ -5,7 +5,7 @@
 Commands
 ==========
 
-One of the most appealing aspect of the command extension is how easy it is to define commands and
+One of the most appealing aspect of the library is how easy it is to define commands and
 how you can arbitrarily nest groups and commands to have a rich sub-command system.
 
 Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar
@@ -28,7 +28,7 @@ With the following prefix (``$``), it would be invoked by the user via:
 A command must always have at least one parameter, ``ctx``, which is the :class:`.Context` as the first one.
 
 There are two ways of registering a command. The first one is by using :meth:`.Bot.command` decorator,
-as seen in the example above. The second is using the :func:`~ext.commands.command` decorator followed by
+as seen in the example above. The second is using the :func:`.command` decorator followed by
 :meth:`.Bot.add_command` on the instance.
 
 Essentially, these two are equivalent: ::
@@ -282,20 +282,20 @@ handlers that allow us to do just that. First we decorate an error handler funct
             await ctx.send('Why is it here. It takes no arguments :thonk:')
 
 The first parameter of the error handler is the :class:`.Context` while the second one is an exception that is derived from
-:exc:`exceptions.CommandError`. A list of errors is found in the :ref:`vk_api_errors` page of the documentation.
+:exc:`.CommandError`. A list of errors is found in the :ref:`vk_api_errors` page of the documentation.
 
 Checks
 -------
 
 There are cases when we don't want a user to use our commands. They don't have permissions to do so or maybe we blocked
-them from using our bot earlier. The commands extension comes with full support for these things in a concept called a check.
+them from using our bot earlier. The library comes with full support for these things in a concept called a check.
 
 A check is a basic predicate that can take in a :class:`.Context` as its sole parameter. Within it, you have the following
 options:
 
 - Return ``True`` to signal that the person can run the command.
 - Return ``False`` to signal that the person cannot run the command.
-- Raise a :exc:`exceptions.CommandError` derived exception to signal the person cannot run the command.
+- Raise a :exc:`.CommandError` derived exception to signal the person cannot run the command.
 
     - This allows you to have custom error messages for you to handle in the
       :ref:`error handlers <vk_api_error_handler>`.
@@ -360,8 +360,8 @@ When multiple checks are specified, **all** of them must be ``True``:
 If any of those checks fail in the example above, then the command will not be run.
 
 When an error happens, the error is propagated to the :ref:`error handlers <vk_api_error_handler>`. If you do not
-raise a custom :exc:`exceptions.CommandError` derived exception, then it will get wrapped up into a
-:exc:`exceptions.CheckFailure` exception as so:
+raise a custom :exc:`.CommandError` derived exception, then it will get wrapped up into a
+:exc:`.CheckFailure` exception as so:
 
 .. code-block:: python3
 

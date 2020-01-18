@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vk-botting 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-18 02:43+0300\n"
+"POT-Creation-Date: 2020-01-18 21:09+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,15 +20,16 @@ msgstr ""
 # 9c4478c1d33442c08b4c93b36e56b28c
 #: ../../commands.rst:6
 msgid "Commands"
-msgstr ""
+msgstr "Команды"
 
-# a3fb717a7d934c0581a969416dcc052f
 #: ../../commands.rst:8
 msgid ""
-"One of the most appealing aspect of the command extension is how easy it "
-"is to define commands and how you can arbitrarily nest groups and "
-"commands to have a rich sub-command system."
+"One of the most appealing aspect of the library is how easy it is to "
+"define commands and how you can arbitrarily nest groups and commands to "
+"have a rich sub-command system."
 msgstr ""
+"Один из самых привлекательных аспектов библиотеки - простота создания "
+"команд и богатые настройки для них"
 
 # 1e19663e4b90465db5b1b61b85cbea77
 #: ../../commands.rst:11
@@ -37,16 +38,18 @@ msgid ""
 "command is then invoked by the user using a similar signature to the "
 "Python function."
 msgstr ""
+"Команды объявляются прикреплением их к обычной функции. После чего "
+"команды вызываются пользователем через сообщения"
 
 # 9331bba925f746e0aac5219c957568d7
 #: ../../commands.rst:14
 msgid "For example, in the given command definition:"
-msgstr ""
+msgstr "К примеру, в данной команде:"
 
 # c52a9cb3e7d849a1ab84b34d03fcef0b
 #: ../../commands.rst:22
 msgid "With the following prefix (``$``), it would be invoked by the user via:"
-msgstr ""
+msgstr "С данным префиксом (``$``), команда будет вызвана пользователем с помощью:"
 
 # 15ca9b4612f849849d84b5e255fc518d
 #: ../../commands.rst:28
@@ -54,20 +57,24 @@ msgid ""
 "A command must always have at least one parameter, ``ctx``, which is the "
 ":class:`.Context` as the first one."
 msgstr ""
+"Команда всегда должна иметь как минимум один параметр, ``ctx``, который "
+"является экземпляром :class:`.Context` как свой первый параметр."
 
-# 4ae85d6fab4d43f2a3b9f10dd65bcffa
 #: ../../commands.rst:30
 msgid ""
 "There are two ways of registering a command. The first one is by using "
 ":meth:`.Bot.command` decorator, as seen in the example above. The second "
-"is using the :func:`~ext.commands.command` decorator followed by "
+"is using the :func:`.command` decorator followed by "
 ":meth:`.Bot.add_command` on the instance."
 msgstr ""
+"Есть 2 способа зарегистрировать команду. Первый - используя декоратор "
+":meth:`.Bot.command` как в примере выше. Второй - с помощью декоратора "
+":func:`.command` и метода :meth:`.Bot.add_command`"
 
 # 90ccbd9747c74cd7a7a4811e946d20e2
 #: ../../commands.rst:34
 msgid "Essentially, these two are equivalent: ::"
-msgstr ""
+msgstr "По сути, они аналогичны: ::"
 
 # c7da394255d645bd90dd8720435c86e5
 #: ../../commands.rst:52
@@ -75,6 +82,8 @@ msgid ""
 "Since the :meth:`.Bot.command` decorator is shorter and easier to "
 "comprehend, it will be the one used throughout the documentation here."
 msgstr ""
+"Так как декоратор :meth:`.Bot.command` короче и удобнее, он будет "
+"использоваться во всей документации"
 
 # 112033f26a7f4fb7a14d6b36555e4866
 #: ../../commands.rst:55
@@ -83,11 +92,14 @@ msgid ""
 "be passed into the decorator. For example, to change the name to "
 "something other than the function would be as simple as doing this:"
 msgstr ""
+"Любой параметр, принимаемый конструктором класса :class:`.Command`, может"
+" быть передан в декоратор. К примеру, для смены названия команды на "
+"что-то отличное от имени функции надо просто объявить ее так:"
 
 # 7f8a49ddfa754320993cd62e8ccc7fab
 #: ../../commands.rst:65
 msgid "Parameters"
-msgstr ""
+msgstr "Параметры"
 
 # 899f8ec1f0254cbcab49faa51d4ae0cf
 #: ../../commands.rst:67
@@ -95,6 +107,8 @@ msgid ""
 "Since we define commands by making Python functions, we also define the "
 "argument passing behaviour by the function parameters."
 msgstr ""
+"Так как команды являются, по сути, функциями, мы можем в том числе "
+"объявить характер парсинга аргументов функцией"
 
 # e498c58bb318451cb1dd1ae66c9cd990
 #: ../../commands.rst:70
@@ -102,11 +116,13 @@ msgid ""
 "Certain parameter types do different things in the user side and most "
 "forms of parameter types are supported."
 msgstr ""
+"Некоторые типы параметров ведут себя по разному на стороне пользователя и"
+" большая часть параметров поддерживается"
 
 # ca4419b24550433caec597f7cecb8977
 #: ../../commands.rst:73
 msgid "Positional"
-msgstr ""
+msgstr "Позиционные"
 
 # ed904bb945dc41c3a21d6fa5c4d3cf5f
 #: ../../commands.rst:75
@@ -114,6 +130,8 @@ msgid ""
 "The most basic form of parameter passing is the positional parameter. "
 "This is where we pass a parameter as-is:"
 msgstr ""
+"Самый базовый вид параметра - позиционный. Это когда параметр передается "
+"как есть:"
 
 # 3c93b8c089a44accabe45f537c6f0601
 #: ../../commands.rst:84
@@ -121,6 +139,8 @@ msgid ""
 "On the bot using side, you can provide positional arguments by just "
 "passing a regular string:"
 msgstr ""
+"На стороне пользователя, передать параметр можно просто передавая обычную"
+" строку"
 
 # 9d8e8774f374417a808674d994e26403
 #: ../../commands.rst:86
@@ -128,11 +148,13 @@ msgid ""
 "Since positional arguments are just regular Python arguments, you can "
 "have as many as you want:"
 msgstr ""
+"Так как позиционные аргументы - это просто обычные аргументы, их может "
+"быть сколь угодно много"
 
 # b89b92117eeb4879837de5bd6c8e4d27
 #: ../../commands.rst:95
 msgid "Variable"
-msgstr ""
+msgstr "Переменные"
 
 # a249675be5a2442891f7e62d3ae9b332
 #: ../../commands.rst:97
@@ -141,6 +163,9 @@ msgid ""
 " The library supports this similar to how variable list parameters are "
 "done in Python:"
 msgstr ""
+"Иногда необходимо, чтобы пользователь мог отправить неопределенное число "
+"параметров. Библиотека делает это аналогично тому, как списки параметров "
+"делаются в Python"
 
 # 3a0fda2781224e04abe20a4c54c87767
 #: ../../commands.rst:106
@@ -148,6 +173,8 @@ msgid ""
 "This allows our user to accept either one or many arguments as they "
 "please."
 msgstr ""
+"Это позволяет пользователю передавать один или множество аргументов по "
+"желанию"
 
 # 083ee55ddf044a2288ec7806d50b722b
 #: ../../commands.rst:108
@@ -155,6 +182,8 @@ msgid ""
 "Do note that similar to the Python function behaviour, a user can "
 "technically pass no arguments at all."
 msgstr ""
+"Учтите, что так как команды работают аналогично функциям, пользователь "
+"может вообще не передавать аргументы"
 
 # e5cc5ada5b8a4342bdccb5ff6b8cea55
 #: ../../commands.rst:111
@@ -162,11 +191,13 @@ msgid ""
 "Since the ``args`` variable is a :class:`py:tuple`, you can do anything "
 "you would usually do with one."
 msgstr ""
+"Так как переменная ``args`` - типа :class:`py:tuple`, с ней можно делать "
+"все, что и с ним"
 
 # 75e94216589e41e98bdde61e245affd1
 #: ../../commands.rst:115
 msgid "Keyword-Only Arguments"
-msgstr ""
+msgstr "Аргументы с ключевыми словами"
 
 # e3f316f29a5e4e9eb9c58ea257e8bd49
 #: ../../commands.rst:117
@@ -176,11 +207,15 @@ msgid ""
 "library to give you the rest as a single argument. We do this by using a "
 "**keyword-only argument**, seen below:"
 msgstr ""
+"Если вы хотите обрабатывать аргументы сами или не хотите заставлять "
+"пользователя использовать кавычки, можно принимать в функцию оставшиеся "
+"аргументы как одну строку. Делается это с помощью аргументов с ключевыми "
+"словами, так:"
 
 # 2ab00799c48e4a0b92ebb09fef7674da
 #: ../../commands.rst:129
 msgid "You can only have one keyword-only argument due to parsing ambiguities."
-msgstr ""
+msgstr "Такой аргумент может быть только один в связи с особенностями парсинга"
 
 # 9bf787f9179b40748e18199ad5167613
 #: ../../commands.rst:131
@@ -189,11 +224,14 @@ msgid ""
 "make it easier to work with. This behaviour can be toggled by the "
 ":attr:`.Command.rest_is_raw` argument in the decorator."
 msgstr ""
+"По умолчанию такие аргументы автоматически очищаются от пробелов на краях"
+" для удобства, но это можно поменять с помощью передачи атрибута "
+":attr:`.Command.rest_is_raw` в декоратор"
 
 # 876a799b72f246f2baaf360997492614
 #: ../../commands.rst:137
 msgid "Invocation Context"
-msgstr ""
+msgstr "Контекст Вызова"
 
 # d9a994a9678b46cc89311ceaf8f1acc3
 #: ../../commands.rst:139
@@ -201,6 +239,8 @@ msgid ""
 "As seen earlier, every command must take at least a single parameter, "
 "called the :class:`context.Context`."
 msgstr ""
+"Как было показано ранее, все команды должны иметь как минимум один "
+"параметр, называемый контекстом (:class:`context.Context`)"
 
 # 332d4e80f96f44a3bd3a1d1f95c88980
 #: ../../commands.rst:141
@@ -209,16 +249,19 @@ msgid ""
 "context\". Essentially all the information you need to know how the "
 "command was executed. It contains a lot of useful information:"
 msgstr ""
+"Этот параметр дает вам доступ к так называемому \"контексту вызова\". По "
+"сути он содержит всю информацию, необходимую для понимания, как и где "
+"была вызвана команда. Например:"
 
 # 9467185274794cd6bb59cdd242265126
 #: ../../commands.rst:144
 msgid ":attr:`.Context.from_id` to fetch the id of message author."
-msgstr ""
+msgstr ":attr:`.Context.from_id` - id автора сообщения"
 
 # f1cce2687cb2456cbaa2e625ddc4eb59
 #: ../../commands.rst:145
 msgid ":attr:`.Context.peer_id` to fetch id of conversation."
-msgstr ""
+msgstr ":attr:`.Context.peer_id` - id диалога, в котором пришло сообщение"
 
 # f7f68304f9b840d6a221c2dc5a476451
 #: ../../commands.rst:146
@@ -226,6 +269,8 @@ msgid ""
 ":meth:`.Context.get_user` to fetch the :class:`User` that called the "
 "command."
 msgstr ""
+":meth:`.Context.get_user` возвращает автора как экземпляр класса "
+":class:`User`"
 
 # 940472227e734ebab87487811e3355b2
 #: ../../commands.rst:147
@@ -233,6 +278,8 @@ msgid ""
 ":meth:`.Context.send` to send a message to the conversation the command "
 "was used in."
 msgstr ""
+":meth:`.Context.send` можно использовать для отправки сообщений в диалог,"
+" в котором была использована команда"
 
 # fc4e3edcfee24b359a34f1bbf8622858
 #: ../../commands.rst:149
@@ -241,11 +288,14 @@ msgid ""
 "anything you can do on a :class:`abstract.Messageable` you can do on the "
 ":class:`context.Context`."
 msgstr ""
+"Контекст является реализацией класса :class:`abstract.Messageable`, так "
+"что все, что можно делать с ним, можно делать и с "
+":class:`context.Context`"
 
 # e438cf54de874470acb15570427b734d
 #: ../../commands.rst:153
 msgid "Converters"
-msgstr ""
+msgstr "Преобразователи"
 
 # e8fa1d491a7a4834a3a310b35cc9bb82
 #: ../../commands.rst:155
@@ -255,11 +305,15 @@ msgid ""
 "arguments, we usually want to convert the data into a target type. We "
 "call these Converters."
 msgstr ""
+"Аргументы бота как параметры для функции - только первый шаг на пути "
+"построения командного интерфейса бота. Для удобства использования "
+"аргументов, их обычно стоит преобразовать в нужный тип. Это можно сделать"
+" с помощью преобразователей."
 
 # 2c4c482953534985b1fc456abc125f86
 #: ../../commands.rst:159
 msgid "Converters come in a few flavours:"
-msgstr ""
+msgstr "Преобразователи бывают разными:"
 
 # d30a6ec476ab4d249113fb648b2dbf5e
 #: ../../commands.rst:161
@@ -267,6 +321,8 @@ msgid ""
 "A regular callable object that takes an argument as a sole parameter and "
 "returns a different type."
 msgstr ""
+"Обычная функция, которая принимает как аргумент один параметр и "
+"возвращает его другого типа."
 
 # 896d8a073d134f2a9e5eb1de0967b74b
 #: ../../commands.rst:163
@@ -274,16 +330,18 @@ msgid ""
 "These range from your own function, to something like :class:`bool` or "
 ":class:`int`."
 msgstr ""
+"Они могут быть как вашими собственными функциями, так и, к примеру, "
+":class:`bool` или :class:`int`."
 
 # de31920704284885ab089690e796898d
 #: ../../commands.rst:165
 msgid "A custom class that inherits from :class:`conversions.Converter`."
-msgstr ""
+msgstr "Собственный класс должен быть наследником :class:`conversions.Converter`"
 
 # d096a74fb2b147cf9ab85f7ad99da031
 #: ../../commands.rst:168
 msgid "Basic Converters"
-msgstr ""
+msgstr "Базовые преобразователи"
 
 # 1efd4fe958414e4f96478fdf8a4bb1c6
 #: ../../commands.rst:170
@@ -291,6 +349,8 @@ msgid ""
 "At its core, a basic converter is a callable that takes in an argument "
 "and turns it into something else."
 msgstr ""
+"По сути, базовый преобразователь - функция, которая получает на вход "
+"аргумент и преобразует его во что-то иное."
 
 # e2945899eff94e42893927532b9942d5
 #: ../../commands.rst:172
@@ -298,6 +358,8 @@ msgid ""
 "For example, if we wanted to add two numbers together, we could request "
 "that they are turned into integers for us by specifying the converter:"
 msgstr ""
+"К примеру, если надо добавить два числа вместе, то можно указать, что они"
+" должны быть целыми числами:"
 
 # a12a5abfae0043b5859fb6426e22b12e
 #: ../../commands.rst:181
@@ -306,6 +368,9 @@ msgid ""
 "annotation**. This is a Python 3 exclusive feature that was introduced in"
 " :pep:`3107`."
 msgstr ""
+"Преобразователи указываются с помощью так называемых **аннотаций "
+"функции**. Это деталь, эксклюзивная для Python 3 и добавленная в "
+":pep:`3107`."
 
 # ad0deb5e9ff8445aae529b2d3b7aad9a
 #: ../../commands.rst:184
@@ -313,11 +378,13 @@ msgid ""
 "This works with any callable, such as a function that would convert a "
 "string to all upper-case:"
 msgstr ""
+"Это работает со всеми функциями. Например, для преобразования строки в "
+"верхний регистр:"
 
 # feaa6c0c91604de4bc6b90d909efabca
 #: ../../commands.rst:196
 msgid "bool"
-msgstr ""
+msgstr "Логические переменные"
 
 # 91587fe2c9ad462b822628a749e1e88d
 #: ../../commands.rst:198
@@ -328,11 +395,15 @@ msgid ""
 " instead evaluates the argument as ``True`` or ``False`` based on its "
 "given content:"
 msgstr ""
+"В отличии от других базовых преобразователей, преобразование в "
+":class:`bool` работает немного по другому. Вместо использования типа "
+":class:`bool` напрямую, он преобразовывает аргумент в ``True`` или "
+"``False`` в зависимости от его значения:"
 
 # 7e5f0002f5e74607a0f3e947b178af56
 #: ../../commands.rst:210
 msgid "Advanced Converters"
-msgstr ""
+msgstr "Продвинутые Преобразователи"
 
 # ef66e7b19d894c3caf286605fd0e0099
 #: ../../commands.rst:212
@@ -342,6 +413,10 @@ msgid ""
 ":class:`Message` that called the command or we want to do some "
 "asynchronous processing."
 msgstr ""
+"Обычно простого преобразователя может не хватить для наших нужд. "
+"Например, если требуется получить дополнительную информацию от сообщения "
+"(:class:`Message`), вызвавшего команду или требуется какая-то асинхронная"
+" обработка."
 
 # e4c7fa46d16649949373acf689f29b2b
 #: ../../commands.rst:215
@@ -352,11 +427,15 @@ msgid ""
 " interface requires overriding a single method, "
 ":meth:`.Converter.convert`."
 msgstr ""
+"В таком случае стоит использовать собственный преобразователь как "
+"наследника :class:`conversions.Converter`. Это позволяет получить доступ "
+"к :class:`.Context` и объявлять функцию как асинхронную. Это требует "
+"замены одного метода - :meth:`.Converter.convert`"
 
 # 5ea74b9995714721994b7660d6001dfa
 #: ../../commands.rst:219
 msgid "An example converter:"
-msgstr ""
+msgstr "Пример преобразователя:"
 
 # 59c80b0511a34844ac4dc0605c984403
 #: ../../commands.rst:234
@@ -364,6 +443,8 @@ msgid ""
 "The converter provided can either be constructed or not. Essentially "
 "these two are equivalent:"
 msgstr ""
+"При этом преобразователь может передаваться и как класс, и как экземпляр "
+"этого класса. По сути это одно и то же:"
 
 # 75c4cee8cd824669acc33175cea4f095
 #: ../../commands.rst:248
@@ -372,6 +453,8 @@ msgid ""
 "up some state in the converter's ``__init__`` for fine tuning the "
 "converter."
 msgstr ""
+"Возможность передавать экземпляр класса требуется для возможного "
+"использования ``__init__`` для более детальной настройки преобразователя."
 
 # fb8a3cedfa384fa5827c64f9087b6107
 #: ../../commands.rst:251
@@ -379,11 +462,13 @@ msgid ""
 "If a converter fails to convert an argument to its designated target "
 "type, the :exc:`.BadArgument` exception must be raised."
 msgstr ""
+"Если преобразователю не удается преобразовать аргумент, то вызывается "
+"ошибка :exc:`.BadArgument`."
 
 # 3ef5838c606c43129d56489d00a2cd00
 #: ../../commands.rst:258
 msgid "Error Handling"
-msgstr ""
+msgstr "Обработка Ошибок"
 
 # 68b42f3d2c8f4baea476ee9c88311b95
 #: ../../commands.rst:260
@@ -392,6 +477,9 @@ msgid ""
 "error in ``stderr`` of our console that tells us that an error has "
 "happened and has been silently ignored."
 msgstr ""
+"По умолчанию, когда команда вызывает ошибку, мы получим страшное "
+"сообщение в ``stderr`` консоли которое будет говорить о том, что за "
+"ошибка была проигнорирована."
 
 # b948f43a1e914a2b916c52244ab8eb4f
 #: ../../commands.rst:263
@@ -401,8 +489,11 @@ msgid ""
 " which works like any other event in the :ref:`vk_api_events`. This "
 "global error handler is called for every error reached."
 msgstr ""
+"Чтобы обрабатывать ошибки, необходимо использовать так называемый "
+"обработчик ошибок. Глобальный обработчик ошибок "
+"(:func:`on_command_error`) работает как и любое другое событие в "
+":ref:`vk_api_events` и вызывается при каждой ошибке."
 
-# a2e9906fed504cd39334787baae7091f
 #: ../../commands.rst:267
 msgid ""
 "Most of the time however, we want to handle an error local to the command"
@@ -410,29 +501,38 @@ msgid ""
 "to do just that. First we decorate an error handler function with "
 ":meth:`.Command.error`:"
 msgstr ""
+"Большую часть времени, однако, требуется обрабатывать ошибку, которая "
+"возникает в конкретной команде. В таком случае можно объявить команде "
+"локальный обработчик ошибок с помощью :meth:`.Command.error`."
 
-# cebe44e1a1d14901a6c4d44188d8e35a
 #: ../../commands.rst:284
 msgid ""
 "The first parameter of the error handler is the :class:`.Context` while "
-"the second one is an exception that is derived from "
-":exc:`exceptions.CommandError`. A list of errors is found in the "
-":ref:`vk_api_errors` page of the documentation."
+"the second one is an exception that is derived from :exc:`.CommandError`."
+" A list of errors is found in the :ref:`vk_api_errors` page of the "
+"documentation."
 msgstr ""
+"Первым параметром этого обработчика всегда должен быть контекст "
+"(:class:`.Context`), в то время как второй - ошибка, являющаяся "
+"наследником :exc:`.CommandError`. Список ошибок можно найти на странице "
+":ref:`vk_api_errors`."
 
 # 8fcdc74870d3483895b42b8077cc918f
 #: ../../commands.rst:288
 msgid "Checks"
-msgstr ""
+msgstr "Проверки"
 
-# 1a47bea45cda414cb82eb1f5357749ac
 #: ../../commands.rst:290
 msgid ""
 "There are cases when we don't want a user to use our commands. They don't"
 " have permissions to do so or maybe we blocked them from using our bot "
-"earlier. The commands extension comes with full support for these things "
-"in a concept called a check."
+"earlier. The library comes with full support for these things in a "
+"concept called a check."
 msgstr ""
+"Есть случаи, в которых пользователь не должен использовать команды. Может"
+" быть, у них нет для этого права или же им заблокирован доступ к боту. "
+"Для таких случаев библиотека предоставляет концепт, называемый "
+"проверками."
 
 # c10b4be157b54aa3a7002cfa1b16a3e0
 #: ../../commands.rst:293
@@ -440,23 +540,30 @@ msgid ""
 "A check is a basic predicate that can take in a :class:`.Context` as its "
 "sole parameter. Within it, you have the following options:"
 msgstr ""
+"Проверка - функция, принимающая на вход лишь контекст "
+"(:class:`.Context`). Внутри нее можно сделать следующее:"
 
 # 3ee50b1861b2443b96590e4f944cad38
 #: ../../commands.rst:296
 msgid "Return ``True`` to signal that the person can run the command."
 msgstr ""
+"Вернуть ``True``, чтобы показать, что пользователь может использовать "
+"команду."
 
 # b3cf4867f9fb42ad97f61fd454298eee
 #: ../../commands.rst:297
 msgid "Return ``False`` to signal that the person cannot run the command."
 msgstr ""
+"Вернуть ``False``, чтобы показать, что пользователь не может использовать"
+" команду."
 
-# 2b85494f0e0c41bc8864060589dd9f51
 #: ../../commands.rst:298
 msgid ""
-"Raise a :exc:`exceptions.CommandError` derived exception to signal the "
-"person cannot run the command."
+"Raise a :exc:`.CommandError` derived exception to signal the person "
+"cannot run the command."
 msgstr ""
+"Вызвать :exc:`.CommandError` или ее наследника, чтобы показать, что "
+"пользователь не может использовать команду."
 
 # 84d9ffddc62a459291ca960b6ae417f0
 #: ../../commands.rst:300
@@ -464,6 +571,8 @@ msgid ""
 "This allows you to have custom error messages for you to handle in the "
 ":ref:`error handlers <vk_api_error_handler>`."
 msgstr ""
+"Это позволяет иметь пользовательские сообщения об ошибках для обработки "
+"их с помощью :ref:`обработчиков ошибок <vk_api_error_handler>`."
 
 # f4dbf12d29ef4256afbee313340973e6
 #: ../../commands.rst:303
@@ -471,6 +580,8 @@ msgid ""
 "To register a check for a command, we would have two ways of doing so. "
 "The first is using the :meth:`limiters.check` decorator. For example:"
 msgstr ""
+"Привязать проверку к команде можно двумя способами. Первый - используя "
+"декоратор :meth:`limiters.check`. К примеру:"
 
 # fae7467fa7ef41a887eae05371119c79
 #: ../../commands.rst:317
@@ -479,6 +590,10 @@ msgid ""
 " ``True``. Sometimes we re-use a check often and want to split it into "
 "its own decorator. To do that we can just add another level of depth:"
 msgstr ""
+"Этот пример вызовет команду только если функция ``is_owner`` вернет "
+"``True``. Иногда, в случае частого использования проверки, ее можно "
+"превратить в декоратор. Для этого просто надо добавить еще один уровень "
+"вложенности:"
 
 # 61a9ccdded094e6e8ff2faa039ed3a7e
 #: ../../commands.rst:334
@@ -486,11 +601,14 @@ msgid ""
 "Library actually provides a premade check to check if user is in given "
 "list (:func:`limitest.in_user_list`):"
 msgstr ""
+"Так как он часто используется, библиотека предоставляет заранее готовый "
+"декоратор для проверки наличия пользователя в списке "
+"(:func:`limitest.in_user_list`):"
 
 # a4f278186c3d4639aeabef2b19a40aea
 #: ../../commands.rst:344
 msgid "When multiple checks are specified, **all** of them must be ``True``:"
-msgstr ""
+msgstr "Когда объявлено несколько проверок, **все** они должны вернуть ``True``:"
 
 # 10c78b1f17c64e8083b849e90b96959a
 #: ../../commands.rst:360
@@ -498,20 +616,25 @@ msgid ""
 "If any of those checks fail in the example above, then the command will "
 "not be run."
 msgstr ""
+"В примере выше, если любая из проверок провалится, команда не будет "
+"работать"
 
 # 12e450f17d5c4897b473fe4d286ab7ce
 #: ../../commands.rst:362
 msgid ""
 "When an error happens, the error is propagated to the :ref:`error "
 "handlers <vk_api_error_handler>`. If you do not raise a custom "
-":exc:`exceptions.CommandError` derived exception, then it will get "
-"wrapped up into a :exc:`exceptions.CheckFailure` exception as so:"
+":exc:`.CommandError` derived exception, then it will get wrapped up into "
+"a :exc:`.CheckFailure` exception as so:"
 msgstr ""
+"Когда происходит ошибка, она передается :ref:`обработчикам ошибок "
+"<vk_api_error_handler>`. Если вы не вызвали пользовательскую ошибку, "
+"являющуюся :exc:`.CommandError` или ее наследником, то ошибка будет "
+"обернута в :exc:`.CheckFailure` и ее можно обработать так:"
 
-# 688292965482497bb1f520549320491f
 #: ../../commands.rst:381
 msgid "Global Checks"
-msgstr ""
+msgstr "Глобальные Проверки"
 
 # e2499cce0bb2466ea2a590757d20d744
 #: ../../commands.rst:383
@@ -520,6 +643,8 @@ msgid ""
 " commands. The library supports this as well using the global check "
 "concept."
 msgstr ""
+"Иногда необходимо применить проверку к **каждой** команде, а не только к "
+"конкретной. Библиотека так тоже может, засчет глобальных проверок."
 
 # 515a0e314c434e7abc435b8499001422
 #: ../../commands.rst:386
@@ -527,11 +652,15 @@ msgid ""
 "Global checks work similarly to regular checks except they are registered"
 " with the :func:`.Bot.check` decorator."
 msgstr ""
+"Глобальные проверки работают аналогично обычным, но регистрируются с "
+"помощью декоратора :func:`.Bot.check`"
 
 # a1153ef5324149d481c32404c8dd5c77
 #: ../../commands.rst:388
 msgid "For example, to block all DMs we could do the following:"
 msgstr ""
+"К примеру, чтобы заблокировать все личные сообщения, можно сделать "
+"следующее:"
 
 # fdbcf0e2223d4789897af82c087c5915
 #: ../../commands.rst:398
@@ -539,4 +668,6 @@ msgid ""
 "Be careful on how you write your global checks, as it could also lock you"
 " out of your own bot."
 msgstr ""
+"Будьте аккуратны с глобальными проверками, ибо они могут ограничить вам "
+"доступ к собственному боту."
 
