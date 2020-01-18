@@ -334,7 +334,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
 
     Called when new post is added to board.
 
-    :param comment: Post that was added.
+    :param comment: New post on the board.
     :type comment: :class:`group.BoardComment`
 
 .. function:: on_board_post_edit(comment)

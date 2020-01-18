@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-18 20:15+0300\n"
+"POT-Creation-Date: 2020-01-18 20:21+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3214,8 +3214,8 @@ msgid "Called when new post is added to board."
 msgstr "Вызывается, когда к обсуждению добавляется новый комментарий"
 
 #: ../../api.rst:337
-msgid "Post that was added."
-msgstr "Добавленный пост"
+msgid "New post on the board."
+msgstr "Комментарий, добавленный к обсуждению"
 
 # 0261c226307d4ac3a7e707bf1db343c4
 #: ../../api.rst:342
@@ -4890,7 +4890,7 @@ msgstr ""
 #~ msgstr "Измененный комментарий"
 
 #~ msgid "ABRACADABRA."
-#~ msgstr ""
+#~ msgstr "Абракадабра"
 
 # 30afefd11c97478c838b3ce5b10c143f
 #~ msgid "Post that was added to board."
@@ -4912,4 +4912,8 @@ msgstr ""
 
 #~ msgid "Somewarning."
 #~ msgstr ""
+
+# 2e6f64e647c647dd9393a0de4e28ed5a
+#~ msgid "Post that was added to the board."
+#~ msgstr "Префикс, использованный для вызова команды"
 
