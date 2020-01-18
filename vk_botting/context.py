@@ -138,7 +138,7 @@ class Context(Messageable):
 
         .. note::
 
-            If you want to bypass :exc:`.UserInputError` derived exceptions,
+            If you want to bypass :exc:`.ArgumentError` derived exceptions,
             it is recommended to use the regular :meth:`~.Context.invoke`
             as it will work more naturally. After all, this will end up
             using the old arguments the user has used and will thus just

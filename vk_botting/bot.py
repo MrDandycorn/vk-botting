@@ -819,8 +819,8 @@ class BotBase(GroupMixin):
         to the bot and other groups. Without this coroutine, none of the
         commands will be triggered.
         
-        By default, this coroutine is called inside the :func:`.on_message`
-        event. If you choose to override the :func:`.on_message` event, then
+        By default, this coroutine is called inside the :func:`.on_message_new`
+        event. If you choose to override the :func:`.on_message_new` event, then
         you should invoke this coroutine as well.
         
         This is built using other low level tools, and is equivalent to a

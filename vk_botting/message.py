@@ -41,7 +41,7 @@ class Message(Messageable):
 
         .. warning::
 
-            Do not try to use this parameter in conversations with Bot, as it will always be 0 and cause errors.
+            Do not try to use this parameter in group chats with Bot, as it will always be 0 and cause errors.
 
     date: :class:`datetime.datetime`
         Datetime when message was sent
@@ -95,7 +95,7 @@ class Message(Messageable):
 
         .. warning::
 
-            As it depends on message id, it does not work in conversations. At least as long as VK API does not return message_id in conversations
+            As it depends on message id, it does not work in group chats. At least as long as VK API does not return message_id in group chats
 
         Parameters
         ----------
