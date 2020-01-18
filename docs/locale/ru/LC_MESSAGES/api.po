@@ -1698,7 +1698,6 @@ msgstr ""
 
 # f9cae2577a554e978fe74cdbb06f65d4
 #: of vk_botting.bot.Bot.process_commands:7
-#, fuzzy
 msgid ""
 "By default, this coroutine is called inside the :func:`.on_message_new` "
 "event. If you choose to override the :func:`.on_message_new` event, then "
@@ -3212,7 +3211,6 @@ msgstr "Вызывается, когда к обсуждению добавля�
 
 # 6b6c7041ab284debba9375c7369ec60a
 #: ../../api.rst:337
-#, fuzzy
 msgid "Post that got sent."
 msgstr "Добавленный комментарий"
 
@@ -3814,7 +3812,6 @@ msgstr "Id сообщения в диалоге"
 
 # 5727aaf9ebe74e45ba5b1a1403340057
 #: of vk_botting.message.Message:11
-#, fuzzy
 msgid ""
 "Do not try to use this parameter in group chats with Bot, as it will "
 "always be 0 and cause errors."
@@ -3891,7 +3888,6 @@ msgstr "Корутина для изменения сообщения"
 # 684cbe66e5734bd38a4ba5464c616806
 # a970d5844c364746bbdd2625a4d67e35
 #: of vk_botting.message.Message.edit:7
-#, fuzzy
 msgid ""
 "As it depends on message id, it does not work in group chats. At least as"
 " long as VK API does not return message_id in group chats"
