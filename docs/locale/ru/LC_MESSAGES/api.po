@@ -1,13 +1,13 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2019, MrDandycorn
-# This file is distributed under the same license as the vk-botting package.
+# Translations template for PROJECT.
+# Copyright (C) 2020 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vk-botting 0.5.7\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2020-01-18 19:29+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
 
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, MrDandycorn
+# This file is distributed under the same license as the vk-botting package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 # 881665c6975c404b879a7606000313d3
 #: ../../api.rst:4
 msgid "API Reference"
@@ -3209,10 +3213,11 @@ msgstr "Вызывается, когда под товаром удаляетс�
 msgid "Called when new post is added to board."
 msgstr "Вызывается, когда к обсуждению добавляется новый комментарий"
 
-# 6b6c7041ab284debba9375c7369ec60a
+# 236d458c77c747959c39297726d59049
 #: ../../api.rst:337
+#, fuzzy
 msgid "Post that got sent."
-msgstr "Добавленный комментарий"
+msgstr "Комментарий, который был добавлен"
 
 # 0261c226307d4ac3a7e707bf1db343c4
 #: ../../api.rst:342
@@ -3387,9 +3392,10 @@ msgid ""
 ":func:`py:isinstance` and :func:`py:issubclass`\\."
 msgstr ""
 ":term:`py:abstract base class`, известные как ``abc`` - классы, которые "
-"определяют базовые модели, которые могут наследовать другие классы (:doc:`abc <py:library/abc>`). "
-"**Нельзя создавать экземпляры этих классов**. Они существуют в основном "
-"для использования с :func:`py:isinstance` и :func:`py:issubclass`"
+"определяют базовые модели, которые могут наследовать другие классы "
+"(:doc:`abc <py:library/abc>`). **Нельзя создавать экземпляры этих "
+"классов**. Они существуют в основном для использования с "
+":func:`py:isinstance` и :func:`py:issubclass`"
 
 # d9bb5e2ae1de4753959c63b4cbc2233a
 #: ../../api.rst:467
@@ -3888,6 +3894,7 @@ msgstr "Корутина для изменения сообщения"
 # 684cbe66e5734bd38a4ba5464c616806
 # a970d5844c364746bbdd2625a4d67e35
 #: of vk_botting.message.Message.edit:7
+#, fuzzy
 msgid ""
 "As it depends on message id, it does not work in group chats. At least as"
 " long as VK API does not return message_id in group chats"
