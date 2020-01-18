@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-18 19:29+0300\n"
+"POT-Creation-Date: 2020-01-18 20:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3213,11 +3213,9 @@ msgstr "Вызывается, когда под товаром удаляетс�
 msgid "Called when new post is added to board."
 msgstr "Вызывается, когда к обсуждению добавляется новый комментарий"
 
-# 236d458c77c747959c39297726d59049
 #: ../../api.rst:337
-#, fuzzy
-msgid "Post that got sent."
-msgstr "Комментарий, который был добавлен"
+msgid "Post that was added."
+msgstr "Добавленный пост"
 
 # 0261c226307d4ac3a7e707bf1db343c4
 #: ../../api.rst:342
@@ -3891,17 +3889,13 @@ msgstr "Информация о действии"
 msgid "Coroutine to edit the message. Depends on message_id."
 msgstr "Корутина для изменения сообщения"
 
-# 684cbe66e5734bd38a4ba5464c616806
-# a970d5844c364746bbdd2625a4d67e35
-#: of vk_botting.message.Message.edit:7
-#, fuzzy
+#: of vk_botting.message.Message.edit:7 vk_botting.message.Message.reply:7
 msgid ""
 "As it depends on message id, it does not work in group chats. At least as"
-" long as VK API does not return message_id in group chats"
+" long as VK API does not provide message_id there"
 msgstr ""
-"Так как она зависит от id сообщения, она не работает в групповых чатах. "
-"По крайней мере пока вк не начнет возвращать id сообщения для групповых "
-"чатов"
+"Так как он зависит от id сообщения, он не работает в групповых чатах. По "
+"крайней мере пока вк не начнет возвращать id сообщения для них"
 
 # 8c288eb4ad07409c8c358e3f6dec7346
 #: of vk_botting.message.Message.edit:9
@@ -3927,17 +3921,6 @@ msgstr "``True`` если стоит сохранить сниппеты. По �
 #: of vk_botting.message.Message.reply:3
 msgid "Sends a message to the destination as a reply to original message."
 msgstr "Отправляет сообщение как ответ к изначальному"
-
-# 684cbe66e5734bd38a4ba5464c616806
-# a970d5844c364746bbdd2625a4d67e35
-#: of vk_botting.message.Message.reply:7
-msgid ""
-"As it depends on message id, it does not work in conversations. At least "
-"as long as VK API does not return message_id in conversations"
-msgstr ""
-"Так как она зависит от id сообщения, она не работает в групповых чатах. "
-"По крайней мере пока вк не начнет возвращать id сообщения для групповых "
-"чатов"
 
 # 08e2ec5186464f9e8f01fea9621c0587
 # f0a9f7ad8ffc46b98296448f59d16c80
@@ -4901,4 +4884,32 @@ msgstr ""
 #~ "так как иначе будут использованы те "
 #~ "же аргументы и вызвана та же "
 #~ "ошибка"
+
+# 236d458c77c747959c39297726d59049
+#~ msgid "Post that got sent."
+#~ msgstr "Измененный комментарий"
+
+#~ msgid "ABRACADABRA."
+#~ msgstr ""
+
+# 30afefd11c97478c838b3ce5b10c143f
+#~ msgid "Post that was added to board."
+#~ msgstr "Добавленный пост"
+
+# 684cbe66e5734bd38a4ba5464c616806
+# a970d5844c364746bbdd2625a4d67e35
+#~ msgid ""
+#~ "As method depends on message id, "
+#~ "it does not work in group chats."
+#~ " At least as long as VK API "
+#~ "does not provide message ids there."
+#~ msgstr ""
+#~ "Так как она зависит от id "
+#~ "сообщения, она не работает в групповых"
+#~ " чатах. По крайней мере пока вк "
+#~ "не начнет возвращать id сообщения для"
+#~ " групповых чатов"
+
+#~ msgid "Somewarning."
+#~ msgstr ""
 

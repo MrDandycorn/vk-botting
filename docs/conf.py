@@ -70,7 +70,7 @@ rst_prolog = """
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 locale_dirs = ['locale/']
-gettext_uuid = True
+gettext_uuid = False
 gettext_compact = False
 
 # List of patterns, relative to source directory, that match files and

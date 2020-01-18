@@ -95,7 +95,7 @@ class Message(Messageable):
 
         .. warning::
 
-            As it depends on message id, it does not work in group chats. At least as long as VK API does not return message_id in group chats
+            As it depends on message id, it does not work in group chats. At least as long as VK API does not provide message_id there
 
         Parameters
         ----------
@@ -134,7 +134,7 @@ class Message(Messageable):
 
         .. warning::
 
-            As it depends on message id, it does not work in conversations. At least as long as VK API does not return message_id in conversations
+            As it depends on message id, it does not work in group chats. At least as long as VK API does not provide message_id there
 
         The content must be a type that can convert to a string through ``str(message)``.
 
