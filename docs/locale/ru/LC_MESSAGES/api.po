@@ -29,7 +29,6 @@ msgstr "Bot"
 
 # dedbef118f304b61922b562857f4f3ab
 #: of vk_botting.bot.Bot:1
-#, fuzzy
 msgid ""
 "Represents a VK bot. This class is a subclass of "
 ":class:`vk_botting.client.Client` and as a result anything that you can "
@@ -2463,7 +2462,7 @@ msgid ""
 "Similar to :attr:`args`\\, if this is accessed in the "
 ":func:`on_command_error` event then this dict could be incomplete."
 msgstr ""
-":class:`dict` преобразованных аргументов, переданных команде. Аналогично "
+"Словарь преобразованных аргументов, переданных команде. Аналогично "
 ":attr:`args`, если используется в событии :func:`on_command_error`, то "
 "может быть неполным"
 
@@ -2596,7 +2595,10 @@ msgid ""
 "recommended to use the regular :meth:`~.Context.invoke` as it will work "
 "more naturally. After all, this will end up using the old arguments the "
 "user has used and will thus just fail again."
-msgstr "Если необходимо избежать :exc:`.ArgumentError` или ее наследников, то стоит использовать обычный :meth:`~.Context.invoke`, так как иначе будут использованы те же аргументы и возвращена та же ошибка"
+msgstr ""
+"Если необходимо избежать :exc:`.ArgumentError` или ее наследников, то "
+"стоит использовать обычный :meth:`~.Context.invoke`, так как иначе будут "
+"использованы те же аргументы и возвращена та же ошибка"
 
 # d2eeb962f54a4180a1be15c2af2adb13
 #: of vk_botting.context.Context.reinvoke:16
@@ -3387,7 +3389,7 @@ msgid ""
 ":func:`py:isinstance` and :func:`py:issubclass`\\."
 msgstr ""
 ":term:`py:abstract base class`, известные как ``abc`` - классы, которые "
-"определяют базовые модели, которые могут наследовать другие классы. "
+"определяют базовые модели, которые могут наследовать другие классы (:doc:`abc <py:library/abc>`). "
 "**Нельзя создавать экземпляры этих классов**. Они существуют в основном "
 "для использования с :func:`py:isinstance` и :func:`py:issubclass`"
 
@@ -3829,7 +3831,7 @@ msgstr "Дата/время отправки сообщения"
 # f238ac5e24b54233b2a6e91fc791d185
 #: of vk_botting.message.Message:19 vk_botting.message.Message:25
 msgid ":class:`datetime.datetime`"
-msgstr ":class:`datetime.datetime"
+msgstr ":class:`datetime.datetime`"
 
 # 273bfb2d9a954da09d1ff44124f75c70
 #: of vk_botting.message.Message:23
