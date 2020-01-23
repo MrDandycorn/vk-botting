@@ -94,7 +94,7 @@ async def get_audio(bot, obj):
     return audio
 
 
-async def get_attachment(obj):
+def get_attachment(obj):
     t = obj['type']
     if t == 'audio_message':
         return AudioMessage(obj[t])

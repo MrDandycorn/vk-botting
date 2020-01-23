@@ -230,7 +230,7 @@ class UserMessage(Messageable):
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
-        return await self.bot.build_msg(params)
+        return self.bot.build_msg(params)
 
     async def get_user(self):
         user = await self.bot.get_pages(self.from_id)

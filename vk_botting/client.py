@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 import asyncio
 import sys
 import traceback
+import textwrap
 import aiohttp
 import enum
 from random import randint
@@ -450,9 +451,8 @@ class Client:
             return Group(group.get('response')[0])
         return User(user.get('response')[0])
 
-    async def build_msg(self, msg):
-        """|coro|
-
+    def build_msg(self, msg):
+        """
         Build :class:`.Message` instance from message object :class:`dict`.
 
         Normally should not be used at all.
@@ -470,12 +470,12 @@ class Client:
         res = Message(msg)
         if res.attachments:
             for i in range(len(res.attachments)):
-                res.attachments[i] = await get_attachment(res.attachments[i])
+                res.attachments[i] = get_attachment(res.attachments[i])
         if res.fwd_messages:
             for i in range(len(res.fwd_messages)):
-                res.fwd_messages[i] = await self.build_msg(res.fwd_messages[i])
+                res.fwd_messages[i] = self.build_msg(res.fwd_messages[i])
         if res.reply_message:
-            res.reply_message = await self.build_msg(res.reply_message)
+            res.reply_message = self.build_msg(res.reply_message)
         res.bot = self
         return res
 
@@ -529,8 +529,8 @@ class Client:
         updates = res.get('updates', [])
         return ts, updates
 
-    async def handle_message(self, message):
-        msg = await self.build_msg(message)
+    def handle_message(self, message):
+        msg = self.build_msg(message)
         payload = message.get('payload')
         if payload and payload == '{"command":"start"}':
             return self.dispatch('conversation_start', msg)
@@ -540,106 +540,160 @@ class Client:
             return self.dispatch(action_type, msg)
         return self.dispatch('message_new', msg)
 
-    async def handle_update(self, update):
+    def handle_message_reply(self, t, obj):
+        msg = self.build_msg(obj)
+        return self.dispatch(t, msg)
+
+    def handle_message_edit(self, t, obj):
+        msg = self.build_msg(obj)
+        return self.dispatch(t, msg)
+
+    async def handle_message_typing_state(self, t, obj):
+        state = await get_state(obj)
+        return self.dispatch(t, state)
+
+    async def handle_message_allow(self, t, obj):
+        user = await self.get_pages(obj)
+        return self.dispatch(t, user)
+
+    async def handle_photo_new(self, t, obj):
+        photo = await get_photo(self, obj)
+        return self.dispatch(t, photo)
+
+    async def handle_photo_comment_new(self, t, obj):
+        comment = await get_photo_comment(self, obj)
+        return self.dispatch(t, comment)
+
+    async def handle_photo_comment_delete(self, t, obj):
+        deleted = await get_deleted_photo_comment(self, obj)
+        return self.dispatch(t, deleted)
+
+    async def handle_audio_new(self, t, obj):
+        audio = await get_audio(self, obj)
+        return self.dispatch(t, audio)
+
+    async def handle_video_new(self, t, obj):
+        video = await get_video(self, obj)
+        return self.dispatch(t, video)
+
+    def handle_video_comment_new(self, t, obj):
+        comment = get_video_comment(self, obj)
+        return self.dispatch(t, comment)
+
+    async def handle_video_comment_delete(self, t, obj):
+        deleted = await get_deleted_video_comment(self, obj)
+        return self.dispatch(t, deleted)
+
+    async def handle_wall_post_new(self, t, obj):
+        post = await get_post(self, obj)
+        return self.dispatch(t, post)
+
+    async def handle_wall_reply_new(self, t, obj):
+        comment = await get_wall_comment(self, obj)
+        return self.dispatch(t, comment)
+
+    async def handle_wall_reply_delete(self, t, obj):
+        deleted = await get_deleted_wall_comment(self, obj)
+        return self.dispatch(t, deleted)
+
+    async def handle_board_post_new(self, t, obj):
+        comment = await get_board_comment(self, obj)
+        return self.dispatch(t, comment)
+
+    async def handle_board_post_delete(self, t, obj):
+        deleted = await get_deleted_board_comment(self, obj)
+        return self.dispatch(t, deleted)
+
+    async def handle_market_comment_new(self, t, obj):
+        comment = await get_market_comment(self, obj)
+        return self.dispatch(t, comment)
+
+    async def handle_market_comment_delete(self, t, obj):
+        deleted = await get_deleted_market_comment(self, obj)
+        return self.dispatch(t, deleted)
+
+    async def handle_group_leave(self, t, obj):
+        user = await self.get_pages(obj['user_id'])
+        return self.dispatch(t, user)
+
+    async def handle_group_join(self, t, obj):
+        user = await self.get_pages(obj['user_id'])
+        return self.dispatch(t, user)
+
+    async def handle_user_block(self, t, obj):
+        blocked = await get_blocked_user(self, obj)
+        return self.dispatch(t, blocked)
+
+    async def handle_user_unblock(self, t, obj):
+        unblocked = await get_unblocked_user(self, obj)
+        return self.dispatch(t, unblocked)
+
+    async def handle_poll_vote_new(self, t, obj):
+        vote = await get_poll_vote(self, obj)
+        return self.dispatch(t, vote)
+
+    async def handle_group_officers_edit(self, t, obj):
+        edit = await get_officers_edit(self, obj)
+        return self.dispatch(t, edit)
+
+    def handle_update(self, update):
         t = update['type']
         if t == 'message_new':
-            return await self.handle_message(update['object']['message'])
-        elif t == 'message_reply' and 'on_message_reply' in self.extra_events:
-            obj = update['object']
-            msg = await self.build_msg(obj)
-            return self.dispatch(t, msg)
+            return self.handle_message(update['object']['message'])
+        obj = update['object']
+        if t == 'message_reply' and 'on_message_reply' in self.extra_events:
+            return self.handle_message_reply(t, obj)
         elif t == 'message_edit' and 'on_message_edit' in self.extra_events:
-            obj = update['object']
-            msg = await self.build_msg(obj)
-            return self.dispatch(t, msg)
+            return self.handle_message_edit(t, obj)
         elif t == 'message_typing_state' and 'on_message_typing_state' in self.extra_events:
-            obj = update['object']
-            state = await get_state(obj)
-            return self.dispatch(t, state)
+            return self.loop.create_task(self.handle_message_typing_state(t, obj))
         elif t in ['message_allow', 'message_deny'] and any(event in self.extra_events for event in ['on_message_allow', 'on_message_deny']):
-            obj = update['object']
-            user = await self.get_pages(obj)
-            return self.dispatch(t, user[0])
+            return self.loop.create_task(self.handle_message_allow(t, obj))
         elif t == 'photo_new' and 'on_photo_new' in self.extra_events:
-            obj = update['object']
-            photo = await get_photo(self, obj)
-            return self.dispatch(t, photo)
-        elif t in ['photo_comment_new', 'photo_comment_edit', 'photo_comment_restore'] and any(event in self.extra_events for event in ['on_photo_comment_new', 'on_photo_comment_edit', 'on_photo_comment_restore']):
-            obj = update['object']
-            comment = await get_photo_comment(self, obj)
-            return self.dispatch(t, comment)
+            return self.loop.create_task(self.handle_photo_new(t, obj))
+        elif t in ['photo_comment_new', 'photo_comment_edit', 'photo_comment_restore'] and any(
+                event in self.extra_events for event in ['on_photo_comment_new', 'on_photo_comment_edit', 'on_photo_comment_restore']):
+            return self.loop.create_task(self.handle_photo_comment_new(t, obj))
         elif t == 'photo_comment_delete' and 'on_photo_comment_delete' in self.extra_events:
-            obj = update['object']
-            deleted = await get_deleted_photo_comment(self, obj)
-            return self.dispatch(t, deleted)
+            return self.loop.create_task(self.handle_photo_comment_delete(t, obj))
         elif t == 'audio_new' and 'on_audio_new' in self.extra_events:
-            obj = update['object']
-            audio = await get_audio(self, obj)
-            return self.dispatch(t, audio)
+            return self.loop.create_task(self.handle_audio_new(t, obj))
         elif t == 'video_new' and 'on_video_new' in self.extra_events:
-            obj = update['object']
-            video = await get_video(self, obj)
-            return self.dispatch(t, video)
-        elif t in ['video_comment_new', 'video_comment_edit', 'video_comment_restore'] and any(event in self.extra_events for event in ['on_video_comment_new', 'on_video_comment_edit', 'on_video_comment_restore']):
-            obj = update['object']
-            comment = get_video_comment(self, obj)
-            return self.dispatch(t, comment)
+            return self.loop.create_task(self.handle_video_new(t, obj))
+        elif t in ['video_comment_new', 'video_comment_edit', 'video_comment_restore'] and any(
+                event in self.extra_events for event in ['on_video_comment_new', 'on_video_comment_edit', 'on_video_comment_restore']):
+            return self.handle_video_comment_new(t, obj)
         elif t == 'video_comment_delete' and 'on_video_comment_delete' in self.extra_events:
-            obj = update['object']
-            deleted = await get_deleted_video_comment(self, obj)
-            return self.dispatch(t, deleted)
+            return self.loop.create_task(self.handle_video_comment_delete(t, obj))
         elif t in ['wall_post_new', 'wall_repost'] and any(event in self.extra_events for event in ['on_wall_post_new', 'on_wall_repost']):
-            obj = update['object']
-            post = await get_post(self, obj)
-            return self.dispatch(t, post)
-        elif t in ['wall_reply_new', 'wall_reply_edit', 'wall_reply_restore'] and any(event in self.extra_events for event in ['on_wall_reply_new', 'on_wall_reply_edit', 'on_wall_reply_restore']):
-            obj = update['object']
-            comment = await get_wall_comment(self, obj)
-            return self.dispatch(t, comment)
+            return self.loop.create_task(self.handle_wall_post_new(t, obj))
+        elif t in ['wall_reply_new', 'wall_reply_edit', 'wall_reply_restore'] and any(
+                event in self.extra_events for event in ['on_wall_reply_new', 'on_wall_reply_edit', 'on_wall_reply_restore']):
+            return self.loop.create_task(self.handle_wall_reply_new(t, obj))
         elif t == 'wall_reply_delete' and 'on_wall_reply_delete' in self.extra_events:
-            obj = update['object']
-            deleted = await get_deleted_wall_comment(self, obj)
-            return self.dispatch(t, deleted)
-        elif t in ['board_post_new', 'board_post_edit', 'board_post_restore'] and any(event in self.extra_events for event in ['on_board_post_new', 'on_board_post_edit', 'on_board_post_restore']):
-            obj = update['object']
-            comment = await get_board_comment(self, obj)
-            return self.dispatch(t, comment)
+            return self.loop.create_task(self.handle_wall_reply_delete(t, obj))
+        elif t in ['board_post_new', 'board_post_edit', 'board_post_restore'] and any(
+                event in self.extra_events for event in ['on_board_post_new', 'on_board_post_edit', 'on_board_post_restore']):
+            return self.loop.create_task(self.handle_board_post_new(t, obj))
         elif t == 'board_post_delete' and 'on_board_post_delete' in self.extra_events:
-            obj = update['object']
-            deleted = await get_deleted_board_comment(self, obj)
-            return self.dispatch(t, deleted)
-        elif t in ['market_comment_new', 'market_comment_edit', 'market_comment_restore'] and any(event in self.extra_events for event in ['on_market_comment_new', 'on_market_comment_edit', 'on_market_comment_restore']):
-            obj = update['object']
-            comment = await get_market_comment(self, obj)
-            return self.dispatch(t, comment)
+            return self.loop.create_task(self.handle_board_post_delete(t, obj))
+        elif t in ['market_comment_new', 'market_comment_edit', 'market_comment_restore'] and any(
+                event in self.extra_events for event in ['on_market_comment_new', 'on_market_comment_edit', 'on_market_comment_restore']):
+            return self.loop.create_task(self.handle_market_comment_new(t, obj))
         elif t == 'market_comment_delete' and 'on_market_comment_delete' in self.extra_events:
-            obj = update['object']
-            deleted = await get_deleted_market_comment(self, obj)
-            return self.dispatch(t, deleted)
+            return self.loop.create_task(self.handle_market_comment_delete(t, obj))
         elif t == 'group_leave' and 'on_group_leave' in self.extra_events:
-            obj = update['object']
-            user = await self.get_pages(obj['user_id'])
-            return self.dispatch(t, user[0], obj['self'])
+            return self.loop.create_task(self.handle_group_leave(t, obj))
         elif t == 'group_join' and 'on_group_join' in self.extra_events:
-            obj = update['object']
-            user = await self.get_pages(obj['user_id'])
-            return self.dispatch(t, user[0], obj['join_type'])
+            return self.loop.create_task(self.handle_group_join(t, obj))
         elif t == 'user_block' and 'on_user_block' in self.extra_events:
-            obj = update['object']
-            blocked = await get_blocked_user(self, obj)
-            return self.dispatch(t, blocked)
+            return self.loop.create_task(self.handle_user_block(t, obj))
         elif t == 'user_unblock' and 'on_user_unblock' in self.extra_events:
-            obj = update['object']
-            unblocked = await get_unblocked_user(self, obj)
-            return self.dispatch(t, unblocked)
+            return self.loop.create_task(self.handle_user_unblock(t, obj))
         elif t == 'poll_vote_new' and 'on_poll_vote_new' in self.extra_events:
-            obj = update['object']
-            vote = await get_poll_vote(self, obj)
-            return self.dispatch(t, vote)
+            return self.loop.create_task(self.handle_poll_vote_new(t, obj))
         elif t == 'group_officers_edit' and 'on_group_officers_edit' in self.extra_events:
-            obj = update['object']
-            edit = await get_officers_edit(self, obj)
-            return self.dispatch(t, edit)
+            return self.loop.create_task(self.handle_group_officers_edit(t, obj))
         elif t not in self._implemented_events and 'on_unknown' in self.extra_events:
             return self.dispatch('unknown', update)
 
@@ -756,6 +810,11 @@ class Client:
             attachment = ','.join(map(str, attachment))
         else:
             attachment = str(attachment)
+        if len(message) > 4000:
+            messages = textwrap.wrap(message, 4000)
+            for message in messages[:-1]:
+                await self.send_message(peer_id, message)
+            return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
         params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await self.vk_request('messages.send', **params)
@@ -767,7 +826,7 @@ class Client:
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
         params['from_id'] = -self.group.id
-        return await self.build_msg(params)
+        return self.build_msg(params)
 
     async def _run(self, owner_id):
         if owner_id and owner_id.__class__ is not int:
@@ -788,7 +847,7 @@ class Client:
                 try:
                     lp = self.loop.create_task(self.longpoll(ts))
                     for update in updates:
-                        self.loop.create_task(self.handle_update(update))
+                        self.handle_update(update)
                     ts, updates = await lp
                 except Exception as e:
                     print(f'Ignoring exception in longpoll cycle:\n{e}', file=sys.stderr)

@@ -44,7 +44,7 @@ def when_mentioned(bot, msg):
     r"""A callable that implements a command prefix equivalent to being mentioned.
     These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
     """
-    match = re.match(rf'\[club{bot.group.id}\|[^\]]+\] ', msg.text)
+    match = re.match(rf'\[club{bot.group.id}\|[^\]]+\],? ', msg.text)
     if match and msg.text.startswith(match.group()):
         return [match.group()]
     return [f'[club{bot.group.id}|@{bot.group.screen_name}] ', f'[club{bot.group.id}|{bot.group.name}] ']
