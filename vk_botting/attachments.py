@@ -108,8 +108,10 @@ async def get_attachment(obj):
         return Audio(obj[t])
     elif t == 'doc':
         return Document(obj[t])
+    elif t == 'poll':
+        return Poll(obj[t])
     else:
-        return obj[t]
+        return t, obj[t]
 
 
 async def get_user_attachments(atts):
@@ -291,6 +293,47 @@ class Video:
 
     def __str__(self):
         return f'video{self.owner_id}_{self.id}'
+
+
+class PollAnswer:
+
+    def __init__(self, data):
+        self._unpack(data)
+
+    def _unpack(self, data):
+        self.id = data.get('id')
+        self.text = data.get('text')
+        self.votes = data.get('votes')
+        self.rate = data.get('rate')
+
+
+class Poll:
+
+    def __init__(self, data):
+        self._unpack(data)
+
+    def _unpack(self, data):
+        self.id = data.get('id')
+        self.owner_id = data.get('owner_id')
+        self.created = data.get('created')
+        self.question = data.get('question')
+        self.votes = data.get('votes')
+        answers = data.get('answers')
+        self.answers = [PollAnswer(answer) for answer in answers]
+        self.anonymous = data.get('anonymous')
+        self.multiple = data.get('multiple')
+        self.answer_ids = data.get('answer_ids')
+        self.end_date = data.get('end_date')
+        self.closed = data.get('closed')
+        self.is_board = data.get('is_board')
+        self.can_edit = data.get('can_edit')
+        self.can_vote = data.get('can_vote')
+        self.can_report = data.get('can_report')
+        self.can_share = data.get('can_share')
+        self.author_id = data.get('author_id')
+
+    def __str__(self):
+        return f'poll{self.owner_id}_{self.id}'
 
 
 class Attachment:
