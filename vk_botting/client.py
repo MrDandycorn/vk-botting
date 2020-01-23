@@ -810,6 +810,7 @@ class Client:
             attachment = ','.join(map(str, attachment))
         else:
             attachment = str(attachment)
+        message = str(message)
         if len(message) > 4096:
             w = textwrap.TextWrapper(width=4096, replace_whitespace=False)
             messages = w.wrap(message)
