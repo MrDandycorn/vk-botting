@@ -44,36 +44,6 @@ class DocType(Enum):
     GRAFFITI = 'graffiti'
 
 
-async def upload_document(bot, peer_id, file, type=DocType.DOCUMENT, title=None):
-    if isinstance(type, DocType):
-        type = type.value
-    async with ClientSession() as session:
-        r = await bot.vk_request('docs.getMessagesUploadServer', peer_id=peer_id, type=type)
-        imurl = r['response']['upload_url']
-        files = {'file': open(file, 'rb')}
-        r = await session.post(imurl, data=files)
-        r = await r.json()
-        filedata = r['file']
-        if title is None:
-            title = os.path.splitext(file)[0]
-        r = await bot.vk_request('docs.save', file=filedata, title=title)
-        doc = r['response']
-        doc = doc[doc['type']]
-    return Attachment(doc['owner_id'], doc['id'], AttachmentType.DOCUMENT)
-
-
-async def upload_photo(bot, peer_id, file):
-    async with ClientSession() as session:
-        r = await bot.vk_request('photos.getMessagesUploadServer', peer_id=peer_id)
-        imurl = r['response']['upload_url']
-        files = {'file': open(file, 'rb')}
-        r = await session.post(imurl, data=files)
-        r = await r.json(content_type='text/html')
-        r = await bot.vk_request('photos.saveMessagesPhoto', **r)
-        doc = r['response'][0]
-    return Attachment(doc['owner_id'], doc['id'], AttachmentType.PHOTO)
-
-
 async def get_photo(bot, obj):
     photo = Photo(obj)
     photo.author, photo.owner = await bot.get_pages(photo.user_id, photo.owner_id)

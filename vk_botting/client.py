@@ -28,6 +28,8 @@ import traceback
 import textwrap
 import aiohttp
 import enum
+import os
+from mimetypes import guess_extension
 from random import randint
 from collections.abc import Iterable
 
@@ -36,7 +38,7 @@ from vk_botting.group import get_post, get_board_comment, get_market_comment, ge
     get_deleted_video_comment, get_deleted_board_comment, get_deleted_market_comment, get_deleted_wall_comment, get_officers_edit, get_poll_vote, Group
 from vk_botting.attachments import get_photo, get_video, get_audio
 from vk_botting.message import Message, UserMessage
-from vk_botting.attachments import get_attachment, get_user_attachments
+from vk_botting.attachments import get_attachment, get_user_attachments, DocType, Attachment, AttachmentType
 from vk_botting.states import get_state
 from vk_botting.exceptions import VKApiError, LoginError
 from vk_botting.general import convert_params
@@ -450,6 +452,44 @@ class Client:
             group = await self.vk_request('groups.getById')
             return Group(group.get('response')[0])
         return User(user.get('response')[0])
+
+    async def upload_document(self, peer_id, file, type=DocType.DOCUMENT, title=None):
+        if isinstance(type, DocType):
+            type = type.value
+        r = await self.vk_request('docs.getMessagesUploadServer', peer_id=peer_id, type=type)
+        imurl = r['response']['upload_url']
+        files = {'file': open(file, 'rb')}
+        r = await self.session.post(imurl, data=files)
+        r = await r.json()
+        filedata = r['file']
+        if title is None:
+            title = os.path.splitext(file)[0]
+        r = await self.vk_request('docs.save', file=filedata, title=title)
+        doc = r['response']
+        doc = doc[doc['type']]
+        return Attachment(doc['owner_id'], doc['id'], AttachmentType.DOCUMENT)
+
+    async def upload_photo(self, peer_id, file=None, url=None):
+        if not (file or url):
+            return
+        r = await self.vk_request('photos.getMessagesUploadServer', peer_id=peer_id)
+        imurl = r['response']['upload_url']
+        if file:
+            files = {'photo': open(file, 'rb')}
+        else:
+            imbts = await self.session.get(url)
+            cnt = imbts.content_type
+            if not cnt.startswith('image/'):
+                raise TypeError('URL passed does not lead to an image')
+            ext = cnt[6:]
+            imbts = await imbts.read()
+            files = aiohttp.FormData()
+            files.add_field('photo', imbts, filename=f'temp.{ext}')
+        r = await self.session.post(imurl, data=files)
+        r = await r.json(content_type='text/html')
+        r = await self.vk_request('photos.saveMessagesPhoto', **r)
+        doc = r['response'][0]
+        return Attachment(doc['owner_id'], doc['id'], AttachmentType.PHOTO)
 
     def build_msg(self, msg):
         """
