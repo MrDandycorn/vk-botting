@@ -810,8 +810,9 @@ class Client:
             attachment = ','.join(map(str, attachment))
         else:
             attachment = str(attachment)
-        if len(message) > 4000:
-            messages = textwrap.wrap(message, 4000)
+        if len(message) > 4096:
+            w = textwrap.TextWrapper(width=4096, replace_whitespace=False)
+            messages = w.wrap(message)
             for message in messages[:-1]:
                 await self.send_message(peer_id, message)
             return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
