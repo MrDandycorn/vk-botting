@@ -93,3 +93,13 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+def setup(app):
+    if app.config.language == 'ru':
+        app.config.rst_prolog = """
+.. |coro| replace:: Эта функция является |coroutine_link|_.
+.. |maybecoro| replace:: Эта функция *может быть* |coroutine_link|_.
+.. |coroutine_link| replace:: *корутиной*
+.. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
+"""
