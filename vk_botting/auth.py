@@ -233,7 +233,8 @@ class TokenReceiverKate:
             params['X-scope'] = f'id{self.id}'
             params['X-kid'] = params['X-X-kid'] = '|ID|2|'
             res = await client.post(url, data=params, headers=headers)
-        res = res.text.split('|ID|2|:')[1]
+            res = await res.text()
+        res = res.split('|ID|2|:')[1]
         if res == 'PHONE_REGISTRATION_ERROR':
             raise LoginError('PHONE_REGISTRATION_ERROR')
         return res
