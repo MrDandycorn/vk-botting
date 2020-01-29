@@ -29,7 +29,6 @@ import textwrap
 import aiohttp
 import enum
 import os
-from mimetypes import guess_extension
 from random import randint
 from collections.abc import Iterable
 
