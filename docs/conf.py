@@ -13,6 +13,11 @@
 import sys
 import os
 import re
+import mock
+
+MOCK_MODULES = ['aiohttp', 'abs', 'enum', 'os', 'random', 'asyncio', 'inspect', 'sys', 'traceback', 'importlib', 'types', 'collections', 're', 'textwrap', 'functools', 'typing', 'datetime', 'time', 'json']
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = mock.Mock()
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
