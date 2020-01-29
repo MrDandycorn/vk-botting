@@ -23,7 +23,8 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from random import choice
-import requests
+import aiohttp
+import asyncio
 
 from vk_botting.exceptions import LoginError
 
@@ -62,9 +63,13 @@ class TokenReceiverOfficial:
         return {'2fa_supported': 1}
 
     def get_token(self):
-        pass
+        return self.get_non_refreshed()
+    
+    def get_non_refreshed(self):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(self._get_non_refreshed())
 
-    def get_non_refreshed(self, captcha_sid=None, captcha_key=None):
+    async def _get_non_refreshed(self, captcha_sid=None, captcha_key=None):
         device_id = generate_random_string(16, '0123456789abcdef')
         url = 'https://oauth.vk.com/token?grant_type=password'
         headers = {
@@ -78,23 +83,26 @@ class TokenReceiverOfficial:
             'v': '5.93',
             'scope': self.scope,
             'lang': 'en',
-            'devide_id': device_id,
-            'captcha_sid': captcha_sid,
-            'captcha_key': captcha_key
+            'devide_id': device_id
         }
+        if captcha_sid:
+            params['captcha_sid'] = captcha_sid
+        if captcha_key:
+            params['captcha_key'] = captcha_key
         params.update(self.get_two_factor_part())
-        res = requests.post(url, data=params, headers=headers)
-        res = res.json()
+        async with aiohttp.ClientSession() as client:
+            res = await client.post(url, data=params, headers=headers)
+            res = await res.json()
         if 'error' in res.keys():
             if res['error'] == 'need_validation':
                 if self.auth_code == 'GET_CODE':
                     self.auth_code = input('Input sms code: ')
-                    return self.get_non_refreshed()
+                    return await self._get_non_refreshed()
                 self.auth_code = 'GET_CODE'
-                return self.get_non_refreshed()
+                return await self._get_non_refreshed()
             if res['error'] == 'need_captcha':
                 key = input(f'Captcha needed ({res["captcha_img"]}): ')
-                return self.get_non_refreshed(res['captcha_sid'], key)
+                return await self._get_non_refreshed(res['captcha_sid'], key)
             raise LoginError(res.get('error_description'))
         return res['access_token']
 
@@ -117,13 +125,17 @@ class TokenReceiverKate:
         if self.auth_code:
             return {'code': self.auth_code}
         return {'2fa_supported': 1}
-
+        
     def get_token(self):
         token = self.get_non_refreshed()
         receipt = self.get_receipt()
         return self.refresh_token(token, receipt)
+    
+    def get_non_refreshed(self):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(self._get_non_refreshed())
 
-    def get_non_refreshed(self, captcha_sid=None, captcha_key=None):
+    async def _get_non_refreshed(self, captcha_sid=None, captcha_key=None):
         device_id = generate_random_string(16, '0123456789abcdef')
         url = 'https://oauth.vk.com/token?grant_type=password'
         headers = {
@@ -137,28 +149,35 @@ class TokenReceiverKate:
             'v': '5.78',
             'scope': self.scope,
             'lang': 'en',
-            'devide_id': device_id,
-            'captcha_sid': captcha_sid,
-            'captcha_key': captcha_key
+            'devide_id': device_id
         }
+        if captcha_sid:
+            params['captcha_sid'] = captcha_sid
+        if captcha_key:
+            params['captcha_key'] = captcha_key
         params.update(self.get_two_factor_part())
-        res = requests.post(url, data=params, headers=headers)
-        res = res.json()
+        async with aiohttp.ClientSession() as client:
+            res = await client.post(url, data=params, headers=headers)
+            res = await res.json()
         if 'error' in res.keys():
             if res['error'] == 'need_validation':
                 if self.auth_code == 'GET_CODE':
                     self.auth_code = input('Input sms code: ')
-                    return self.get_non_refreshed()
+                    return await self._get_non_refreshed()
                 self.auth_code = 'GET_CODE'
-                return self.get_non_refreshed()
+                return await self._get_non_refreshed()
             if res['error'] == 'need_captcha':
                 key = input(f'Captcha needed ({res["captcha_img"]}): ')
-                return self.get_non_refreshed(res['captcha_sid'], key)
+                return await self._get_non_refreshed(res['captcha_sid'], key)
             raise LoginError(res.get('error_description'))
         self.id = res['user_id']
         return res['access_token']
-
+    
     def refresh_token(self, token, receipt):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(self._refresh_token(token, receipt))
+
+    async def _refresh_token(self, token, receipt):
         headers = {
             'User-Agent': self.client.user_agent
         }
@@ -167,14 +186,19 @@ class TokenReceiverKate:
             'receipt': receipt,
             'v': '5.78'
         }
-        res = requests.get('https://api.vk.com/method/auth.refreshToken', params=params, headers=headers)
-        res = res.json()
+        async with aiohttp.ClientSession() as client:
+            res = await client.get('https://api.vk.com/method/auth.refreshToken', params=params, headers=headers)
+            res = await res.json()
         new_token = res['response']['token']
         if new_token == token:
             raise LoginError('Token not refreshed. Try using own gms credentials')
         return new_token
-
+    
     def get_receipt(self):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(self._get_receipt())
+
+    async def _get_receipt(self):
         url = 'https://android.clients.google.com/c2dm/register3'
         headers = {
             'User-Agent': 'Android-GCM/1.5 (generic_x86 KK)',
@@ -204,11 +228,11 @@ class TokenReceiverKate:
             "plat": "0",
             "X-messenger2": "1"
         }
-        with requests.Session() as session:
-            session.post(url, data=params, headers=headers)
+        async with aiohttp.ClientSession() as client:
+            await client.post(url, data=params, headers=headers)
             params['X-scope'] = f'id{self.id}'
             params['X-kid'] = params['X-X-kid'] = '|ID|2|'
-            res = session.post(url, data=params, headers=headers)
+            res = await client.post(url, data=params, headers=headers)
         res = res.text.split('|ID|2|:')[1]
         if res == 'PHONE_REGISTRATION_ERROR':
             raise LoginError('PHONE_REGISTRATION_ERROR')
