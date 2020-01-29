@@ -96,8 +96,9 @@ html_static_path = ['_static']
 
 
 def setup(app):
+    global rst_prolog
     if app.config.language == 'ru':
-        app.config.rst_prolog = """
+        rst_prolog = """
 .. |coro| replace:: Эта функция является |coroutine_link|_.
 .. |maybecoro| replace:: Эта функция *может быть* |coroutine_link|_.
 .. |coroutine_link| replace:: *корутиной*
