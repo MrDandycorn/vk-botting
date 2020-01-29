@@ -92,27 +92,3 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-
-def run_apidoc(_):
-
-    argv = [
-        "-f",
-        "-T",
-        "-e",
-        "-M",
-        "-o", ".",
-        ".."
-    ]
-
-    try:
-        from sphinx.ext import apidoc
-        apidoc.main(argv)
-    except ImportError:
-        from sphinx import apidoc
-        argv.insert(0, apidoc.__file__)
-        apidoc.main(argv)
-
-
-def setup(app):
-    app.connect('builder-inited', run_apidoc)
