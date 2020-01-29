@@ -36,7 +36,7 @@ class Message(Messageable):
 
     Attributes
     ----------
-    id: :class:`str`
+    id: :class:`int`
         Id of the message in conversation
 
         .. warning::

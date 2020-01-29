@@ -3802,7 +3802,7 @@ msgstr "Message"
 # 5a4e6c2bfe224a739a8daad603e3cc87
 #: of vk_botting.message.Message:1
 msgid "Represents any message sent or received by bot."
-msgstr "Представляет собой любое сообщение, отправленное или полученное ботов"
+msgstr "Представляет собой любое сообщение, отправленное или полученное ботом"
 
 # c29fac7acc2f4fe68eb1d9815cce5b82
 #: of vk_botting.message.Message:3
@@ -4865,6 +4865,5 @@ msgid ""
 "Should not be used outside of :class:`.Bot`, as it is not intended and "
 "will probably not work"
 msgstr ""
-"Не должен испольщоваться вне класса :class:`.Bot`, так как не будет "
+"Не должен использоваться вне класса :class:`.Bot`, так как не будет "
 "работать"
-
