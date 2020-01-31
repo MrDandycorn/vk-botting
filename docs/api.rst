@@ -59,11 +59,13 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     functions.
 
 .. function:: on_ready()
+    :module:
 
     Called when the bot is done preparing the data received from VK. Usually after login is successful
     and the :attr:`Bot.group` and co. are filled up.
 
 .. function:: on_error(event, \*args, \*\*kwargs)
+    :module:
 
     Usually when an event raises an uncaught exception, a traceback is
     printed to stderr and the exception is ignored. If you want to
@@ -88,6 +90,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
         exception.
 
 .. function:: on_command_error(ctx, error)
+    :module:
 
     An error handler that is called when an error is raised
     inside a command either through user input error, check
@@ -101,6 +104,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type error: :class:`CommandError` derived
 
 .. function:: on_command(ctx)
+    :module:
 
     An event that is called when a command is found and is about to be invoked.
 
@@ -111,6 +115,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type ctx: :class:`Context`
 
 .. function:: on_command_completion(ctx)
+    :module:
 
     An event that is called when a command has completed its invocation.
 
@@ -121,6 +126,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type ctx: :class:`Context`
 
 .. function:: on_message_new(message)
+    :module:
 
     Called when bot receives a message.
 
@@ -128,6 +134,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_message_reply(message)
+    :module:
 
     Called when bot replies with a message.
 
@@ -135,6 +142,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_message_edit(message)
+    :module:
 
     Called when message is edited.
 
@@ -142,6 +150,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_message_typing_state(state)
+    :module:
 
     Called when typing state is changed (e.g. someone starts typing).
 
@@ -149,6 +158,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type state: :class:`states.State`
 
 .. function:: on_conversation_start(message)
+    :module:
 
     Called when user starts conversation using special button.
 
@@ -156,6 +166,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_kick_user(message)
+    :module:
 
     Called when user is kicked from the chat.
 
@@ -163,6 +174,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_invite_user(message)
+    :module:
 
     Called when user is invited to the chat.
 
@@ -170,6 +182,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_invite_user_by_link(message)
+    :module:
 
     Called when user is invited to the chat by link.
 
@@ -177,6 +190,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_photo_update(message)
+    :module:
 
     Called when chat photo is updated.
 
@@ -184,6 +198,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_photo_remove(message)
+    :module:
 
     Called when chat photo is removed.
 
@@ -191,6 +206,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_create(message)
+    :module:
 
     Called when chat is created.
 
@@ -198,6 +214,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_title_update(message)
+    :module:
 
     Called when chat title is updated.
 
@@ -205,6 +222,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_pin_message(message)
+    :module:
 
     Called when message is pinned in chat.
 
@@ -212,6 +230,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_chat_unpin_message(message)
+    :module:
 
     Called when message is unpinned in chat.
 
@@ -219,6 +238,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type message: :class:`message.Message`
 
 .. function:: on_message_allow(user)
+    :module:
 
     Called when user allows getting messages from bot.
 
@@ -226,6 +246,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type user: :class:`user.User`
 
 .. function:: on_message_deny(user)
+    :module:
 
     Called when user denies getting messages from bot.
 
@@ -233,6 +254,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type user: :class:`user.User`
 
 .. function:: on_photo_new(photo)
+    :module:
 
     Called when new photo is uploaded to bot group.
 
@@ -240,6 +262,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type photo: :class:`attachments.Photo`
 
 .. function:: on_audio_new(audio)
+    :module:
 
     Called when new audio is uploaded to bot group.
 
@@ -247,6 +270,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type audio: :class:`attachments.Audio`
 
 .. function:: on_video_new(video)
+    :module:
 
     Called when new video is uploaded to bot group.
 
@@ -254,6 +278,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type video: :class:`attachments.Video`
 
 .. function:: on_photo_comment_new(comment)
+    :module:
 
     Called when new comment is added to photo.
 
@@ -261,6 +286,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.PhotoComment`
 
 .. function:: on_photo_comment_edit(comment)
+    :module:
 
     Called when comment on photo gets edited.
 
@@ -268,6 +294,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.PhotoComment`
 
 .. function:: on_photo_comment_restore(comment)
+    :module:
 
     Called when comment on photo is restored.
 
@@ -275,6 +302,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.PhotoComment`
 
 .. function:: on_photo_comment_delete(comment)
+    :module:
 
     Called when comment on photo is deleted.
 
@@ -282,6 +310,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.DeletedPhotoComment`
 
 .. function:: on_video_comment_new(comment)
+    :module:
 
     Called when new comment is added to video.
 
@@ -289,6 +318,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.VideoComment`
 
 .. function:: on_video_comment_edit(comment)
+    :module:
 
     Called when comment on video gets edited.
 
@@ -296,6 +326,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.VideoComment`
 
 .. function:: on_video_comment_restore(comment)
+    :module:
 
     Called when comment on video is restored.
 
@@ -303,6 +334,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.VideoComment`
 
 .. function:: on_video_comment_delete(comment)
+    :module:
 
     Called when comment on video is deleted.
 
@@ -310,6 +342,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.DeletedVideoComment`
 
 .. function:: on_market_comment_new(comment)
+    :module:
 
     Called when new comment is added to market.
 
@@ -317,6 +350,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.MarketComment`
 
 .. function:: on_market_comment_edit(comment)
+    :module:
 
     Called when comment on market gets edited.
 
@@ -324,6 +358,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.MarketComment`
 
 .. function:: on_market_comment_restore(comment)
+    :module:
 
     Called when comment on market is restored.
 
@@ -331,6 +366,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.MarketComment`
 
 .. function:: on_market_comment_delete(comment)
+    :module:
 
     Called when comment on market is deleted.
 
@@ -338,6 +374,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.DeletedMarketComment`
 
 .. function:: on_board_post_new(comment)
+    :module:
 
     Called when new post is added to board.
 
@@ -345,6 +382,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.BoardComment`
 
 .. function:: on_board_post_edit(comment)
+    :module:
 
     Called when post on board gets edited.
 
@@ -352,6 +390,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.BoardComment`
 
 .. function:: on_board_post_restore(comment)
+    :module:
 
     Called when post on board is restored.
 
@@ -359,6 +398,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.BoardComment`
 
 .. function:: on_board_post_delete(comment)
+    :module:
 
     Called when post on board is deleted.
 
@@ -366,6 +406,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.DeletedBoardComment`
 
 .. function:: on_wall_post_new(post)
+    :module:
 
     Called when new post in added to wall.
 
@@ -373,6 +414,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type post: :class:`group.Post`
 
 .. function:: on_wall_repost(post)
+    :module:
 
     Called when wall post is reposted.
 
@@ -380,6 +422,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type post: :class:`group.Post`
 
 .. function:: on_wall_reply_new(comment)
+    :module:
 
     Called when new comment is added to wall.
 
@@ -387,6 +430,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.WallComment`
 
 .. function:: on_wall_reply_edit(comment)
+    :module:
 
     Called when comment on wall gets edited.
 
@@ -394,6 +438,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.WallComment`
 
 .. function:: on_wall_reply_restore(comment)
+    :module:
 
     Called when comment on wall is restored.
 
@@ -401,6 +446,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.WallComment`
 
 .. function:: on_wall_reply_delete(comment)
+    :module:
 
     Called when comment on wall is deleted.
 
@@ -408,6 +454,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type comment: :class:`group.DeletedWallComment`
 
 .. function:: on_group_join(user, join_type)
+    :module:
 
     Called when user joins bot group.
 
@@ -417,6 +464,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type join_type: :class:`str`
 
 .. function:: on_group_leave(user, self)
+    :module:
 
     Called when user leaves bot group.
 
@@ -426,6 +474,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type self: :class:`bool`
 
 .. function:: on_user_block(user)
+    :module:
 
     Called when user is blocked in bot group.
 
@@ -433,6 +482,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type user: :class:`user.BlockedUser`
 
 .. function:: on_user_unblock(user)
+    :module:
 
     Called when user is unblocked in bot group.
 
@@ -440,6 +490,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type user: :class:`user.UnblockedUser`
 
 .. function:: on_poll_vote_new(vote)
+    :module:
 
     Called when new poll vote is received.
 
@@ -447,6 +498,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type vote: :class:`group.PollVote`
 
 .. function:: on_group_officers_edit(edit)
+    :module:
 
     Called when group officers are edited.
 
@@ -454,6 +506,7 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type edit: :class:`group.OfficersEdit`
 
 .. function:: on_unknown(payload)
+    :module:
 
     Called when unknown event is received.
 
