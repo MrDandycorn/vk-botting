@@ -148,6 +148,13 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param state: New state.
     :type state: :class:`states.State`
 
+.. function:: on_conversation_start(message)
+
+    Called when user starts conversation using special button.
+
+    :param message: Message sent when conversation is started.
+    :type message: :class:`message.Message`
+
 .. function:: on_chat_kick_user(message)
 
     Called when user is kicked from the chat.

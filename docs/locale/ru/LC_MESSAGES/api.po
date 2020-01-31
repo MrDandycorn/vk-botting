@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-18 20:21+0300\n"
+"POT-Creation-Date: 2020-01-31 17:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -314,8 +314,8 @@ msgstr "Библиотека не будет работать с версиям�
 #: vk_botting.exceptions.InvalidEndOfQuotedStringError:10
 #: vk_botting.exceptions.UnexpectedQuoteError:9 vk_botting.group.Group:13
 #: vk_botting.group.Group:19 vk_botting.group.Group:31
-#: vk_botting.message.Message:13 vk_botting.message.Message:43
-#: vk_botting.user.User:17 vk_botting.user.User:23
+#: vk_botting.message.Message:43 vk_botting.user.User:17
+#: vk_botting.user.User:23
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
@@ -809,80 +809,9 @@ msgid ""
 "self."
 msgstr "Тут могла быть ваша реклама"
 
-# c9932c8cccc14a3da3238da9bae95c3e
-# 693938f094634fc79df45f0e1a4a2a05
-# 8a3fd1759c294cd5905b3e863fb00f5c
-# 40a9ce745958496ba6db5cfd2e30d97d
-# c4d6cd6e447d465481395deaaf1a2688
-# 0118cfd5196f4f7989e15c7f959cb0c8
-# fab690fee50447748cc73cca7db79d2c
-# 15d2475f371743819d285f4594277211
-# c7c89c8f3dc443c7adf0b1377bb99cba
-# 8a070998484c4c80b795518a07e404ec
-# bff3db0874b24dc0b7a9a3d6134f2bd9
-# ffdbb48d33c64dc0aa5df7fcee19fce8
-# 9f4e0a29a8ee49ccb671f27b0750c86f
-# ccab0f1eaa5f41d394c324551354a80b
-# 84b4f5d066524def93f1686847c8feed
-# e764c4ede0ef48ebafb974ec56dfecb9
-# 4b5a9e299a8a4635be14b569b0f507ac
-# 79d16171f4b84588b52a83130bcd7d25
-# 958662e89e4540619fdf1392a3abf125
-# d28b77be45a4476c91fd6f8eaead2c7c
-# 81bd72290a9b451ea6840ceb28799fe0
-# 54f1a41a92ed4255a377444251f25ce0
-# ce8fa9cf784846f989cef16c6cddf461
-# e6cf8ef8a72e455ca240d9deb7fdade8
-# 2af1bfd0ead94e52b6d82112216ef36f
-# 2e351b56ec434a0e89bbd079c4c6159f
-# 8ec81fcf41724694847b29ad11727a23
-# f455af93dd3e4099963f762d17be3132
-# 32a4740b919e4dc483c60e9ff4131cbc
-# 987677925e1142d38877974c31c283a4
-# 17894c1aaf1c440a901e6e00b38cece6
-# d1a3f02269a747d68a3a198c68a46423
-# bca48a9bf6834be281a750eebd306c3d
-# dd9aafd8d35b4e26b410c9681ebf5298
-# 5eae90d917dd4c819b6faa836691a917
-# f6e62429bf244c55bef7aab7003b4d85
-# f046f2d84e6a4565b953c4e7c42f332d
-# 1e6c933e42e14229a0578fc04e42c502
-# 9bf9b4b189e14116b22a8fada051420a
-# d59eb4a456554881b45fcfc4e27fa63b
-# 905088a12c7f4a4e9a479421e0e6caa0
-# 5fda6fd4e2a5407a9e7fe8e23b164e45
-#: of vk_botting.abstract.Messageable.send:1
-#: vk_botting.abstract.Messageable.trigger_typing:1
-#: vk_botting.bot.Bot.build_msg:1 vk_botting.bot.Bot.get_context:1
-#: vk_botting.bot.Bot.get_group:1 vk_botting.bot.Bot.get_groups:1
-#: vk_botting.bot.Bot.get_own_page:1 vk_botting.bot.Bot.get_page:1
-#: vk_botting.bot.Bot.get_pages:1 vk_botting.bot.Bot.get_prefix:1
-#: vk_botting.bot.Bot.get_user:1 vk_botting.bot.Bot.get_users:1
-#: vk_botting.bot.Bot.invoke:1 vk_botting.bot.Bot.on_error:1
-#: vk_botting.bot.Bot.process_commands:1 vk_botting.bot.Bot.send_message:1
-#: vk_botting.bot.Bot.vk_request:1 vk_botting.bot.Bot.wait_for:1
-#: vk_botting.client.Client.build_msg:1 vk_botting.client.Client.get_group:1
-#: vk_botting.client.Client.get_groups:1
-#: vk_botting.client.Client.get_own_page:1 vk_botting.client.Client.get_page:1
-#: vk_botting.client.Client.get_pages:1 vk_botting.client.Client.get_user:1
-#: vk_botting.client.Client.get_users:1 vk_botting.client.Client.on_error:1
-#: vk_botting.client.Client.send_message:1
-#: vk_botting.client.Client.vk_request:1 vk_botting.client.Client.wait_for:1
-#: vk_botting.commands.Command.can_run:1
-#: vk_botting.commands.GroupCommand.can_run:1
-#: vk_botting.context.Context.invoke:1 vk_botting.context.Context.reinvoke:1
-#: vk_botting.context.Context.send:1
-#: vk_botting.context.Context.trigger_typing:1
-#: vk_botting.message.Message.edit:1 vk_botting.message.Message.reply:1
-#: vk_botting.message.Message.send:1
-#: vk_botting.message.Message.trigger_typing:1 vk_botting.user.User.send:1
-#: vk_botting.user.User.trigger_typing:1
-msgid "|coro|"
-msgstr "|coro|"
-
 # 3304a4dcbeca4aefbdf23188972174d6
 # ba121e69c71a479588797dee7f9d5089
-#: of vk_botting.bot.Bot.build_msg:3 vk_botting.client.Client.build_msg:3
+#: of vk_botting.bot.Bot.build_msg:1 vk_botting.client.Client.build_msg:1
 msgid "Build :class:`.Message` instance from message object :class:`dict`."
 msgstr ""
 "Создает экземпляр класса :class:`.Message` из :class:`dict`, содержащего "
@@ -890,13 +819,13 @@ msgstr ""
 
 # d44be6ef10f64ed585399a000de1ccc1
 # 4afc5cee4a1b495a95c7d80b0f58a337
-#: of vk_botting.bot.Bot.build_msg:5 vk_botting.client.Client.build_msg:5
+#: of vk_botting.bot.Bot.build_msg:3 vk_botting.client.Client.build_msg:3
 msgid "Normally should not be used at all."
 msgstr "В нормальных условиях не должна вызываться вообще"
 
 # 1633b48610da444b92c349e7b7d10d48
 # 1e669bbe3d6d4352ab64d4b7a3c81ce6
-#: of vk_botting.bot.Bot.build_msg:7 vk_botting.client.Client.build_msg:7
+#: of vk_botting.bot.Bot.build_msg:5 vk_botting.client.Client.build_msg:5
 msgid ":class:`dict` representation of Message object returned by VK API"
 msgstr ":class:`dict`, представляющий объект сообщения, полученный от VK API"
 
@@ -975,7 +904,7 @@ msgstr "Возвращает"
 
 # 4367d007c80b4604a933a8c669d158b0
 # f9f91cdbd5d84ad18aec701a16b82e04
-#: of vk_botting.bot.Bot.build_msg:10 vk_botting.client.Client.build_msg:10
+#: of vk_botting.bot.Bot.build_msg:8 vk_botting.client.Client.build_msg:8
 msgid ":class:`.Message` instance representing original object"
 msgstr "Экземпляр :class:`.Message`, представляющий изначальное сообщение"
 
@@ -1066,8 +995,8 @@ msgstr "Тип возвращаемого значения"
 # e7c306f25fe247e89f3daf285f293a77
 # e2b6cda7c38c4bffacc68feacce68d1f
 #: of vk_botting.abstract.Messageable:6 vk_botting.abstract.Messageable.send:30
-#: vk_botting.bot.Bot.build_msg:11 vk_botting.bot.Bot.send_message:32
-#: vk_botting.client.Client.build_msg:11
+#: vk_botting.bot.Bot.build_msg:9 vk_botting.bot.Bot.send_message:32
+#: vk_botting.client.Client.build_msg:9
 #: vk_botting.client.Client.send_message:32 vk_botting.context.Context:13
 #: vk_botting.context.Context.send:30 vk_botting.message.Message:61
 #: vk_botting.message.Message.edit:21 vk_botting.message.Message.reply:30
@@ -1250,6 +1179,76 @@ msgstr "Запрошенная команда. Если не найдена, в�
 #: vk_botting.commands.GroupMixin.get_command:14
 msgid ":class:`Command` or subclass"
 msgstr ":class:`Command` или сабкласс"
+
+# c9932c8cccc14a3da3238da9bae95c3e
+# 693938f094634fc79df45f0e1a4a2a05
+# 8a3fd1759c294cd5905b3e863fb00f5c
+# 40a9ce745958496ba6db5cfd2e30d97d
+# c4d6cd6e447d465481395deaaf1a2688
+# 0118cfd5196f4f7989e15c7f959cb0c8
+# fab690fee50447748cc73cca7db79d2c
+# 15d2475f371743819d285f4594277211
+# c7c89c8f3dc443c7adf0b1377bb99cba
+# 8a070998484c4c80b795518a07e404ec
+# bff3db0874b24dc0b7a9a3d6134f2bd9
+# ffdbb48d33c64dc0aa5df7fcee19fce8
+# 9f4e0a29a8ee49ccb671f27b0750c86f
+# ccab0f1eaa5f41d394c324551354a80b
+# 84b4f5d066524def93f1686847c8feed
+# e764c4ede0ef48ebafb974ec56dfecb9
+# 4b5a9e299a8a4635be14b569b0f507ac
+# 79d16171f4b84588b52a83130bcd7d25
+# 958662e89e4540619fdf1392a3abf125
+# d28b77be45a4476c91fd6f8eaead2c7c
+# 81bd72290a9b451ea6840ceb28799fe0
+# 54f1a41a92ed4255a377444251f25ce0
+# ce8fa9cf784846f989cef16c6cddf461
+# e6cf8ef8a72e455ca240d9deb7fdade8
+# 2af1bfd0ead94e52b6d82112216ef36f
+# 2e351b56ec434a0e89bbd079c4c6159f
+# 8ec81fcf41724694847b29ad11727a23
+# f455af93dd3e4099963f762d17be3132
+# 32a4740b919e4dc483c60e9ff4131cbc
+# 987677925e1142d38877974c31c283a4
+# 17894c1aaf1c440a901e6e00b38cece6
+# d1a3f02269a747d68a3a198c68a46423
+# bca48a9bf6834be281a750eebd306c3d
+# dd9aafd8d35b4e26b410c9681ebf5298
+# 5eae90d917dd4c819b6faa836691a917
+# f6e62429bf244c55bef7aab7003b4d85
+# f046f2d84e6a4565b953c4e7c42f332d
+# 1e6c933e42e14229a0578fc04e42c502
+# 9bf9b4b189e14116b22a8fada051420a
+# d59eb4a456554881b45fcfc4e27fa63b
+# 905088a12c7f4a4e9a479421e0e6caa0
+# 5fda6fd4e2a5407a9e7fe8e23b164e45
+#: of vk_botting.abstract.Messageable.send:1
+#: vk_botting.abstract.Messageable.trigger_typing:1
+#: vk_botting.bot.Bot.get_context:1 vk_botting.bot.Bot.get_group:1
+#: vk_botting.bot.Bot.get_groups:1 vk_botting.bot.Bot.get_own_page:1
+#: vk_botting.bot.Bot.get_page:1 vk_botting.bot.Bot.get_pages:1
+#: vk_botting.bot.Bot.get_prefix:1 vk_botting.bot.Bot.get_user:1
+#: vk_botting.bot.Bot.get_users:1 vk_botting.bot.Bot.invoke:1
+#: vk_botting.bot.Bot.on_error:1 vk_botting.bot.Bot.process_commands:1
+#: vk_botting.bot.Bot.send_message:1 vk_botting.bot.Bot.vk_request:1
+#: vk_botting.bot.Bot.wait_for:1 vk_botting.client.Client.get_group:1
+#: vk_botting.client.Client.get_groups:1
+#: vk_botting.client.Client.get_own_page:1 vk_botting.client.Client.get_page:1
+#: vk_botting.client.Client.get_pages:1 vk_botting.client.Client.get_user:1
+#: vk_botting.client.Client.get_users:1 vk_botting.client.Client.on_error:1
+#: vk_botting.client.Client.send_message:1
+#: vk_botting.client.Client.vk_request:1 vk_botting.client.Client.wait_for:1
+#: vk_botting.commands.Command.can_run:1
+#: vk_botting.commands.GroupCommand.can_run:1
+#: vk_botting.context.Context.invoke:1 vk_botting.context.Context.reinvoke:1
+#: vk_botting.context.Context.send:1
+#: vk_botting.context.Context.trigger_typing:1
+#: vk_botting.message.Message.edit:1 vk_botting.message.Message.reply:1
+#: vk_botting.message.Message.send:1
+#: vk_botting.message.Message.trigger_typing:1 vk_botting.user.User.send:1
+#: vk_botting.user.User.trigger_typing:1
+msgid "|coro|"
+msgstr "|coro|"
 
 # 49a4ebcadb03420b92171a2fb8c24365
 #: of vk_botting.bot.Bot.get_context:3
@@ -2978,146 +2977,154 @@ msgstr ""
 msgid "New state."
 msgstr "Новое состояние"
 
-# 09f4bcce5c0942faad2d0ea284612564
 #: ../../api.rst:153
+msgid "Called when user starts conversation using special button."
+msgstr "Вызывается, когда пользователь использует кнопку 'Начать' в диалоге с ботом"
+
+#: ../../api.rst:155
+msgid "Message sent when conversation is started."
+msgstr "Сообщение, отправленное когда пользователь начал диалог"
+
+# 09f4bcce5c0942faad2d0ea284612564
+#: ../../api.rst:160
 msgid "Called when user is kicked from the chat."
 msgstr "Вызывается при удалении пользователя из чата"
 
 # 9123c591842443eab72dc5cb3ea0e1bb
-#: ../../api.rst:155
+#: ../../api.rst:162
 msgid "Message sent when user is kicked."
 msgstr "Сообщение, отправленное, когда пользователь был удален"
 
 # a44f74cfef64474192378ceed0702e19
-#: ../../api.rst:160
+#: ../../api.rst:167
 msgid "Called when user is invited to the chat."
 msgstr "Вызывается при добавлении пользователя к чату"
 
 # 818949e4be3840c3a35be3a6afeee809
 # 884a78df5d7f449c84b65cd9956f579a
-#: ../../api.rst:162 ../../api.rst:169
+#: ../../api.rst:169 ../../api.rst:176
 msgid "Message sent when user is invited."
 msgstr "Сообщение, отправленное при приглашении пользователя"
 
 # 87d83c7f1e004068b797f41532062591
-#: ../../api.rst:167
+#: ../../api.rst:174
 msgid "Called when user is invited to the chat by link."
 msgstr ""
 "Вызывается при добавлении пользователя к чату посредством "
 "ссылки-приглашения"
 
 # 351b22f6a1384925834d62d02c770eb7
-#: ../../api.rst:174
+#: ../../api.rst:181
 msgid "Called when chat photo is updated."
 msgstr "Вызывается при обновлении фото чата"
 
 # 76f08374efdd4071b5b63877089227c6
-#: ../../api.rst:176
+#: ../../api.rst:183
 msgid "Message sent when photo is updated."
 msgstr "Сообщение, отправленное при смене фото"
 
 # 061b2a28631d452eb08b11e03dc9f281
-#: ../../api.rst:181
+#: ../../api.rst:188
 msgid "Called when chat photo is removed."
 msgstr "Вызывается при удалении фото чата"
 
 # cfe38bc5fbbc483698ce4baf55603ef2
-#: ../../api.rst:183
+#: ../../api.rst:190
 msgid "Message sent when photo is removed."
 msgstr "Сообщение, отправленное при удалении фото"
 
 # 54d6c66e41b94d8885323fd6af74056d
-#: ../../api.rst:188
+#: ../../api.rst:195
 msgid "Called when chat is created."
 msgstr "Вызывается при создании чата"
 
 # 4997fbb9cd324d05ab98aa569f884acd
-#: ../../api.rst:190
+#: ../../api.rst:197
 msgid "Message sent when chat is created."
 msgstr "Сообщение, отправленное при создании чата"
 
 # 0953b832ffaa4da48b5808699e39ee41
-#: ../../api.rst:195
+#: ../../api.rst:202
 msgid "Called when chat title is updated."
 msgstr "Вызывается при обновлении названия чата"
 
 # 46badbcb75ff4716abe76d50b7d17848
-#: ../../api.rst:197
+#: ../../api.rst:204
 msgid "Message sent when chat title is updated."
 msgstr "Сообщение, отправленное при смене названия чата"
 
 # 9d0cb5f51bad4dc69db4fbd0ea868415
-#: ../../api.rst:202
+#: ../../api.rst:209
 msgid "Called when message is pinned in chat."
 msgstr "Вызывается при закреплении сообщения в чате"
 
 # 594906943c7046169350e2d74be1f865
-#: ../../api.rst:204
+#: ../../api.rst:211
 msgid "Message sent when message is pinned in chat."
 msgstr "Сообщение, отправленное при закреплении сообщения в чате"
 
 # 25f1dac68bd14c86a4732e46d8a1c12b
-#: ../../api.rst:209
+#: ../../api.rst:216
 msgid "Called when message is unpinned in chat."
 msgstr "Вызывается при откреплении сообщения в чате"
 
 # f449bc2e5d664aca81142640d94835be
-#: ../../api.rst:211
+#: ../../api.rst:218
 msgid "Message sent when message is unpinned in chat."
 msgstr "Сообщение, отправленное при откреплении сообщения в чате"
 
 # 8dd505622d7448ec87091669332640a2
-#: ../../api.rst:216
+#: ../../api.rst:223
 msgid "Called when user allows getting messages from bot."
 msgstr "Вызывается, когда пользователь разрешает получение сообщений от бота"
 
 # 1daf2db2331b4e89a975887f8b11dfec
-#: ../../api.rst:218
+#: ../../api.rst:225
 msgid "User who allowed messages."
 msgstr "Пользователь, разрешивший получение сообщений"
 
 # 985312976df2472eb2fcc0a846fd2d6b
-#: ../../api.rst:223
+#: ../../api.rst:230
 msgid "Called when user denies getting messages from bot."
 msgstr "Вызывается, когда пользователь запрещает получение сообщения от бота"
 
 # 17d0ea4f10c54bab991bdc0542258779
-#: ../../api.rst:225
+#: ../../api.rst:232
 msgid "User who denied messages."
 msgstr "Пользователь, запретивший получение сообщений"
 
 # 257e7b523e6a49ba8984fa6cebd9c7d4
-#: ../../api.rst:230
+#: ../../api.rst:237
 msgid "Called when new photo is uploaded to bot group."
 msgstr "Вызывается, когда в группу бота загружено фото"
 
 # 85db08333575464695eb879392c4bfda
-#: ../../api.rst:232
+#: ../../api.rst:239
 msgid "Photo that got uploaded."
 msgstr "Загруженное фото"
 
 # ce9c1b9ff99c4055a63cc117ffe6cddf
-#: ../../api.rst:237
+#: ../../api.rst:244
 msgid "Called when new audio is uploaded to bot group."
 msgstr "Вызывается, когда в группу бота загружено аудио"
 
 # be05c41d7cab4dfe9028abe1a54efdfa
-#: ../../api.rst:239
+#: ../../api.rst:246
 msgid "Audio that got uploaded."
 msgstr "Загруженное аудио"
 
 # e8b825828db3492eb75e2f4f99fb461b
-#: ../../api.rst:244
+#: ../../api.rst:251
 msgid "Called when new video is uploaded to bot group."
 msgstr "Вызывается, когда в группу бота загружено видео"
 
 # a38be6a1ee48436497544477a4de23e3
-#: ../../api.rst:246
+#: ../../api.rst:253
 msgid "Video that got uploaded."
 msgstr "Загруженное видео"
 
 # 2eb1cf49ab3d44e9a729b21fa0755c11
-#: ../../api.rst:251
+#: ../../api.rst:258
 msgid "Called when new comment is added to photo."
 msgstr "Вызывается, когда к фото добавляется новый комментарий"
 
@@ -3125,12 +3132,12 @@ msgstr "Вызывается, когда к фото добавляется но
 # 2d19d6b85d1b4fcd9805943608b0caef
 # dcba4953810d4be6b4504a9d4c6ddbe7
 # ef7f98ea036b4b8f88ab180e8a872a2b
-#: ../../api.rst:253 ../../api.rst:281 ../../api.rst:309 ../../api.rst:379
+#: ../../api.rst:260 ../../api.rst:288 ../../api.rst:316 ../../api.rst:386
 msgid "Comment that got send."
 msgstr "Добавленный комментарий"
 
 # 2165ca134aff4f899cae8a6573d497eb
-#: ../../api.rst:258
+#: ../../api.rst:265
 msgid "Called when comment on photo gets edited."
 msgstr "Вызывается, когда под фото изменяется комментарий"
 
@@ -3138,12 +3145,12 @@ msgstr "Вызывается, когда под фото изменяется к
 # 7865211f3070470cbe61deb13f79f6cc
 # 36cd8c3b45874030900566e05289fd29
 # 89cfde8f7a4a40dc80ec078637adbef1
-#: ../../api.rst:260 ../../api.rst:288 ../../api.rst:316 ../../api.rst:386
+#: ../../api.rst:267 ../../api.rst:295 ../../api.rst:323 ../../api.rst:393
 msgid "Comment that got edited."
 msgstr "Измененный комментарий"
 
 # ac40dfa551e14caa90e17a4d67b5c470
-#: ../../api.rst:265
+#: ../../api.rst:272
 msgid "Called when comment on photo is restored."
 msgstr "Вызывается, когда под фото восстанавливается комментарий"
 
@@ -3151,12 +3158,12 @@ msgstr "Вызывается, когда под фото восстанавли�
 # 36ecebff8a1a465385feaedfc0acdb8b
 # f5bbb4ce0e0843619e19bb1c4a85ba2b
 # 75564fb1f4bf412694e573b3c75e3e77
-#: ../../api.rst:267 ../../api.rst:295 ../../api.rst:323 ../../api.rst:393
+#: ../../api.rst:274 ../../api.rst:302 ../../api.rst:330 ../../api.rst:400
 msgid "Comment that got restored."
 msgstr "Восстановленный комментарий"
 
 # 06f8acfd1d4147c287e6677f13761ba5
-#: ../../api.rst:272
+#: ../../api.rst:279
 msgid "Called when comment on photo is deleted."
 msgstr "Вызывается, когда под фото удаляется комментарий"
 
@@ -3164,141 +3171,141 @@ msgstr "Вызывается, когда под фото удаляется ко
 # 7932c0e0d1e6445289c10f8350f53e19
 # ffb32703fb8648878d9599c4d6f81e89
 # 70177267a576477e95c06609167c427d
-#: ../../api.rst:274 ../../api.rst:302 ../../api.rst:330 ../../api.rst:400
+#: ../../api.rst:281 ../../api.rst:309 ../../api.rst:337 ../../api.rst:407
 msgid "Comment that got deleted."
 msgstr "Удаленный комментарий"
 
 # c27010f1a0c8416a80318057cc89c348
-#: ../../api.rst:279
+#: ../../api.rst:286
 msgid "Called when new comment is added to video."
 msgstr "Вызывается, когда к видео добавляется новый комментарий"
 
 # f627e6ace8d64243b034cc24a18c6569
-#: ../../api.rst:286
+#: ../../api.rst:293
 msgid "Called when comment on video gets edited."
 msgstr "Вызывается, когда под видео изменяется комментарий"
 
 # 5d02edca81e641fa875d3ec1225b7abf
-#: ../../api.rst:293
+#: ../../api.rst:300
 msgid "Called when comment on video is restored."
 msgstr "Вызывается, когда под видео восстанавливается комментарий"
 
 # 08606ef9ed5d4e5ab1d9e56ccbf38f17
-#: ../../api.rst:300
+#: ../../api.rst:307
 msgid "Called when comment on video is deleted."
 msgstr "Вызывается, когда под видео удаляется комментарий"
 
 # 46fca122640c4e5c9227533c1aeafc78
-#: ../../api.rst:307
+#: ../../api.rst:314
 msgid "Called when new comment is added to market."
 msgstr "Вызывается, когда к товару добавляется новый комментарий"
 
 # d5629e6fca8948bcb47ef5a01a243808
-#: ../../api.rst:314
+#: ../../api.rst:321
 msgid "Called when comment on market gets edited."
 msgstr "Вызывается, когда под товаром изменяется комментарий"
 
 # 19971fd5d61f4878b1a99488ed216d1f
-#: ../../api.rst:321
+#: ../../api.rst:328
 msgid "Called when comment on market is restored."
 msgstr "Вызывается, когда под товаром восстанавливается комментарий"
 
 # 78e1745df1554323b67c4bbd9c0b8fa8
-#: ../../api.rst:328
+#: ../../api.rst:335
 msgid "Called when comment on market is deleted."
 msgstr "Вызывается, когда под товаром удаляется комментарий"
 
 # abc79ab170c94328b51f7e1060ab4a4b
-#: ../../api.rst:335
+#: ../../api.rst:342
 msgid "Called when new post is added to board."
 msgstr "Вызывается, когда к обсуждению добавляется новый комментарий"
 
-#: ../../api.rst:337
+#: ../../api.rst:344
 msgid "New post on the board."
 msgstr "Комментарий, добавленный к обсуждению"
 
 # 0261c226307d4ac3a7e707bf1db343c4
-#: ../../api.rst:342
+#: ../../api.rst:349
 msgid "Called when post on board gets edited."
 msgstr "Вызывается, когда в обсуждении изменяется комментарий"
 
 # 236d458c77c747959c39297726d59049
-#: ../../api.rst:344
+#: ../../api.rst:351
 msgid "Post that got edited."
 msgstr "Измененный комментарий"
 
 # 3ab227a9606544fbbf17a80a033bf83b
-#: ../../api.rst:349
+#: ../../api.rst:356
 msgid "Called when post on board is restored."
 msgstr "Вызывается, когда в обсуждении восстанавливается комментарий"
 
 # 830117506e474d82a6394186769f0cdc
-#: ../../api.rst:351
+#: ../../api.rst:358
 msgid "Post that got restored."
 msgstr "Восстановленный комментарий"
 
 # d73024c804e04490a82177f4e81b553b
-#: ../../api.rst:356
+#: ../../api.rst:363
 msgid "Called when post on board is deleted."
 msgstr "Вызывается, когда в обсуждении удаляется комментарий"
 
 # 73b62fb6d30b422b9a61e533ff087c6b
-#: ../../api.rst:358
+#: ../../api.rst:365
 msgid "Post that got deleted."
 msgstr "Удаленный комментарий"
 
 # d74488ebeb3444bc9fbffc030c9a03da
-#: ../../api.rst:363
+#: ../../api.rst:370
 msgid "Called when new post in added to wall."
 msgstr "Вызывается, когда на стену добавляется пост"
 
 # 30afefd11c97478c838b3ce5b10c143f
-#: ../../api.rst:365
+#: ../../api.rst:372
 msgid "Post that got added."
 msgstr "Добавленный пост"
 
 # 8e83407ad0f240148b2859987dd8be2f
-#: ../../api.rst:370
+#: ../../api.rst:377
 msgid "Called when wall post is reposted."
 msgstr "Вызывается, когда пост со стены репостится"
 
 # f0c76ec666ba4ee7940e3f263ae52f06
-#: ../../api.rst:372
+#: ../../api.rst:379
 msgid "Post that got reposted."
 msgstr "Репостнутый пост"
 
 # 1dd76a433ae749d0af2df8480b7b9208
-#: ../../api.rst:377
+#: ../../api.rst:384
 msgid "Called when new comment is added to wall."
 msgstr "Вызывается, когда на стену добавляется новый комментарий"
 
 # 670880ac3a2b4908a4cc476e8f6aa147
-#: ../../api.rst:384
+#: ../../api.rst:391
 msgid "Called when comment on wall gets edited."
 msgstr "Вызывается, когда комментарий на стене изменяется"
 
 # e0774a8a904d4c9ab28d52e35c359cb1
-#: ../../api.rst:391
+#: ../../api.rst:398
 msgid "Called when comment on wall is restored."
 msgstr "Вызывается, когда комментарий на стене восстанавливается"
 
 # b45f9cc6078343ff90b6a7067e590084
-#: ../../api.rst:398
+#: ../../api.rst:405
 msgid "Called when comment on wall is deleted."
 msgstr "Вызывается, когда комментарий на стене удаляется"
 
 # b991fa038efd4ea08af1bdae5c1b74c2
-#: ../../api.rst:405
+#: ../../api.rst:412
 msgid "Called when user joins bot group."
 msgstr "Вызывается, когда пользователь присоединяется к группе"
 
 # e1c477be9de6411e9c2dd93ced4d1e61
-#: ../../api.rst:407
+#: ../../api.rst:414
 msgid "User that joined the group."
 msgstr "Пользователь, присоединившийся к группе"
 
 # 22e06a96871e44d98a11b6e2c03fa329
-#: ../../api.rst:409
+#: ../../api.rst:416
 msgid ""
 "User join type. Can be 'join' if user just joined, 'unsure' for events, "
 "'accepted' if user was invited, 'approved' if user join request was "
@@ -3310,77 +3317,77 @@ msgstr ""
 "пользователь запросил доступ в сообщество"
 
 # e3b82217b2d043df87d74fecc4427461
-#: ../../api.rst:414
+#: ../../api.rst:421
 msgid "Called when user leaves bot group."
 msgstr "Вызывается, когда пользователь покидает группу"
 
 # c1ba8ceb1dbe406796a9f035c838e047
-#: ../../api.rst:416
+#: ../../api.rst:423
 msgid "User that left the group."
 msgstr "Пользователь, покинувший группу"
 
 # 9f54fba7532a4ae8b721b543de5b8ebb
-#: ../../api.rst:418
+#: ../../api.rst:425
 msgid "If user left on their own (True) or was kicked (False)."
 msgstr "Покинул ли пользователь сам (True) или был исключен (False)"
 
 # ad96e9764b2f4ac08e5495cc9c6988c5
-#: ../../api.rst:423
+#: ../../api.rst:430
 msgid "Called when user is blocked in bot group."
 msgstr "Вызывается, когда пользователя блокируют в группе"
 
 # d117555353e44244939c7434ebaf97fe
-#: ../../api.rst:425
+#: ../../api.rst:432
 msgid "User that was blocked."
 msgstr "Пользователь, которого заблокировали"
 
 # d823a7ef9293474a81e3ad4ecbc70177
-#: ../../api.rst:430
+#: ../../api.rst:437
 msgid "Called when user is unblocked in bot group."
 msgstr "Вызывается, когда пользователя разблокируют в группе"
 
 # c7b5a9e428404b7182f39dc7e06b731c
-#: ../../api.rst:432
+#: ../../api.rst:439
 msgid "User that was unblocked."
 msgstr "Пользователь, которого разблокировали"
 
 # f693452abc6740e98275e0754e5281f2
-#: ../../api.rst:437
+#: ../../api.rst:444
 msgid "Called when new poll vote is received."
 msgstr "Вызывается, когда в опросе появляется новый голос"
 
 # f3dc54653fcf46039a3f6c466fb00067
-#: ../../api.rst:439
+#: ../../api.rst:446
 msgid "New vote."
 msgstr "Новый голос"
 
 # a3aed40548284c46ac213b00c8fb88ea
-#: ../../api.rst:444
+#: ../../api.rst:451
 msgid "Called when group officers are edited."
 msgstr "Вызывается, когда изменяются полномочия в группе"
 
 # aeff17f617944fbc99f8e016a7d63a26
-#: ../../api.rst:446
+#: ../../api.rst:453
 msgid "New edit."
 msgstr "Изменение"
 
 # be22b647dc2b47ce9e3b013583370eb0
-#: ../../api.rst:451
+#: ../../api.rst:458
 msgid "Called when unknown event is received."
 msgstr "Вызывается, когда получено неизвестное событие"
 
 # fa03882e560b4eb887541f93accaa864
-#: ../../api.rst:453
+#: ../../api.rst:460
 msgid "Json payload of the event."
 msgstr "Json события"
 
 # 0da4461cb8f240d0bf452610ceedd611
-#: ../../api.rst:460
+#: ../../api.rst:467
 msgid "Abstract Base Classes"
 msgstr "Абстрактные классы"
 
 # 8d796632904e4f96af7e32dc1b739dff
-#: ../../api.rst:462
+#: ../../api.rst:469
 msgid ""
 "An :term:`py:abstract base class` (also known as an ``abc``) is a class "
 "that models can inherit to get their behaviour. The Python implementation"
@@ -3396,7 +3403,7 @@ msgstr ""
 ":func:`py:isinstance` и :func:`py:issubclass`"
 
 # d9bb5e2ae1de4753959c63b4cbc2233a
-#: ../../api.rst:467
+#: ../../api.rst:474
 msgid ""
 "This library has a module related to abstract base classes, some of which"
 " are actually from the :doc:`abc <py:library/abc>` standard module, "
@@ -3423,12 +3430,12 @@ msgid ":class:`.UserMessage`"
 msgstr ":class:`.UserMessage`"
 
 # d6b378586dee46f9b2b61677f2decdcd
-#: ../../api.rst:479
+#: ../../api.rst:486
 msgid "Utility Classes"
 msgstr "Дополнительные классы"
 
 # 1704f34910764c6b99519a29a2080694
-#: ../../api.rst:482
+#: ../../api.rst:489
 msgid "Attachment"
 msgstr "Attachment"
 
@@ -3502,9 +3509,9 @@ msgstr ""
 # 985afb59278a48d5886a89b689fcf85a
 # c0b10e8c64814c8fb3b58f86928492eb
 #: of vk_botting.attachments.Attachment:9 vk_botting.attachments.Attachment:15
-#: vk_botting.group.Group:7 vk_botting.message.Message:31
-#: vk_botting.message.Message:37 vk_botting.user.User:11
-#: vk_botting.user.User:41
+#: vk_botting.group.Group:7 vk_botting.message.Message:13
+#: vk_botting.message.Message:31 vk_botting.message.Message:37
+#: vk_botting.user.User:11 vk_botting.user.User:41
 msgid ":class:`int`"
 msgstr ":class:`int`"
 
@@ -3519,7 +3526,7 @@ msgid "Type of an attachment. Can be value from :class:`.AttachmentType` enum."
 msgstr "Тип приложения. Может быть значением из :class:`.AttachmentType`"
 
 # 1c5497802cd844999279b3099418bb43
-#: ../../api.rst:491
+#: ../../api.rst:498
 msgid "Keyboard"
 msgstr "Keyboard"
 
@@ -3669,12 +3676,12 @@ msgid "When there are already too many lines in a keyboard"
 msgstr "Когда на клавиатуре уже слишком много кнопок"
 
 # 06af5d11a53d44858b8e9f8fcf98c677
-#: ../../api.rst:502
+#: ../../api.rst:509
 msgid "VK Models"
 msgstr "Модели VK"
 
 # 253ad0e597584c5fb59f23d3bd198f2e
-#: ../../api.rst:504
+#: ../../api.rst:511
 msgid ""
 "Models are classes that are received from VK and are not meant to be "
 "created by the user of the library."
@@ -3683,14 +3690,14 @@ msgstr ""
 "пользователем"
 
 # a5dc893d682642a78ede78ebe755ee1d
-#: ../../api.rst:509
+#: ../../api.rst:516
 msgid ""
 "The classes listed below are **not intended to be created by users** and "
 "are also **read-only**."
 msgstr "Классы ниже **только для чтения**"
 
 # 02f8cf07f20242eea59c46bfbe885c43
-#: ../../api.rst:512
+#: ../../api.rst:519
 msgid ""
 "For example, this means that you should not make your own :class:`User` "
 "instances nor should you modify the :class:`User` instance yourself."
@@ -3699,7 +3706,7 @@ msgstr ""
 "класса :class:`User`"
 
 # 3b9b13cf46ca47ae91da87157700cd5c
-#: ../../api.rst:517
+#: ../../api.rst:524
 msgid "User"
 msgstr "User"
 
@@ -3755,7 +3762,7 @@ msgid "1 for female, 2 for male, 0 for not specified"
 msgstr "1 - женский, 2 - мужской, 0 - не определен"
 
 # 755462880cd249179c2a0124fa3de1ab
-#: ../../api.rst:529
+#: ../../api.rst:536
 msgid "Group"
 msgstr "Group"
 
@@ -3795,7 +3802,7 @@ msgid "Has group photo urls with different sizes"
 msgstr "Разные размеры фото группы"
 
 # 39cda7b3f0e641879a19297f78ab2240
-#: ../../api.rst:536
+#: ../../api.rst:543
 msgid "Message"
 msgstr "Message"
 
@@ -3932,7 +3939,7 @@ msgid "|coro| Alternative for :meth:`.Message.get_user`"
 msgstr "|coro| Альтернатива для :meth:`.Message.get_user`"
 
 # 4029a25e89934a69a7463e78dd94bd5d
-#: ../../api.rst:549
+#: ../../api.rst:556
 msgid "Exceptions"
 msgstr "Ошибки"
 
@@ -4319,7 +4326,7 @@ msgstr ""
 "по какой-то причине"
 
 # 81fb1159601741818e6f167fd7b33f86
-#: ../../api.rst:603
+#: ../../api.rst:610
 msgid "Additional Classes"
 msgstr "Дополнительные классы"
 
@@ -4867,3 +4874,4 @@ msgid ""
 msgstr ""
 "Не должен использоваться вне класса :class:`.Bot`, так как не будет "
 "работать"
+
