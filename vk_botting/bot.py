@@ -776,7 +776,8 @@ class BotBase(GroupMixin):
         msg = view.read_rest()
         view.undo()
         for command in self.all_commands:
-            if self.all_commands[command].has_spaces and ((self.case_insensitive and bool(re.match(command, msg, re.I))) or re.match(command, msg)):
+            escaped_command = re.escape(command)
+            if self.all_commands[command].has_spaces and ((self.case_insensitive and bool(re.match(escaped_command, msg, re.I))) or re.match(escaped_command, msg)):
                 view.read(len(command))
                 ctx.invoked_with = command
                 ctx.prefix = invoked_prefix
