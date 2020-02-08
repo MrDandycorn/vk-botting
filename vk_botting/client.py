@@ -453,6 +453,28 @@ class Client:
         return User(user.get('response')[0])
 
     async def upload_document(self, peer_id, file, type=DocType.DOCUMENT, title=None):
+        """|coro|
+
+        Upload a document to conversation with given peer_id.
+
+        Returns ready-to-use in send_message attachment.
+
+        Parameters
+        ----------
+        peer_id: :class:`int`
+            Peer_id of the destination. The uploaded document cannot be used outside of given conversation.
+        file: :class:`str`
+            Path to document to upload. Can be relative.
+        type: :class:`str`
+            Uploaded document type. Can be value from :class:`.DocType` enum.
+        title: :class:`str`
+            Title for uploaded document. Filename by default.
+
+        Returns
+        -------
+        :class:`.Attachment`
+            :class:`.Attachment` instance representing uploaded document.
+        """
         if isinstance(type, DocType):
             type = type.value
         r = await self.vk_request('docs.getMessagesUploadServer', peer_id=peer_id, type=type)
@@ -469,7 +491,29 @@ class Client:
         return Attachment(doc['owner_id'], doc['id'], AttachmentType.DOCUMENT)
 
     async def upload_photo(self, peer_id, file=None, url=None):
+        """|coro|
+
+        Upload a photo to conversation with given peer_id.
+
+        Returns ready-to-use in send_message attachment.
+
+        Parameters
+        ----------
+        peer_id: :class:`int`
+            Peer_id of the destination. The uploaded photo cannot be used outside of given conversation.
+        file: :class:`str`
+            Path to image to upload. Can be relative.
+        url: :class:`str`
+            Url of image to upload. Should be a direct url to supported image format, otherwise wont work.
+
+        Returns
+        -------
+        :class:`.Attachment`
+            :class:`.Attachment` instance representing uploaded photo.
+        """
         if not (file or url):
+            return
+        if file and url:
             return
         r = await self.vk_request('photos.getMessagesUploadServer', peer_id=peer_id)
         imurl = r['response']['upload_url']
