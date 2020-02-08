@@ -263,7 +263,7 @@ class Client:
                       ' is_friend', ' friend_status', ' career', ' military', ' blacklisted', ' blacklisted_by_me', ' can_be_invited_group']
         if name_case is None:
             name_case = 'nom'
-        users = await self.vk_request('users.get', user_ids=','.join(map(str, uids)), fields=fields, name_case=name_case)
+        users = await self.vk_request('users.get', user_ids=','.join(map(str, uids)), fields=','.join(fields), name_case=name_case)
         if 'error' in users.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**users['error']))
         users = users.get('response')
