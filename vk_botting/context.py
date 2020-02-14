@@ -186,27 +186,27 @@ class Context(Messageable):
         Shorthand for :meth:`.Message.reply`"""
         return await self.message.reply(message, attachment=attachment, sticker_id=sticker_id, keyboard=keyboard)
 
-    async def get_user(self):
+    async def get_user(self, fields=None, name_case=None):
         """|coro|
         Returns the author of original message as instance of :class:`.User` class
         """
-        user = await self.bot.get_pages(self.message.from_id)
-        return user[0]
+        user = await self.bot.get_page(self.message.from_id, fields=fields, name_case=name_case)
+        return user
 
-    async def get_author(self):
+    async def get_author(self, *args, **kwargs):
         """|coro|
-                Alternative for :meth:`.Context.get_user`"""
-        return await self.get_user()
+        Alternative for :meth:`.Context.get_user`"""
+        return await self.get_user(*args, **kwargs)
 
-    async def fetch_user(self):
+    async def fetch_user(self, *args, **kwargs):
         """|coro|
-                Alternative for :meth:`.Context.get_user`"""
-        return await self.get_user()
+        Alternative for :meth:`.Context.get_user`"""
+        return await self.get_user(*args, **kwargs)
 
-    async def fetch_author(self):
+    async def fetch_author(self, *args, **kwargs):
         """|coro|
-                Alternative for :meth:`.Context.get_user`"""
-        return await self.get_user()
+        Alternative for :meth:`.Context.get_user`"""
+        return await self.get_user(*args, **kwargs)
 
     @property
     def cog(self):

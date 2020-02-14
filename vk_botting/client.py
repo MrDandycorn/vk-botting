@@ -197,7 +197,7 @@ class Client:
                         return await r.json()
                     return await r.text()
             except Exception as e:
-                print(f'Got exception in request: {e}\nRetrying in {tries*2+1} seconds', file=sys.stderr)
+                print('Got exception in request: {}\nRetrying in {} seconds'.format(e, tries*2+1), file=sys.stderr)
                 await asyncio.sleep(tries*2+1)
 
     async def vk_request(self, method, post=True, **kwargs):
@@ -223,7 +223,10 @@ class Client:
         :class:`dict`
             Dict representation of json response received from the server
         """
-        res = await self.general_request(f'https://api.vk.com/method/{method}', post=post, **self.Payload(**kwargs))
+        for param in kwargs:
+            if isinstance(kwargs[param], (list, tuple)):
+                kwargs[param] = ','.join(map(str, kwargs[param]))
+        res = await self.general_request('https://api.vk.com/method/{}'.format(method), post=post, **self.Payload(**kwargs))
         error = res.get('error', None)
         if error and error.get('error_code') == 6:
             await asyncio.sleep(1)
@@ -240,9 +243,9 @@ class Client:
         uids: List[:class:`int`]
             List of user ids to request
         fields: List[:class:`str`]
-            Optional. Fields that should be requested from VK Api. All possible by default
+            Optional. Fields that should be requested from VK Api. None by default
         name_case: :class:`str`
-            Name case for user's name to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
+            Optional. Name case for users' names to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
 
         Raises
         --------
@@ -254,16 +257,9 @@ class Client:
         List[:class:`.User`]
             List of :class:`.User` instances for requested users
         """
-        if fields is None:
-            fields = ['photo_id', ' verified', ' sex', ' bdate', ' city', ' country', ' home_town', ' has_photo', ' photo_50', ' photo_100', ' photo_200_orig', ' photo_200',
-                      ' photo_400_orig', ' photo_max', ' photo_max_orig', ' online', ' domain', ' has_mobile', ' contacts', ' site', ' education', ' universities', ' schools',
-                      ' status', ' last_seen', ' followers_count', ' common_count', ' occupation', ' nickname', ' relatives', ' relation', ' personal', ' connections', ' exports',
-                      ' activities', ' interests', ' music', ' movies', ' tv', ' books', ' games', ' about', ' quotes', ' can_post', ' can_see_all_posts', ' can_see_audio',
-                      ' can_write_private_message', ' can_send_friend_request', ' is_favorite', ' is_hidden_from_feed', ' timezone', ' screen_name', ' maiden_name', ' crop_photo',
-                      ' is_friend', ' friend_status', ' career', ' military', ' blacklisted', ' blacklisted_by_me', ' can_be_invited_group']
         if name_case is None:
             name_case = 'nom'
-        users = await self.vk_request('users.get', user_ids=','.join(map(str, uids)), fields=','.join(fields), name_case=name_case)
+        users = await self.vk_request('users.get', user_ids=uids, fields=fields, name_case=name_case)
         if 'error' in users.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**users['error']))
         users = users.get('response')
@@ -295,7 +291,7 @@ class Client:
         groups = groups.get('response')
         return [Group(group) for group in groups]
 
-    async def get_pages(self, *ids):
+    async def get_pages(self, *ids, fields=None, name_case=None):
         """|coro|
 
         Gets pages for given ids, whether it is Group or User
@@ -304,6 +300,10 @@ class Client:
         ----------
         ids: List[:class:`int`]
             List of ids to request
+        fields: List[:class:`str`]
+            Optional. Fields that should be requested from VK Api for users. None by default
+        name_case: :class:`str`
+            Optional. Name case for users' names to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
 
         Raises
         --------
@@ -322,7 +322,7 @@ class Client:
                 g.append(-pid)
             else:
                 u.append(pid)
-        users = await self.get_users(*u)
+        users = await self.get_users(*u, fields=fields, name_case=name_case)
         groups = await self.get_groups(*g)
         res = []
         for pid in ids:
@@ -352,9 +352,9 @@ class Client:
         uid: :class:`int`
             Id of user to request
         fields: List[:class:`str`]
-            Optional. Fields that should be requested from VK Api. All possible by default
+            Optional. Fields that should be requested from VK Api. None by default
         name_case: :class:`str`
-            Name case for user's name to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
+            Optional. Name case for user's name to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
 
         Raises
         --------
@@ -402,7 +402,7 @@ class Client:
     async def fetch_group(self, *args, **kwargs):
         return await self.get_group(*args, **kwargs)
 
-    async def get_page(self, pid):
+    async def get_page(self, pid, fields=None, name_case=None):
         """|coro|
 
         Gets page for given id, whether it is Group or User
@@ -411,6 +411,10 @@ class Client:
         ----------
         pid: :class:`int`
             Id of page to request
+        fields: List[:class:`str`]
+            Optional. Fields that should be requested from VK Api for users. None by default
+        name_case: :class:`str`
+            Optional. Name case for user's name to be returned in. 'nom' by default. Can be 'nom', 'gen', 'dat', 'acc', 'ins' or 'abl'
 
         Raises
         --------
@@ -422,7 +426,7 @@ class Client:
         Union[:class:`.Group`, :class:`.User`]
             :class:`.Group` or :class:`.User` instance for requested id
         """
-        page = await self.get_pages(pid)
+        page = await self.get_pages(pid, fields=fields, name_case=name_case)
         if page:
             return page[0]
         return None
@@ -527,7 +531,7 @@ class Client:
             ext = cnt[6:]
             imbts = await imbts.read()
             files = aiohttp.FormData()
-            files.add_field('photo', imbts, filename=f'temp.{ext}')
+            files.add_field('photo', imbts, filename='temp.{}'.format(ext))
         r = await self.session.post(imurl, data=files)
         r = await r.json(content_type='text/html')
         r = await self.vk_request('photos.saveMessagesPhoto', **r)
@@ -588,7 +592,7 @@ class Client:
                 return await self.get_longpoll_server()
             raise VKApiError('Longpoll is disabled for this group. Enable longpoll or try force mode')
         elif error:
-            raise VKApiError(f'[{error["error_code"]}]{error["error_msg"]}')
+            raise VKApiError('[{error_code}]{error_msg}'.format(**error))
         self.key = res['response']['key']
         self.server = res['response']['server'].replace(r'\/', '/')
         ts = res['response']['ts']
@@ -617,9 +621,9 @@ class Client:
         payload = message.get('payload')
         if payload and payload == '{"command":"start"}':
             return self.dispatch('conversation_start', msg)
-        action = message.get('action')
+        action = msg.action
         if action:
-            action_type = action.get('type')
+            action_type = action.type
             return self.dispatch(action_type, msg)
         return self.dispatch('message_new', msg)
 
@@ -915,9 +919,9 @@ class Client:
 
     async def _run(self, owner_id):
         if owner_id and owner_id.__class__ is not int:
-            raise TypeError(f'Owner_id must be positive integer, not {owner_id.__class__.__name__}')
+            raise TypeError('Owner_id must be positive integer, not {0.__class__.__name__}'.format(owner_id))
         if owner_id and owner_id < 0:
-            raise VKApiError(f'Owner_id must be positive integer')
+            raise VKApiError('Owner_id must be positive integer')
         user = await self.get_own_page()
         if isinstance(user, Group):
             self.is_group = True
@@ -935,7 +939,7 @@ class Client:
                         self.handle_update(update)
                     ts, updates = await lp
                 except Exception as e:
-                    print(f'Ignoring exception in longpoll cycle:\n{e}', file=sys.stderr)
+                    print('Ignoring exception in longpoll cycle:\n{}'.format(e), file=sys.stderr)
                     ts = await self.get_longpoll_server()
         raise LoginError('User token passed to group client')
 
@@ -980,10 +984,10 @@ class UserClient(Client):
         if error and error['error_code'] == 15:
             raise LoginError('User has no access to messages API. Try generating token with vk_botting.auth methods')
         elif error:
-            raise VKApiError(f'[{error["error_code"]}]{error["error_msg"]}')
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         self.key = res['response']['key']
         server = res['response']['server'].replace(r'\/', '/')
-        self.server = f'https://{server}'
+        self.server = 'https://{}'.format(server)
         ts = res['response']['ts']
         return ts
 
@@ -1023,9 +1027,9 @@ class UserClient(Client):
 
     async def _run(self, owner_id):
         if owner_id and owner_id.__class__ is not int:
-            raise TypeError(f'Owner_id must be positive integer, not {owner_id.__class__.__name__}')
+            raise TypeError('Owner_id must be positive integer, not {0.__class__.__name__}'.format(owner_id))
         if owner_id and owner_id < 0:
-            raise VKApiError(f'Owner_id must be positive integer')
+            raise VKApiError('Owner_id must be positive integer')
         user = await self.get_own_page()
         if isinstance(user, User):
             self.is_group = False
@@ -1041,6 +1045,6 @@ class UserClient(Client):
                         self.loop.create_task(self.handle_user_update(update))
                     ts, updates = await lp
                 except Exception as e:
-                    print(f'Ignoring exception in longpoll cycle:\n{e}', file=sys.stderr)
+                    print('Ignoring exception in longpoll cycle:\n{}'.format(e), file=sys.stderr)
                     ts = await self.get_user_longpoll()
         raise LoginError('Group token passed to user client')

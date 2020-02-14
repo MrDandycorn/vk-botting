@@ -6,7 +6,7 @@ Commands
 ==========
 
 One of the most appealing aspect of the library is how easy it is to define commands and
-how you can arbitrarily nest groups and commands to have a rich sub-command system.
+how you can arbitrarily nest commands to have a rich command system.
 
 Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar
 signature to the Python function.

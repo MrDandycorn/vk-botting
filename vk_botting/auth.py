@@ -101,7 +101,7 @@ class TokenReceiverOfficial:
                 self.auth_code = 'GET_CODE'
                 return await self._get_non_refreshed()
             if res['error'] == 'need_captcha':
-                key = input(f'Captcha needed ({res["captcha_img"]}): ')
+                key = input('Captcha needed ({}): '.format(res["captcha_img"]))
                 return await self._get_non_refreshed(res['captcha_sid'], key)
             raise LoginError(res.get('error_description'))
         return res['access_token']
@@ -167,7 +167,7 @@ class TokenReceiverKate:
                 self.auth_code = 'GET_CODE'
                 return await self._get_non_refreshed()
             if res['error'] == 'need_captcha':
-                key = input(f'Captcha needed ({res["captcha_img"]}): ')
+                key = input('Captcha needed ({}): '.format(res["captcha_img"]))
                 return await self._get_non_refreshed(res['captcha_sid'], key)
             raise LoginError(res.get('error_description'))
         self.id = res['user_id']
@@ -202,7 +202,7 @@ class TokenReceiverKate:
         url = 'https://android.clients.google.com/c2dm/register3'
         headers = {
             'User-Agent': 'Android-GCM/1.5 (generic_x86 KK)',
-            'Authorization': f'AidLogin {self.gms_id}:{self.gms_token}'
+            'Authorization': 'AidLogin {0.gms_id}:{0.gms_token}'.format(self)
         }
         params = {
             "X-scope": "GCM",
@@ -230,7 +230,7 @@ class TokenReceiverKate:
         }
         async with aiohttp.ClientSession() as client:
             await client.post(url, data=params, headers=headers)
-            params['X-scope'] = f'id{self.id}'
+            params['X-scope'] = 'id{}'.format(self.id)
             params['X-kid'] = params['X-X-kid'] = '|ID|2|'
             res = await client.post(url, data=params, headers=headers)
             res = await res.text()

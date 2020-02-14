@@ -123,6 +123,7 @@ class Group:
     """
 
     def __init__(self, data):
+        self.original_data = data
         self._unpack(data)
 
     def _unpack(self, data):
@@ -136,6 +137,10 @@ class Group:
             '100': data.get('photo_100'),
             '200': data.get('photo_200')
         }
+
+    @property
+    def mention(self):
+        return '[club{}|{}]'.format(self.id, self.name)
 
 
 class Comments:

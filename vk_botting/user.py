@@ -64,6 +64,7 @@ class User(Messageable):
         return self.id
 
     def __init__(self, data):
+        self.original_data = data
         self._unpack(data)
 
     def _unpack(self, data):
@@ -133,6 +134,10 @@ class User(Messageable):
         self.blacklisted = data.get('blacklisted')
         self.blacklisted_by_me = data.get('blacklisted_by_me')
         self.can_be_invited_group = data.get('can_be_invited_group')
+
+    @property
+    def mention(self):
+        return '[id{}|{}]'.format(self.id, self.first_name)
 
 
 class BlockedUser:

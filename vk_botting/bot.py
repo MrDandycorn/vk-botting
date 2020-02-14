@@ -44,10 +44,10 @@ def when_mentioned(bot, msg):
     r"""A callable that implements a command prefix equivalent to being mentioned.
     These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
     """
-    match = re.match(rf'\[club{bot.group.id}\|[^\]]+\],? ', msg.text)
+    match = re.match(r'\[club{}\|[^\]]+\],? '.format(bot.group.id), msg.text)
     if match and msg.text.startswith(match.group()):
         return [match.group()]
-    return [f'[club{bot.group.id}|@{bot.group.screen_name}] ', f'[club{bot.group.id}|{bot.group.name}] ']
+    return ['[club{0.group.id}|@{0.group.screen_name}] '.format(bot), '[club{0.group.id}|{0.group.name}] '.format(bot)]
 
 
 def when_mentioned_or(*prefixes):
@@ -775,18 +775,25 @@ class BotBase(GroupMixin):
 
         msg = view.read_rest()
         view.undo()
-        for command in self.all_commands:
-            escaped_command = re.escape(command)
-            if self.all_commands[command].has_spaces and ((self.case_insensitive and bool(re.match(escaped_command, msg, re.I))) or re.match(escaped_command, msg)):
-                view.read(len(command))
-                ctx.invoked_with = command
-                ctx.prefix = invoked_prefix
-                ctx.command = self.all_commands[command]
-                return ctx
-        invoker = view.get_word()
+        # This is by far the fastest method there is as far as my knowledge extends
+        # Considering VK message length limit is 4096 it is at most 2048 iterations which is at most about 50 ms
+        # If not exaggerating the length of user messages this is the most optimal way imo
+        # It also works well with several commands having the same beginning as it will always choose the longest one
+        commands = set(self.all_commands) if not self.case_insensitive else self.all_commands
+        words = msg.split(' ')
+        for wordamt in range(len(words), 1, -1):
+            potcomm = ' '.join(words[:wordamt])
+            if potcomm in commands:
+                command = potcomm
+                invoker = potcomm
+                view.read(len(potcomm))
+                break
+        else:
+            invoker = view.get_word()
+            command = invoker
         ctx.invoked_with = invoker
         ctx.prefix = invoked_prefix
-        ctx.command = self.all_commands.get(invoker)
+        ctx.command = self.all_commands.get(command)
         return ctx
 
     async def invoke(self, ctx):

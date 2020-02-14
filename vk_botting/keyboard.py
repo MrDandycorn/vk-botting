@@ -227,5 +227,5 @@ class Keyboard(object):
         """
         if (len(self.lines) > 5 and self.inline) or len(self.lines) > 9:
             num = 6 if self.inline else 10
-            raise VKApiError(f'Max {num} lines')
+            raise VKApiError('Max {} lines'.format(num))
         self.lines.append([])

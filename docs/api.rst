@@ -666,10 +666,6 @@ Additional Classes
     :members:
     :inherited-members:
 
-.. autoclass:: vk_botting.commands.GroupCommand
-    :members:
-    :inherited-members:
-
 .. autoclass:: vk_botting.commands.Command
     :members:
     :inherited-members:

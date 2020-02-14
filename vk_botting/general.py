@@ -45,4 +45,4 @@ async def general_request(url, post=False, **params):
 
 
 async def vk_request(method, token, post=False, **kwargs):
-    return await general_request(f'https://api.vk.com/method/{method}', post=post, access_token=token, v='5.999', **kwargs)
+    return await general_request('https://api.vk.com/method/{}'.format(method), post=post, access_token=token, v='5.999', **kwargs)

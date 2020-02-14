@@ -23,8 +23,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from enum import Enum
-from aiohttp import ClientSession
-import os
 
 
 class AttachmentType(Enum):
@@ -87,8 +85,8 @@ def get_attachment(obj):
 async def get_user_attachments(atts):
     res = []
     for i in range(len(atts)//2):
-        t = atts.get(f'attach{i}_type')
-        att = atts.get(f'attach{i}')
+        t = atts.get('attach{}_type'.format(i))
+        att = atts.get('attach{}'.format(i))
         if not att or t == 'sticker':
             continue
         oid, aid = att.split('_')
@@ -127,7 +125,7 @@ class Document:
         self.access_key = data.get('access_key')
 
     def __str__(self):
-        return f'doc{self.owner_id}_{self.id}'
+        return 'doc{0.owner_id}_{0.id}'.format(self)
 
 
 class AudioMessage:
@@ -186,7 +184,7 @@ class Photo:
         self.height = data.get('height')
 
     def __str__(self):
-        return f'photo{self.owner_id}_{self.id}'
+        return 'photo{0.owner_id}_{0.id}'.format(self)
 
 
 class DeletedPhoto:
@@ -222,7 +220,7 @@ class Audio:
         self.is_hq = data.get('is_hq')
 
     def __str__(self):
-        return f'audio{self.owner_id}_{self.id}'
+        return 'audio{0.owner_id}_{0.id}'.format(self)
 
 
 class Video:
@@ -262,7 +260,7 @@ class Video:
         self.is_favorite = data.get('is_favorite')
 
     def __str__(self):
-        return f'video{self.owner_id}_{self.id}'
+        return 'video{0.owner_id}_{0.id}'.format(self)
 
 
 class PollAnswer:
@@ -303,7 +301,7 @@ class Poll:
         self.author_id = data.get('author_id')
 
     def __str__(self):
-        return f'poll{self.owner_id}_{self.id}'
+        return 'poll{0.owner_id}_{0.id}'.format(self)
 
 
 class Attachment:
@@ -326,4 +324,4 @@ class Attachment:
         self.type = type.value if isinstance(type, AttachmentType) else type
 
     def __str__(self):
-        return f'{self.type}{self.owner_id}_{self.id}'
+        return '{0.type}{0.owner_id}_{0.id}'.format(self)

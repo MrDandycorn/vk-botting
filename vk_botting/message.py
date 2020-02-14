@@ -29,6 +29,18 @@ from vk_botting.abstract import Messageable
 from vk_botting.exceptions import VKApiError
 
 
+class MessageAction:
+    def __init__(self, data):
+        self._unpack(data)
+
+    def _unpack(self, data):
+        self.type = data.get('type')
+        self.member_id = data.get('member_id')
+        self.text = data.get('text')
+        self.email = data.get('email')
+        self.photo = data.get('photo')
+
+
 class Message(Messageable):
     """Represents any message sent or received by bot.
 
@@ -86,7 +98,8 @@ class Message(Messageable):
         self.keyboard = data.get('keyboard')
         self.fwd_messages = data.get('fwd_messages')
         self.reply_message = data.get('reply_message')
-        self.action = data.get('action')
+        action = data.get('action')
+        self.action = MessageAction(action) if action else None
 
     async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
         """|coro|

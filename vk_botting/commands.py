@@ -27,6 +27,7 @@ import functools
 import inspect
 import typing
 import datetime
+import sys
 
 from vk_botting.exceptions import CommandError, CommandInvokeError, ClientException, ConversionError, BadArgument, BadUnionArgument, MissingRequiredArgument, TooManyArguments, \
     CheckFailure, DisabledCommand, CommandOnCooldown
@@ -75,8 +76,7 @@ def hooked_wrapped_callback(command, ctx, coro):
 
 
 class GroupMixin:
-    """A mixin that implements common functionality for classes that behave
-    similar to :class:`.GroupCommand` and are allowed to register commands.
+    """A mixin that implements common functionality for classes that are allowed to register commands.
 
     Attributes
     -----------
@@ -108,8 +108,8 @@ class GroupMixin:
         """Adds a :class:`.Command` or its subclasses into the internal list
         of commands.
 
-        This is usually not called, instead the :meth:`~.GroupMixin.command` or
-        :meth:`~.GroupMixin.group_command` shortcut decorators are used instead.
+        This is usually not called, instead the :meth:`~.GroupMixin.command`
+        shortcut decorator are used instead.
 
         Parameters
         -----------
@@ -224,22 +224,9 @@ class GroupMixin:
 
         return decorator
 
-    def group_command(self, *args, **kwargs):
-        """A shortcut decorator that invokes :func:`.group_command` and adds it to
-        the internal command list via :meth:`~.GroupMixin.add_command`.
-        """
-        def decorator(func):
-            kwargs.setdefault('parent', self)
-            result = group_command(*args, **kwargs)(func)
-            self.add_command(result)
-            return result
-
-        return decorator
-
 
 def command(name=None, cls=None, **attrs):
-    """A decorator that transforms a function into a :class:`.Command`
-    or if called with :func:`.group_command`, :class:`.GroupCommand`.
+    """A decorator that transforms a function into a :class:`.Command`.
 
     All checks added using the :func:`.check` & co. decorators are added into
     the function. There is no way to supply your own checks through this
@@ -271,16 +258,6 @@ def command(name=None, cls=None, **attrs):
         return cls(func, name=name, **attrs)
 
     return decorator
-
-
-def group_command(name=None, **attrs):
-    """A decorator that transforms a function into a :class:`.GroupCommand`.
-
-    This is similar to the :func:`.command` decorator but the ``cls``
-    parameter is set to :class:`GroupCommand` by default.
-    """
-    attrs.setdefault('cls', GroupCommand)
-    return command(name=name, **attrs)
 
 
 class _CaseInsensitiveDict(dict):
@@ -352,9 +329,6 @@ class Command(_BaseCommand):
         If ``True``\, cooldown processing is done after argument parsing,
         which calls converters. If ``False`` then cooldown processing is done
         first and then the converters are called second. Defaults to ``False``.
-    has_spaces: :class:`bool`
-        Should be ``True`` if command has spaces in name, else it won't be processed.
-        Defaults to ``False``
     """
 
     def __new__(cls, *args, **kwargs):
@@ -366,45 +340,30 @@ class Command(_BaseCommand):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError('Callback must be a coroutine')
 
-        self.name = name = kwargs.get('name') or func.__name__
+        self.name = name = kwargs.pop('name', None) or func.__name__
         if not isinstance(name, str):
             raise TypeError('Name of a command must be a string')
 
         self.callback = func
-        self.enabled = kwargs.get('enabled', True)
+        self.enabled = kwargs.pop('enabled', True)
 
-        help_doc = kwargs.get('help')
-        if help_doc is not None:
-            help_doc = inspect.cleandoc(help_doc)
-        else:
-            help_doc = inspect.getdoc(func)
-            if isinstance(help_doc, bytes):
-                help_doc = help_doc.decode('utf-8')
-
-        self.help = help_doc
-
-        self.brief = kwargs.get('brief')
-        self.usage = kwargs.get('usage')
-        self.rest_is_raw = kwargs.get('rest_is_raw', False)
-        self.aliases = kwargs.get('aliases', [])
+        self.rest_is_raw = kwargs.pop('rest_is_raw', False)
+        self.aliases = kwargs.pop('aliases', [])
 
         if not isinstance(self.aliases, (list, tuple)):
             raise TypeError("Aliases of a command must be a list of strings")
 
-        self.description = inspect.cleandoc(kwargs.get('description', ''))
-        self.hidden = kwargs.get('hidden', False)
-
         try:
             cooldown = func.__commands_cooldown__
         except AttributeError:
-            cooldown = kwargs.get('cooldown')
+            cooldown = kwargs.pop('cooldown', None)
         finally:
             self._buckets = CooldownMapping(cooldown)
 
-        self.cooldown_after_parsing = kwargs.get('cooldown_after_parsing', False)
+        self.cooldown_after_parsing = kwargs.pop('cooldown_after_parsing', False)
         self.cog = None
 
-        parent = kwargs.get('parent')
+        parent = kwargs.pop('parent', None)
         self.parent = parent if isinstance(parent, _BaseCommand) else None
         self._before_invoke = None
         self._after_invoke = None
@@ -413,9 +372,12 @@ class Command(_BaseCommand):
             self.checks = func.__commands_checks__
             self.checks.reverse()
         except AttributeError:
-            self.checks = kwargs.get('checks', [])
-        self.ignore_extra = kwargs.get('ignore_extra', True)
-        self.has_spaces = kwargs.get('has_spaces', False)
+            self.checks = kwargs.pop('checks', [])
+        self.ignore_extra = kwargs.pop('ignore_extra', True)
+        if kwargs.pop('has_spaces', False):
+            print('Parameter has_spaces is deprecated as of 0.7.0. Please do not use it', file=sys.stderr)
+        if kwargs:
+            print('Unknown parameters passed to `{}` Command constructor: {}'.format(name, ', '.join(kwargs.keys())), file=sys.stderr)
 
     def add_check(self, func):
         """Adds a check to the command.
@@ -980,14 +942,6 @@ class Command(_BaseCommand):
         """:class:`str`: The name of the cog this command belongs to. None otherwise."""
         return type(self.cog).__cog_name__ if self.cog is not None else None
 
-    @property
-    def short_doc(self):
-        if self.brief is not None:
-            return self.brief
-        if self.help is not None:
-            return self.help.split('\n', 1)[0]
-        return ''
-
     def _is_typing_optional(self, annotation):
         try:
             origin = annotation.__origin__
@@ -998,40 +952,6 @@ class Command(_BaseCommand):
             return False
 
         return annotation.__args__[-1] is type(None)
-
-    @property
-    def signature(self):
-        """:class:`str`: Returns a POSIX-like signature useful for help command output."""
-        if self.usage is not None:
-            return self.usage
-
-        params = self.clean_params
-        if not params:
-            return ''
-
-        result = []
-        for name, param in params.items():
-            greedy = isinstance(param.annotation, converters._Greedy)
-
-            if param.default is not param.empty:
-                should_print = param.default if isinstance(param.default, str) else param.default is not None
-                if should_print:
-                    result.append('[%s=%s]' % (name, param.default) if not greedy else
-                                  '[%s=%s]...' % (name, param.default))
-                    continue
-                else:
-                    result.append('[%s]' % name)
-
-            elif param.kind == param.VAR_POSITIONAL:
-                result.append('[%s...]' % name)
-            elif greedy:
-                result.append('[%s]...' % name)
-            elif self._is_typing_optional(param.annotation):
-                result.append('[%s]' % name)
-            else:
-                result.append('<%s>' % name)
-
-        return ' '.join(result)
 
     async def can_run(self, ctx):
         """|coro|
@@ -1082,104 +1002,6 @@ class Command(_BaseCommand):
             return await async_all(predicate(ctx) for predicate in predicates)
         finally:
             ctx.command = original
-
-
-class GroupCommand(GroupMixin, Command):
-    """A class that implements a grouping protocol for commands to be
-    executed as subcommands.
-
-    This class is a subclass of :class:`.Command` and thus all options
-    valid in :class:`.Command` are valid in here as well.
-
-    Attributes
-    -----------
-    invoke_without_command: Optional[:class:`bool`]
-        Indicates if the group callback should begin parsing and
-        invocation only if no subcommand was found. Useful for
-        making it an error handling function to tell the user that
-        no subcommand was found or to have different functionality
-        in case no subcommand was found. If this is ``False``, then
-        the group callback will always be invoked first. This means
-        that the checks and the parsing dictated by its parameters
-        will be executed. Defaults to ``False``.
-    case_insensitive: Optional[:class:`bool`]
-        Indicates if the group's commands should be case insensitive.
-        Defaults to ``False``.
-    """
-    def __init__(self, *args, **attrs):
-        self.invoke_without_command = attrs.pop('invoke_without_command', False)
-        super().__init__(*args, **attrs)
-
-    def copy(self):
-        """Creates a copy of this :class:`GroupCommand`."""
-        ret = super().copy()
-        for cmd in self.commands:
-            ret.add_command(cmd.copy())
-        return ret
-
-    async def invoke(self, ctx):
-        ctx.invoked_subcommand = None
-        early_invoke = not self.invoke_without_command
-        if early_invoke:
-            await self.prepare(ctx)
-
-        view = ctx.view
-        previous = view.index
-        view.skip_ws()
-        trigger = view.get_word()
-
-        if trigger:
-            ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
-
-        if early_invoke:
-            injected = hooked_wrapped_callback(self, ctx, self.callback)
-            await injected(*ctx.args, **ctx.kwargs)
-
-        if trigger and ctx.invoked_subcommand:
-            ctx.invoked_with = trigger
-            await ctx.invoked_subcommand.invoke(ctx)
-        elif not early_invoke:
-            view.index = previous
-            view.previous = previous
-            await super().invoke(ctx)
-
-    async def reinvoke(self, ctx, *, call_hooks=False):
-        ctx.invoked_subcommand = None
-        early_invoke = not self.invoke_without_command
-        if early_invoke:
-            ctx.command = self
-            await self._parse_arguments(ctx)
-
-            if call_hooks:
-                await self.call_before_hooks(ctx)
-
-        view = ctx.view
-        previous = view.index
-        view.skip_ws()
-        trigger = view.get_word()
-
-        if trigger:
-            ctx.subcommand_passed = trigger
-            ctx.invoked_subcommand = self.all_commands.get(trigger, None)
-
-        if early_invoke:
-            try:
-                await self.callback(*ctx.args, **ctx.kwargs)
-            except:
-                ctx.command_failed = True
-                raise
-            finally:
-                if call_hooks:
-                    await self.call_after_hooks(ctx)
-
-        if trigger and ctx.invoked_subcommand:
-            ctx.invoked_with = trigger
-            await ctx.invoked_subcommand.reinvoke(ctx, call_hooks=call_hooks)
-        elif not early_invoke:
-            view.index = previous
-            view.previous = previous
-            await super().reinvoke(ctx, call_hooks=call_hooks)
 
 
 def cooldown(rate, per, type=BucketType.default):
