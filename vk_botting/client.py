@@ -899,12 +899,12 @@ class Client:
             attachment = str(attachment)
         if message:
             message = str(message)
-        if len(message) > 4096:
-            w = textwrap.TextWrapper(width=4096, replace_whitespace=False)
-            messages = w.wrap(message)
-            for message in messages[:-1]:
-                await self.send_message(peer_id, message)
-            return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
+            if len(message) > 4096:
+                w = textwrap.TextWrapper(width=4096, replace_whitespace=False)
+                messages = w.wrap(message)
+                for message in messages[:-1]:
+                    await self.send_message(peer_id, message)
+                return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
         params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await self.vk_request('messages.send', **params)
