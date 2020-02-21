@@ -97,7 +97,7 @@ class CooldownMapping:
     def _bucket_key(self, msg):
         bucket_type = self._cooldown.type
         if bucket_type is BucketType.user:
-            return msg.peer_id
+            return msg.from_id
         elif bucket_type is BucketType.conversation:
             return msg.peer_id
 
