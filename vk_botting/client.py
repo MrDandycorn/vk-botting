@@ -29,8 +29,9 @@ import textwrap
 import aiohttp
 import enum
 import os
-from random import randint
+from random import getrandbits
 from collections.abc import Iterable
+from io import BytesIO
 
 from vk_botting.user import get_blocked_user, get_unblocked_user, User
 from vk_botting.group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
@@ -39,7 +40,7 @@ from vk_botting.attachments import get_photo, get_video, get_audio
 from vk_botting.message import Message, UserMessage
 from vk_botting.attachments import get_attachment, get_user_attachments, DocType, Attachment, AttachmentType
 from vk_botting.states import get_state
-from vk_botting.exceptions import VKApiError, LoginError
+from vk_botting.exceptions import VKApiError, LoginError, VKException
 from vk_botting.general import convert_params
 
 
@@ -494,7 +495,7 @@ class Client:
         doc = doc[doc['type']]
         return Attachment(doc['owner_id'], doc['id'], AttachmentType.DOCUMENT)
 
-    async def upload_photo(self, peer_id, file=None, url=None):
+    async def upload_photo(self, peer_id, filename=None, url=None, raw=None, format=None):
         """|coro|
 
         Upload a photo to conversation with given peer_id.
@@ -505,25 +506,31 @@ class Client:
         ----------
         peer_id: :class:`int`
             Peer_id of the destination. The uploaded photo cannot be used outside of given conversation.
-        file: :class:`str`
+        filename: :class:`str`
             Path to image to upload. Can be relative.
         url: :class:`str`
             Url of image to upload. Should be a direct url to supported image format, otherwise wont work.
+        raw: :class:`bytes`
+            Raw bytes of image to upload. If used, format has to be provided.
+        format: :class:`str`
+            Extension of image to upload. Should be used only alongside raw data.
 
         Returns
         -------
         :class:`.Attachment`
             :class:`.Attachment` instance representing uploaded photo.
         """
-        if not (file or url):
-            return
-        if file and url:
-            return
+        if not (filename or url or raw):
+            raise VKException('No image source provided')
+        if (filename and url) or (filename and raw) or (url and raw):
+            raise VKException('Can only upload one image at a time')
+        if raw and not format:
+            raise VKException('Format has to be provided when using raw data')
         r = await self.vk_request('photos.getMessagesUploadServer', peer_id=peer_id)
         imurl = r['response']['upload_url']
-        if file:
-            files = {'photo': open(file, 'rb')}
-        else:
+        if filename:
+            files = {'photo': open(filename, 'rb')}
+        elif url:
             imbts = await self.session.get(url)
             cnt = imbts.content_type
             if not cnt.startswith('image/'):
@@ -532,6 +539,9 @@ class Client:
             imbts = await imbts.read()
             files = aiohttp.FormData()
             files.add_field('photo', imbts, filename='temp.{}'.format(ext))
+        else:
+            files = aiohttp.FormData()
+            files.add_field('photo', raw, filename='temp.{}'.format(format.lower()))
         r = await self.session.post(imurl, data=files)
         r = await r.json(content_type='text/html')
         r = await self.vk_request('photos.saveMessagesPhoto', **r)
@@ -905,7 +915,7 @@ class Client:
                 for message in messages[:-1]:
                     await self.send_message(peer_id, message)
                 return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
-        params = {'group_id': self.group.id, 'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
+        params = {'group_id': self.group.id, 'random_id': getrandbits(64), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await self.vk_request('messages.send', **params)
         if 'error' in res.keys():
