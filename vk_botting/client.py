@@ -229,10 +229,10 @@ class Client:
                 kwargs[param] = ','.join(map(str, kwargs[param]))
         res = await self.general_request('https://api.vk.com/method/{}'.format(method), post=post, **self.Payload(**kwargs))
         error = res.get('error', None)
-        if error and error.get('error_code') == 6:
+        if error and error.get('error_code', None) == 6:
             await asyncio.sleep(1)
             return await self.vk_request(method, post=post, **kwargs)
-        if error and error.get('error_code') == 10:
+        elif error and error.get('error_code', None) == 10 and 'could not check access_token now' in error.get('error_msg', ''):
             await asyncio.sleep(0.1)
             return await self.vk_request(method, post=post, **kwargs)
         return res

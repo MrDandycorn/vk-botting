@@ -30,6 +30,7 @@ class BucketType(Enum):
     default = 0
     user = 1
     conversation = 2
+    member = 3
 
 
 class Cooldown:
@@ -100,6 +101,8 @@ class CooldownMapping:
             return msg.from_id
         elif bucket_type is BucketType.conversation:
             return msg.peer_id
+        elif bucket_type is BucketType.member:
+            return msg.peer_id, msg.from_id
 
     def _verify_cache_integrity(self, current=None):
         current = current or time.time()
