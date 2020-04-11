@@ -194,7 +194,6 @@ msgstr ""
 "``Greetings!`` в ответ"
 
 #: ../../quickstart.rst:126
-#, fuzzy
 msgid ""
 ":attr:`context` here is the instance of the :class:`Context` class , "
 "which is automatically put into every command's first argument, so be "

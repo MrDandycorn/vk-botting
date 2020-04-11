@@ -556,6 +556,14 @@ Keyboard
 .. autoclass:: vk_botting.keyboard.Keyboard
     :members:
 
+Cooldown
+~~~~~~~~~~
+
+.. autofunction:: vk_botting.commands.cooldown
+
+.. autoclass:: vk_botting.cooldowns.BucketType
+    :members:
+
 .. _vk_api_models:
 
 VK Models

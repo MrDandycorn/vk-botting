@@ -110,7 +110,6 @@ msgid "Basic Concepts"
 msgstr "Базовые концепты"
 
 #: ../../intro.rst:73
-#, fuzzy
 msgid ""
 "vk-botting revolves around the concept of :ref:`events <vk_api_events>`. "
 "An event is something you listen to and then respond to. For example, "

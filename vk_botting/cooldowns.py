@@ -27,10 +27,11 @@ from enum import Enum
 
 
 class BucketType(Enum):
-    default = 0
-    user = 1
-    conversation = 2
-    member = 3
+    """Represents type of cooldown bucket"""
+    default = 0        #: Default cooldown. On global basis. Basically, counts command used anywhere towards cooldown bucket.
+    user = 1           #: Per-user basis. Counts command usage for every user, no matter where said user used the command.
+    conversation = 2   #: Per-conversation basis. Counts command usage for every conversation, no matter who used the command and if that conversation is personal or group chat.
+    member = 3         #: Per-member basis. Member here is user in conversation. Same user will be able to use the command in another conversation and that will count towards different bucket.
 
 
 class Cooldown:
