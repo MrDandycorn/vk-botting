@@ -1014,6 +1014,7 @@ def cooldown(rate, per, type=BucketType.default):
 
     Denoted by the third argument of ``type`` which must be of enum
     type ``BucketType`` which could be either:
+
     - ``BucketType.default`` for a global basis.
     - ``BucketType.user`` for a per-user basis.
     - ``BucketType.conversation`` for a per-conversation basis.
