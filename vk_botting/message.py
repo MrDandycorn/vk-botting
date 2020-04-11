@@ -83,8 +83,8 @@ class Message(Messageable):
 
     def _unpack(self, data):
         self.id = data.get('id')
-        self.date = datetime.fromtimestamp(data.get('date', 0))
-        self.update_time = datetime.fromtimestamp(data.get('update_time', 0))
+        self.date = datetime.fromtimestamp(data.get('date', 86400))
+        self.update_time = datetime.fromtimestamp(data.get('update_time', 86400))
         self.peer_id = data.get('peer_id')
         self.from_id = data.get('from_id')
         self.text = data.get('text')
