@@ -928,7 +928,10 @@ class Client:
                                                keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
-        params['from_id'] = -self.group.id
+        if self.is_group:
+            params['from_id'] = -self.group.id
+        else:
+            params['from_id'] = self.user.id
         return self.build_msg(params)
 
     async def _run(self, owner_id):
@@ -1034,6 +1037,7 @@ class UserClient(Client):
                 'text': update.pop(1),
                 'attachments': update.pop(1)
             }
+            data['from_id'] = data['attachments'].pop('from', data['peer_id'])
             msg = await self.build_user_msg(data)
             return self.dispatch('message_new', msg)
         elif 'on_unknown' in self.extra_events:

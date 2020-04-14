@@ -221,6 +221,7 @@ class UserMessage(Messageable):
         self.date = data.get('date')
         self.flags = data.get('flags')
         self.peer_id = data.get('peer_id')
+        self.from_id = data.get('from_id')
         self.text = data.get('text')
         self.attachments = data.get('attachments')
         self.important = data.get('important')
