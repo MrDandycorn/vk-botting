@@ -785,10 +785,10 @@ class BotBase(GroupMixin):
             potcomm = ' '.join(words[:wordamt])
             if potcomm in commands:
                 invoker = potcomm
+                view.read(len(invoker))
                 break
         else:
             invoker = view.get_word()
-        view.read(len(invoker))
         ctx.invoked_with = invoker
         ctx.prefix = invoked_prefix
         ctx.command = self.all_commands.get(invoker)
