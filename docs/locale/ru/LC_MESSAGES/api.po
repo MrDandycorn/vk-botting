@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  vk-botting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-11 13:22+0300\n"
-"PO-Revision-Date: 2020-04-11 12:52+0300\n"
+"POT-Creation-Date: 2020-04-15 16:03+0300\n"
+"PO-Revision-Date: 2020-04-15 16:03+0300\n"
 "Last-Translator: MrDandycorn\n"
 "Language: ru\n"
 "Language-Team: Russian\n"
@@ -442,27 +442,30 @@ msgstr ""
 #: ../../api.rst of vk_botting.abstract.Messageable.send
 #: vk_botting.bot.Bot.add_check vk_botting.bot.Bot.add_cog
 #: vk_botting.bot.Bot.add_command vk_botting.bot.Bot.add_listener
-#: vk_botting.bot.Bot.after_invoke vk_botting.bot.Bot.before_invoke
-#: vk_botting.bot.Bot.build_msg vk_botting.bot.Bot.get_cog
-#: vk_botting.bot.Bot.get_command vk_botting.bot.Bot.get_context
-#: vk_botting.bot.Bot.get_group vk_botting.bot.Bot.get_groups
-#: vk_botting.bot.Bot.get_page vk_botting.bot.Bot.get_pages
-#: vk_botting.bot.Bot.get_prefix vk_botting.bot.Bot.get_user
-#: vk_botting.bot.Bot.get_users vk_botting.bot.Bot.invoke
-#: vk_botting.bot.Bot.load_extension vk_botting.bot.Bot.process_commands
-#: vk_botting.bot.Bot.reload_extension vk_botting.bot.Bot.remove_check
-#: vk_botting.bot.Bot.remove_cog vk_botting.bot.Bot.remove_command
-#: vk_botting.bot.Bot.remove_listener vk_botting.bot.Bot.run
-#: vk_botting.bot.Bot.send_message vk_botting.bot.Bot.unload_extension
-#: vk_botting.bot.Bot.upload_document vk_botting.bot.Bot.upload_photo
+#: vk_botting.bot.Bot.after_invoke vk_botting.bot.Bot.attach_user_token
+#: vk_botting.bot.Bot.before_invoke vk_botting.bot.Bot.build_msg
+#: vk_botting.bot.Bot.get_cog vk_botting.bot.Bot.get_command
+#: vk_botting.bot.Bot.get_context vk_botting.bot.Bot.get_group
+#: vk_botting.bot.Bot.get_groups vk_botting.bot.Bot.get_page
+#: vk_botting.bot.Bot.get_pages vk_botting.bot.Bot.get_prefix
+#: vk_botting.bot.Bot.get_user vk_botting.bot.Bot.get_users
+#: vk_botting.bot.Bot.invoke vk_botting.bot.Bot.load_extension
+#: vk_botting.bot.Bot.process_commands vk_botting.bot.Bot.reload_extension
+#: vk_botting.bot.Bot.remove_check vk_botting.bot.Bot.remove_cog
+#: vk_botting.bot.Bot.remove_command vk_botting.bot.Bot.remove_listener
+#: vk_botting.bot.Bot.run vk_botting.bot.Bot.send_message
+#: vk_botting.bot.Bot.unload_extension vk_botting.bot.Bot.upload_document
+#: vk_botting.bot.Bot.upload_photo vk_botting.bot.Bot.user_vk_request
 #: vk_botting.bot.Bot.vk_request vk_botting.bot.Bot.wait_for
+#: vk_botting.client.Client.attach_user_token
 #: vk_botting.client.Client.build_msg vk_botting.client.Client.get_group
 #: vk_botting.client.Client.get_groups vk_botting.client.Client.get_page
 #: vk_botting.client.Client.get_pages vk_botting.client.Client.get_user
 #: vk_botting.client.Client.get_users vk_botting.client.Client.run
 #: vk_botting.client.Client.send_message
 #: vk_botting.client.Client.upload_document
-#: vk_botting.client.Client.upload_photo vk_botting.client.Client.vk_request
+#: vk_botting.client.Client.upload_photo
+#: vk_botting.client.Client.user_vk_request vk_botting.client.Client.vk_request
 #: vk_botting.client.Client.wait_for vk_botting.commands.Command.add_check
 #: vk_botting.commands.Command.after_invoke
 #: vk_botting.commands.Command.before_invoke
@@ -675,6 +678,11 @@ msgstr ""
 msgid "Example"
 msgstr "Пример"
 
+#: of vk_botting.bot.Bot.add_user_token:1
+#: vk_botting.client.Client.add_user_token:1
+msgid "|coro| Alternative for :meth:`.Client.attach_user_token`"
+msgstr "|coro| Альтернатива для :meth:`.Context.attach_user_token`"
+
 # cf87b11117794dcb88071f077c0b18df
 #: of vk_botting.bot.Bot.after_invoke:1
 msgid ""
@@ -723,6 +731,96 @@ msgstr "Корутина, которую надо зарегистрироват
 #: vk_botting.commands.Command.error:10
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "Переданная корутина на самом деле не корутина"
+
+# c9932c8cccc14a3da3238da9bae95c3e
+# 693938f094634fc79df45f0e1a4a2a05
+# 8a3fd1759c294cd5905b3e863fb00f5c
+# 40a9ce745958496ba6db5cfd2e30d97d
+# c4d6cd6e447d465481395deaaf1a2688
+# 0118cfd5196f4f7989e15c7f959cb0c8
+# fab690fee50447748cc73cca7db79d2c
+# 15d2475f371743819d285f4594277211
+# c7c89c8f3dc443c7adf0b1377bb99cba
+# 8a070998484c4c80b795518a07e404ec
+# bff3db0874b24dc0b7a9a3d6134f2bd9
+# ffdbb48d33c64dc0aa5df7fcee19fce8
+# 9f4e0a29a8ee49ccb671f27b0750c86f
+# ccab0f1eaa5f41d394c324551354a80b
+# 84b4f5d066524def93f1686847c8feed
+# e764c4ede0ef48ebafb974ec56dfecb9
+# 4b5a9e299a8a4635be14b569b0f507ac
+# 79d16171f4b84588b52a83130bcd7d25
+# 958662e89e4540619fdf1392a3abf125
+# d28b77be45a4476c91fd6f8eaead2c7c
+# 81bd72290a9b451ea6840ceb28799fe0
+# 54f1a41a92ed4255a377444251f25ce0
+# ce8fa9cf784846f989cef16c6cddf461
+# e6cf8ef8a72e455ca240d9deb7fdade8
+# 2af1bfd0ead94e52b6d82112216ef36f
+# 2e351b56ec434a0e89bbd079c4c6159f
+# 8ec81fcf41724694847b29ad11727a23
+# f455af93dd3e4099963f762d17be3132
+# 32a4740b919e4dc483c60e9ff4131cbc
+# 987677925e1142d38877974c31c283a4
+# 17894c1aaf1c440a901e6e00b38cece6
+# d1a3f02269a747d68a3a198c68a46423
+# bca48a9bf6834be281a750eebd306c3d
+# dd9aafd8d35b4e26b410c9681ebf5298
+# 5eae90d917dd4c819b6faa836691a917
+# f6e62429bf244c55bef7aab7003b4d85
+# f046f2d84e6a4565b953c4e7c42f332d
+# 1e6c933e42e14229a0578fc04e42c502
+# 9bf9b4b189e14116b22a8fada051420a
+# d59eb4a456554881b45fcfc4e27fa63b
+# 905088a12c7f4a4e9a479421e0e6caa0
+# 5fda6fd4e2a5407a9e7fe8e23b164e45
+#: of vk_botting.abstract.Messageable.send:1
+#: vk_botting.abstract.Messageable.trigger_typing:1
+#: vk_botting.bot.Bot.attach_user_token:1 vk_botting.bot.Bot.get_context:1
+#: vk_botting.bot.Bot.get_group:1 vk_botting.bot.Bot.get_groups:1
+#: vk_botting.bot.Bot.get_own_page:1 vk_botting.bot.Bot.get_page:1
+#: vk_botting.bot.Bot.get_pages:1 vk_botting.bot.Bot.get_prefix:1
+#: vk_botting.bot.Bot.get_user:1 vk_botting.bot.Bot.get_users:1
+#: vk_botting.bot.Bot.invoke:1 vk_botting.bot.Bot.on_error:1
+#: vk_botting.bot.Bot.process_commands:1 vk_botting.bot.Bot.send_message:1
+#: vk_botting.bot.Bot.upload_document:1 vk_botting.bot.Bot.upload_photo:1
+#: vk_botting.bot.Bot.user_vk_request:1 vk_botting.bot.Bot.vk_request:1
+#: vk_botting.bot.Bot.wait_for:1 vk_botting.client.Client.attach_user_token:1
+#: vk_botting.client.Client.get_group:1 vk_botting.client.Client.get_groups:1
+#: vk_botting.client.Client.get_own_page:1 vk_botting.client.Client.get_page:1
+#: vk_botting.client.Client.get_pages:1 vk_botting.client.Client.get_user:1
+#: vk_botting.client.Client.get_users:1 vk_botting.client.Client.on_error:1
+#: vk_botting.client.Client.send_message:1
+#: vk_botting.client.Client.upload_document:1
+#: vk_botting.client.Client.upload_photo:1
+#: vk_botting.client.Client.user_vk_request:1
+#: vk_botting.client.Client.vk_request:1 vk_botting.client.Client.wait_for:1
+#: vk_botting.commands.Command.can_run:1 vk_botting.context.Context.invoke:1
+#: vk_botting.context.Context.reinvoke:1 vk_botting.context.Context.send:1
+#: vk_botting.context.Context.trigger_typing:1
+#: vk_botting.message.Message.edit:1 vk_botting.message.Message.reply:1
+#: vk_botting.message.Message.send:1
+#: vk_botting.message.Message.trigger_typing:1 vk_botting.user.User.send:1
+#: vk_botting.user.User.trigger_typing:1
+msgid "|coro|"
+msgstr "|coro|"
+
+#: of vk_botting.bot.Bot.attach_user_token:3
+#: vk_botting.client.Client.attach_user_token:3
+msgid ""
+"Attaches user token to the bot, enabling it to execute API calls "
+"available to users only."
+msgstr "Присоединяет к боту токен пользователя, что позволяет выполнять запросы к API которые доступны только пользователям."
+
+#: of vk_botting.bot.Bot.attach_user_token:5
+#: vk_botting.client.Client.attach_user_token:5
+msgid "Also puts :class:`.User` object corresponding to the token into self.user"
+msgstr "Также помещает в self.user экземпляр класса :class:`.User` соответствующий предоставленному токену"
+
+#: of vk_botting.bot.Bot.attach_user_token:7
+#: vk_botting.client.Client.attach_user_token:7
+msgid "User token to attach"
+msgstr "Токен пользователя, который необходимо прикрепить"
 
 # 3c75fba596ce4d14af6b4f5b3f3ade69
 #: of vk_botting.bot.Bot.before_invoke:1
@@ -836,14 +934,15 @@ msgstr ":class:`dict`, представляющий объект сообщен�
 #: vk_botting.bot.Bot.get_user vk_botting.bot.Bot.get_users
 #: vk_botting.bot.Bot.remove_command vk_botting.bot.Bot.send_message
 #: vk_botting.bot.Bot.upload_document vk_botting.bot.Bot.upload_photo
-#: vk_botting.bot.Bot.vk_request vk_botting.bot.Bot.wait_for
-#: vk_botting.client.Client.build_msg vk_botting.client.Client.get_group
-#: vk_botting.client.Client.get_groups vk_botting.client.Client.get_own_page
-#: vk_botting.client.Client.get_page vk_botting.client.Client.get_pages
-#: vk_botting.client.Client.get_user vk_botting.client.Client.get_users
-#: vk_botting.client.Client.send_message
+#: vk_botting.bot.Bot.user_vk_request vk_botting.bot.Bot.vk_request
+#: vk_botting.bot.Bot.wait_for vk_botting.client.Client.build_msg
+#: vk_botting.client.Client.get_group vk_botting.client.Client.get_groups
+#: vk_botting.client.Client.get_own_page vk_botting.client.Client.get_page
+#: vk_botting.client.Client.get_pages vk_botting.client.Client.get_user
+#: vk_botting.client.Client.get_users vk_botting.client.Client.send_message
 #: vk_botting.client.Client.upload_document
-#: vk_botting.client.Client.upload_photo vk_botting.client.Client.vk_request
+#: vk_botting.client.Client.upload_photo
+#: vk_botting.client.Client.user_vk_request vk_botting.client.Client.vk_request
 #: vk_botting.client.Client.wait_for vk_botting.commands.Command.can_run
 #: vk_botting.commands.Command.is_on_cooldown
 #: vk_botting.commands.GroupMixin.get_command
@@ -914,14 +1013,15 @@ msgstr "Экземпляр :class:`.Message`, представляющий из�
 #: vk_botting.bot.Bot.get_user vk_botting.bot.Bot.get_users
 #: vk_botting.bot.Bot.remove_command vk_botting.bot.Bot.send_message
 #: vk_botting.bot.Bot.upload_document vk_botting.bot.Bot.upload_photo
-#: vk_botting.bot.Bot.vk_request vk_botting.bot.Bot.wait_for
-#: vk_botting.client.Client.build_msg vk_botting.client.Client.get_group
-#: vk_botting.client.Client.get_groups vk_botting.client.Client.get_own_page
-#: vk_botting.client.Client.get_page vk_botting.client.Client.get_pages
-#: vk_botting.client.Client.get_user vk_botting.client.Client.get_users
-#: vk_botting.client.Client.send_message
+#: vk_botting.bot.Bot.user_vk_request vk_botting.bot.Bot.vk_request
+#: vk_botting.bot.Bot.wait_for vk_botting.client.Client.build_msg
+#: vk_botting.client.Client.get_group vk_botting.client.Client.get_groups
+#: vk_botting.client.Client.get_own_page vk_botting.client.Client.get_page
+#: vk_botting.client.Client.get_pages vk_botting.client.Client.get_user
+#: vk_botting.client.Client.get_users vk_botting.client.Client.send_message
 #: vk_botting.client.Client.upload_document
-#: vk_botting.client.Client.upload_photo vk_botting.client.Client.vk_request
+#: vk_botting.client.Client.upload_photo
+#: vk_botting.client.Client.user_vk_request vk_botting.client.Client.vk_request
 #: vk_botting.client.Client.wait_for vk_botting.commands.Command.can_run
 #: vk_botting.commands.Command.is_on_cooldown
 #: vk_botting.commands.GroupMixin.get_command
@@ -947,9 +1047,9 @@ msgstr "Тип возвращаемого значения"
 # e7c306f25fe247e89f3daf285f293a77
 # e2b6cda7c38c4bffacc68feacce68d1f
 #: of vk_botting.abstract.Messageable:6 vk_botting.abstract.Messageable.send:30
-#: vk_botting.bot.Bot.build_msg:9 vk_botting.bot.Bot.send_message:32
+#: vk_botting.bot.Bot.build_msg:9 vk_botting.bot.Bot.send_message:34
 #: vk_botting.client.Client.build_msg:9
-#: vk_botting.client.Client.send_message:32 vk_botting.context.Context:13
+#: vk_botting.client.Client.send_message:34 vk_botting.context.Context:13
 #: vk_botting.context.Context.send:30 vk_botting.message.Message:61
 #: vk_botting.message.Message.edit:21 vk_botting.message.Message.reply:30
 #: vk_botting.message.Message.send:30 vk_botting.user.User.send:30
@@ -1123,77 +1223,6 @@ msgstr "Запрошенная команда. Если не найдена, в�
 msgid ":class:`Command` or subclass"
 msgstr ":class:`Command` или сабкласс"
 
-# c9932c8cccc14a3da3238da9bae95c3e
-# 693938f094634fc79df45f0e1a4a2a05
-# 8a3fd1759c294cd5905b3e863fb00f5c
-# 40a9ce745958496ba6db5cfd2e30d97d
-# c4d6cd6e447d465481395deaaf1a2688
-# 0118cfd5196f4f7989e15c7f959cb0c8
-# fab690fee50447748cc73cca7db79d2c
-# 15d2475f371743819d285f4594277211
-# c7c89c8f3dc443c7adf0b1377bb99cba
-# 8a070998484c4c80b795518a07e404ec
-# bff3db0874b24dc0b7a9a3d6134f2bd9
-# ffdbb48d33c64dc0aa5df7fcee19fce8
-# 9f4e0a29a8ee49ccb671f27b0750c86f
-# ccab0f1eaa5f41d394c324551354a80b
-# 84b4f5d066524def93f1686847c8feed
-# e764c4ede0ef48ebafb974ec56dfecb9
-# 4b5a9e299a8a4635be14b569b0f507ac
-# 79d16171f4b84588b52a83130bcd7d25
-# 958662e89e4540619fdf1392a3abf125
-# d28b77be45a4476c91fd6f8eaead2c7c
-# 81bd72290a9b451ea6840ceb28799fe0
-# 54f1a41a92ed4255a377444251f25ce0
-# ce8fa9cf784846f989cef16c6cddf461
-# e6cf8ef8a72e455ca240d9deb7fdade8
-# 2af1bfd0ead94e52b6d82112216ef36f
-# 2e351b56ec434a0e89bbd079c4c6159f
-# 8ec81fcf41724694847b29ad11727a23
-# f455af93dd3e4099963f762d17be3132
-# 32a4740b919e4dc483c60e9ff4131cbc
-# 987677925e1142d38877974c31c283a4
-# 17894c1aaf1c440a901e6e00b38cece6
-# d1a3f02269a747d68a3a198c68a46423
-# bca48a9bf6834be281a750eebd306c3d
-# dd9aafd8d35b4e26b410c9681ebf5298
-# 5eae90d917dd4c819b6faa836691a917
-# f6e62429bf244c55bef7aab7003b4d85
-# f046f2d84e6a4565b953c4e7c42f332d
-# 1e6c933e42e14229a0578fc04e42c502
-# 9bf9b4b189e14116b22a8fada051420a
-# d59eb4a456554881b45fcfc4e27fa63b
-# 905088a12c7f4a4e9a479421e0e6caa0
-# 5fda6fd4e2a5407a9e7fe8e23b164e45
-#: of vk_botting.abstract.Messageable.send:1
-#: vk_botting.abstract.Messageable.trigger_typing:1
-#: vk_botting.bot.Bot.get_context:1 vk_botting.bot.Bot.get_group:1
-#: vk_botting.bot.Bot.get_groups:1 vk_botting.bot.Bot.get_own_page:1
-#: vk_botting.bot.Bot.get_page:1 vk_botting.bot.Bot.get_pages:1
-#: vk_botting.bot.Bot.get_prefix:1 vk_botting.bot.Bot.get_user:1
-#: vk_botting.bot.Bot.get_users:1 vk_botting.bot.Bot.invoke:1
-#: vk_botting.bot.Bot.on_error:1 vk_botting.bot.Bot.process_commands:1
-#: vk_botting.bot.Bot.send_message:1 vk_botting.bot.Bot.upload_document:1
-#: vk_botting.bot.Bot.upload_photo:1 vk_botting.bot.Bot.vk_request:1
-#: vk_botting.bot.Bot.wait_for:1 vk_botting.client.Client.get_group:1
-#: vk_botting.client.Client.get_groups:1
-#: vk_botting.client.Client.get_own_page:1 vk_botting.client.Client.get_page:1
-#: vk_botting.client.Client.get_pages:1 vk_botting.client.Client.get_user:1
-#: vk_botting.client.Client.get_users:1 vk_botting.client.Client.on_error:1
-#: vk_botting.client.Client.send_message:1
-#: vk_botting.client.Client.upload_document:1
-#: vk_botting.client.Client.upload_photo:1
-#: vk_botting.client.Client.vk_request:1 vk_botting.client.Client.wait_for:1
-#: vk_botting.commands.Command.can_run:1 vk_botting.context.Context.invoke:1
-#: vk_botting.context.Context.reinvoke:1 vk_botting.context.Context.send:1
-#: vk_botting.context.Context.trigger_typing:1
-#: vk_botting.message.Message.edit:1 vk_botting.message.Message.reply:1
-#: vk_botting.message.Message.send:1
-#: vk_botting.message.Message.trigger_typing:1 vk_botting.user.User.send:1
-#: vk_botting.user.User.trigger_typing:1
-msgid "|coro|"
-msgstr "|coro|"
-
 # 49a4ebcadb03420b92171a2fb8c24365
 #: of vk_botting.bot.Bot.get_context:3
 msgid ""
@@ -1281,12 +1310,12 @@ msgstr "Id группы, которую надо запросить"
 #: vk_botting.bot.Bot.get_group:8 vk_botting.bot.Bot.get_groups:8
 #: vk_botting.bot.Bot.get_own_page:5 vk_botting.bot.Bot.get_page:12
 #: vk_botting.bot.Bot.get_pages:12 vk_botting.bot.Bot.get_user:12
-#: vk_botting.bot.Bot.get_users:12 vk_botting.bot.Bot.send_message:29
+#: vk_botting.bot.Bot.get_users:12 vk_botting.bot.Bot.send_message:31
 #: vk_botting.client.Client.get_group:8 vk_botting.client.Client.get_groups:8
 #: vk_botting.client.Client.get_own_page:5 vk_botting.client.Client.get_page:12
 #: vk_botting.client.Client.get_pages:12 vk_botting.client.Client.get_user:12
 #: vk_botting.client.Client.get_users:12
-#: vk_botting.client.Client.send_message:29 vk_botting.context.Context.send:27
+#: vk_botting.client.Client.send_message:31 vk_botting.context.Context.send:27
 #: vk_botting.context.Context.trigger_typing:9
 #: vk_botting.message.Message.edit:18 vk_botting.message.Message.reply:27
 #: vk_botting.message.Message.send:27
@@ -2014,6 +2043,11 @@ msgstr "Id сообщения, на которое надо ответить"
 msgid "Message ids to be forwarded along with message."
 msgstr "Id сообщений, которые надо переслать."
 
+#: of vk_botting.bot.Bot.send_message:28
+#: vk_botting.client.Client.send_message:28
+msgid "If message should be sent as user (using attached user token)."
+msgstr "Должно ли сообщение быть отправлено от имени пользователя (с использованием присоединенного токена)"
+
 # 287c84218031442a861036fc3b1ff0c6
 # 2f716e3afc71412b9cdbef24c4959d60
 # 544c4b39f2da48a7a0c7f9f8ff830e01
@@ -2023,7 +2057,7 @@ msgstr "Id сообщений, которые надо переслать."
 # 8f0d18a5794641369e9d2cbf79bd9bf0
 # 0c714438b8374e1f9b976f61ca817682
 #: of vk_botting.abstract.Messageable.send:29
-#: vk_botting.bot.Bot.send_message:31 vk_botting.client.Client.send_message:31
+#: vk_botting.bot.Bot.send_message:33 vk_botting.client.Client.send_message:33
 #: vk_botting.context.Context.send:29 vk_botting.message.Message.edit:20
 #: vk_botting.message.Message.reply:29 vk_botting.message.Message.send:29
 #: vk_botting.user.User.send:29
@@ -2148,19 +2182,24 @@ msgstr "Экземпляр :class:`.Attachment`, представляющий з
 
 # 70c025c8f7624753a38dba8b11fb0ad1
 # d5da4136344b4c808f3ba82cd1faf469
-#: of vk_botting.bot.Bot.vk_request:3 vk_botting.client.Client.vk_request:3
-msgid "Implements abstract VK Api method request."
-msgstr "Реализует абстрактный запрос к методам VK Api"
+#: of vk_botting.bot.Bot.user_vk_request:3
+#: vk_botting.client.Client.user_vk_request:3
+msgid "Implements abstract VK Api method request with attached User token."
+msgstr "Реализует абстрактный запрос к методам VK Api с помощью прикрепленного токена пользователя."
 
 # 1e7ecca0f7c6415ea07fe6d2ef8e57c8
 # df7ca981b0d940be8d2c03e79db328d8
-#: of vk_botting.bot.Bot.vk_request:5 vk_botting.client.Client.vk_request:5
+#: of vk_botting.bot.Bot.user_vk_request:5 vk_botting.bot.Bot.vk_request:5
+#: vk_botting.client.Client.user_vk_request:5
+#: vk_botting.client.Client.vk_request:5
 msgid "String representation of method name (e.g. 'users.get')"
 msgstr "Название метода в виде строки (к примеру 'users.get')"
 
 # a9618e2cb4234373b5b2f9d169de0e84
 # f284d543d54045a58c190508c33d3ffb
-#: of vk_botting.bot.Bot.vk_request:7 vk_botting.client.Client.vk_request:7
+#: of vk_botting.bot.Bot.user_vk_request:7 vk_botting.bot.Bot.vk_request:7
+#: vk_botting.client.Client.user_vk_request:7
+#: vk_botting.client.Client.vk_request:7
 msgid ""
 "If request should be POST. Defaults to true. Changing this is not "
 "recommended"
@@ -2170,7 +2209,9 @@ msgstr ""
 
 # 8effd12fb66d479d862112978fe28fa9
 # 6cbe34bcee0f43ba84a8db58418fab74
-#: of vk_botting.bot.Bot.vk_request:9 vk_botting.client.Client.vk_request:9
+#: of vk_botting.bot.Bot.user_vk_request:9 vk_botting.bot.Bot.vk_request:9
+#: vk_botting.client.Client.user_vk_request:9
+#: vk_botting.client.Client.vk_request:9
 msgid ""
 "Payload arguments to send along with request  .. note::      access_token"
 " and v parameters should not be passed as they are automatically added "
@@ -2182,13 +2223,17 @@ msgstr ""
 
 # cd3c6e9338774318ab4c13b87b0ee9ad
 # d963c0ba916c4eb0b0d7de66085e02d6
-#: of vk_botting.bot.Bot.vk_request:9 vk_botting.client.Client.vk_request:9
+#: of vk_botting.bot.Bot.user_vk_request:9 vk_botting.bot.Bot.vk_request:9
+#: vk_botting.client.Client.user_vk_request:9
+#: vk_botting.client.Client.vk_request:9
 msgid "Payload arguments to send along with request"
 msgstr "Аргументы для отправки вместе с запросом."
 
 # d4c5f803676d47479a83c1d0adfa0e37
 # 7b96307aca714ed6a7be2292555c8b89
-#: of vk_botting.bot.Bot.vk_request:13 vk_botting.client.Client.vk_request:13
+#: of vk_botting.bot.Bot.user_vk_request:13 vk_botting.bot.Bot.vk_request:13
+#: vk_botting.client.Client.user_vk_request:13
+#: vk_botting.client.Client.vk_request:13
 msgid ""
 "access_token and v parameters should not be passed as they are "
 "automatically added from current bot attributes"
@@ -2198,7 +2243,9 @@ msgstr ""
 
 # f82e262694cf4fd992a6bd34fcba4dde
 # 2477f959c14542d980cc992d487d2ad0
-#: of vk_botting.bot.Bot.vk_request:16 vk_botting.client.Client.vk_request:16
+#: of vk_botting.bot.Bot.user_vk_request:16 vk_botting.bot.Bot.vk_request:16
+#: vk_botting.client.Client.user_vk_request:16
+#: vk_botting.client.Client.vk_request:16
 msgid "Dict representation of json response received from the server"
 msgstr "Ответ от сервера, представленный в виде :class:`dict`"
 
@@ -2213,13 +2260,21 @@ msgstr "Ответ от сервера, представленный в виде
 # 7b9727654e1e4c6fa4c52dd913f47d54
 # d8454f7081c648cdbae4d9fc52d697a9
 #: of vk_botting.abstract.Messageable.trigger_typing:12
-#: vk_botting.bot.Bot.vk_request:17 vk_botting.client.Client.vk_request:17
-#: vk_botting.commands.GroupMixin:8 vk_botting.context.Context:35
-#: vk_botting.context.Context.trigger_typing:12 vk_botting.group.Group:37
-#: vk_botting.message.Message:67 vk_botting.message.Message.trigger_typing:12
+#: vk_botting.bot.Bot.user_vk_request:17 vk_botting.bot.Bot.vk_request:17
+#: vk_botting.client.Client.user_vk_request:17
+#: vk_botting.client.Client.vk_request:17 vk_botting.commands.GroupMixin:8
+#: vk_botting.context.Context:35 vk_botting.context.Context.trigger_typing:12
+#: vk_botting.group.Group:37 vk_botting.message.Message:67
+#: vk_botting.message.Message.trigger_typing:12
 #: vk_botting.user.User.trigger_typing:12
 msgid ":class:`dict`"
 msgstr ":class:`dict`"
+
+# 70c025c8f7624753a38dba8b11fb0ad1
+# d5da4136344b4c808f3ba82cd1faf469
+#: of vk_botting.bot.Bot.vk_request:3 vk_botting.client.Client.vk_request:3
+msgid "Implements abstract VK Api method request."
+msgstr "Реализует абстрактный запрос к методам VK Api"
 
 # 3bd8d613dfb34b39a46264078f99f19b
 # 48a5c31677f344c4bd22957907f2fada
@@ -3725,13 +3780,13 @@ msgstr ""
 msgid ""
 "Denoted by the third argument of ``type`` which must be of enum type "
 "``BucketType`` which could be either:"
-msgstr "Третий аргумент - тип, который должен"
-" быть значением ``BucketType``, то есть может быть одним из:"
+msgstr ""
+"Третий аргумент - тип, который должен быть значением ``BucketType``, то "
+"есть может быть одним из:"
 
 #: of vk_botting.commands.cooldown:11
 msgid "``BucketType.default`` for a global basis."
-msgstr "``BucketType.default`` "
-"чтобы кулдаун считался на глобальной основе."
+msgstr "``BucketType.default`` чтобы кулдаун считался на глобальной основе."
 
 #: of vk_botting.commands.cooldown:12
 msgid "``BucketType.user`` for a per-user basis."

@@ -31,7 +31,6 @@ import enum
 import os
 from random import getrandbits
 from collections.abc import Iterable
-from io import BytesIO
 
 from vk_botting.user import get_blocked_user, get_unblocked_user, User
 from vk_botting.group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
@@ -107,9 +106,17 @@ class Client:
         self._implemented_events = ['message_new', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
         self.extra_events = []
         self.token = None
+        self.user_token = None
 
     def Payload(self, **kwargs):
         kwargs['access_token'] = self.token
+        kwargs['v'] = self.v
+        return kwargs
+
+    def UserPayload(self, **kwargs):
+        if not self.user_token:
+            raise VKException('User Token not attached. Use Bot.attach_user_token to attach it.')
+        kwargs['access_token'] = self.user_token
         kwargs['v'] = self.v
         return kwargs
 
@@ -201,6 +208,25 @@ class Client:
                 print('Got exception in request: {}\nRetrying in {} seconds'.format(e, tries*2+1), file=sys.stderr)
                 await asyncio.sleep(tries*2+1)
 
+    async def _vk_request(self, method, post, calln=1, **kwargs):
+        if calln > 10:
+            raise VKApiError('VK API call failed after 10 retries')
+        for param in kwargs:
+            if isinstance(kwargs[param], (list, tuple)):
+                kwargs[param] = ','.join(map(str, kwargs[param]))
+        res = await self.general_request('https://api.vk.com/method/{}'.format(method), post=post, **kwargs)
+        if isinstance(res, str):
+            await asyncio.sleep(0.1)
+            return await self._vk_request(method, post, calln+1, **kwargs)
+        error = res.get('error', None)
+        if error and error.get('error_code', None) == 6:
+            await asyncio.sleep(1)
+            return await self._vk_request(method, post, calln+1, **kwargs)
+        elif error and error.get('error_code', None) == 10 and 'could not check access_token now' in error.get('error_msg', ''):
+            await asyncio.sleep(0.1)
+            return await self._vk_request(method, post, calln+1, **kwargs)
+        return res
+
     async def vk_request(self, method, post=True, **kwargs):
         """|coro|
 
@@ -224,18 +250,32 @@ class Client:
         :class:`dict`
             Dict representation of json response received from the server
         """
-        for param in kwargs:
-            if isinstance(kwargs[param], (list, tuple)):
-                kwargs[param] = ','.join(map(str, kwargs[param]))
-        res = await self.general_request('https://api.vk.com/method/{}'.format(method), post=post, **self.Payload(**kwargs))
-        error = res.get('error', None)
-        if error and error.get('error_code', None) == 6:
-            await asyncio.sleep(1)
-            return await self.vk_request(method, post=post, **kwargs)
-        elif error and error.get('error_code', None) == 10 and 'could not check access_token now' in error.get('error_msg', ''):
-            await asyncio.sleep(0.1)
-            return await self.vk_request(method, post=post, **kwargs)
-        return res
+        return await self._vk_request(method, post, **self.Payload(**kwargs))
+
+    async def user_vk_request(self, method, post=True, **kwargs):
+        """|coro|
+
+        Implements abstract VK Api method request with attached User token.
+
+        Parameters
+        ----------
+        method: :class:`str`
+            String representation of method name (e.g. 'users.get')
+        post: :class:`bool`
+            If request should be POST. Defaults to true. Changing this is not recommended
+        kwargs: :class:`dict`
+            Payload arguments to send along with request
+
+            .. note::
+
+                access_token and v parameters should not be passed as they are automatically added from current bot attributes
+
+        Returns
+        -------
+        :class:`dict`
+            Dict representation of json response received from the server
+        """
+        return await self._vk_request(method, post, **self.UserPayload(**kwargs))
 
     async def get_users(self, *uids, fields=None, name_case=None):
         """|coro|
@@ -459,6 +499,11 @@ class Client:
             group = await self.vk_request('groups.getById')
             return Group(group.get('response')[0])
         return User(user.get('response')[0])
+
+    async def get_own_user_page(self):
+        user = await self.user_vk_request('users.get')
+        if 'response' in user and len(user.get('response')) == 1:
+            return User(user.get('response')[0])
 
     async def upload_document(self, peer_id, file, type=DocType.DOCUMENT, title=None):
         """|coro|
@@ -863,7 +908,7 @@ class Client:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
 
-    async def send_message(self, peer_id=None, message=None, *, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None):
+    async def send_message(self, peer_id=None, message=None, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None, **kwargs):
         """|coro|
 
         Sends a message to the given destination with the text given.
@@ -893,6 +938,8 @@ class Client:
             A message id to reply to.
         forward_messages: Union[List[:class:`int`], List[:class:`str`]]
             Message ids to be forwarded along with message.
+        as_user: :class:`bool`
+            If message should be sent as user (using attached user token).
 
         Raises
         --------
@@ -904,7 +951,10 @@ class Client:
         :class:`.Message`
             The message that was sent.
         """
-        if isinstance(attachment, str):
+        as_user = kwargs.pop('as_user', False)
+        if kwargs:
+            print('Unknown parameters passed to send_message: {}'.format(', '.join(kwargs.keys())), file=sys.stderr)
+        if isinstance(attachment, str) or attachment is None:
             pass
         elif isinstance(attachment, Iterable):
             attachment = ','.join(map(str, attachment))
@@ -916,23 +966,49 @@ class Client:
                 w = textwrap.TextWrapper(width=4096, replace_whitespace=False)
                 messages = w.wrap(message)
                 for message in messages[:-1]:
-                    await self.send_message(peer_id, message)
-                return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
-        params = {'group_id': self.group.id, 'random_id': getrandbits(64), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
+                    await self.send_message(peer_id, message, **kwargs)
+                return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, **kwargs)
+        params = {'random_id': getrandbits(64), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
-        res = await self.vk_request('messages.send', **params)
+        if not as_user:
+            params['group_id'] = self.group.id
+        res = await self.vk_request('messages.send', **params) if not as_user else await self.user_vk_request('messages.send', **params)
         if 'error' in res.keys():
             if res['error'].get('error_code') == 9:
                 await asyncio.sleep(1)
                 return await self.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id,
-                                               keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
+                                               keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, **kwargs)
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         params['id'] = res['response']
-        if self.is_group:
+        if self.is_group and not as_user:
             params['from_id'] = -self.group.id
         else:
             params['from_id'] = self.user.id
         return self.build_msg(params)
+
+    async def add_user_token(self, token):
+        """|coro|
+        Alternative for :meth:`.Client.attach_user_token`"""
+        await self.attach_user_token(token)
+
+    async def attach_user_token(self, token):
+        """|coro|
+
+        Attaches user token to the bot, enabling it to execute API calls available to users only.
+
+        Also puts :class:`.User` object corresponding to the token into self.user
+
+        Parameters
+        -----------
+        token: :class:`str`
+            User token to attach
+        """
+        self.user_token = token
+        user = await self.get_own_user_page()
+        if user is None:
+            self.user_token = None
+            raise VKException('Invalid user token')
+        self.user = user
 
     async def _run(self, owner_id):
         if owner_id and owner_id.__class__ is not int:
@@ -1066,3 +1142,24 @@ class UserClient(Client):
                     print('Ignoring exception in longpoll cycle:\n{}'.format(e), file=sys.stderr)
                     ts = await self.get_user_longpoll()
         raise LoginError('Group token passed to user client')
+
+    def run(self, token, owner_id=None):
+        """A blocking call that abstracts away the event loop
+        initialisation from you.
+
+        .. warning::
+            This function must be the last function to call due to the fact that it
+            is blocking. That means that registration of events or anything being
+            called after this function call will not execute until it returns.
+
+        Parameters
+        ----------
+        token: :class:`str`
+            Bot token. Should be group token or user token with access to group
+        owner_id: :class:`int`
+            Should only be passed alongside user token. Owner id of group to connect to
+        """
+        self.token = token
+        self.user_token = token
+        self.loop.create_task(self._run(owner_id))
+        self.loop.run_forever()
