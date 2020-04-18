@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  vk-botting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-15 16:03+0300\n"
+"POT-Creation-Date: 2020-04-18 13:11+0300\n"
 "PO-Revision-Date: 2020-04-15 16:03+0300\n"
 "Last-Translator: MrDandycorn\n"
 "Language: ru\n"
@@ -455,15 +455,16 @@ msgstr ""
 #: vk_botting.bot.Bot.remove_command vk_botting.bot.Bot.remove_listener
 #: vk_botting.bot.Bot.run vk_botting.bot.Bot.send_message
 #: vk_botting.bot.Bot.unload_extension vk_botting.bot.Bot.upload_document
-#: vk_botting.bot.Bot.upload_photo vk_botting.bot.Bot.user_vk_request
-#: vk_botting.bot.Bot.vk_request vk_botting.bot.Bot.wait_for
-#: vk_botting.client.Client.attach_user_token
+#: vk_botting.bot.Bot.upload_image_to_server vk_botting.bot.Bot.upload_photo
+#: vk_botting.bot.Bot.user_vk_request vk_botting.bot.Bot.vk_request
+#: vk_botting.bot.Bot.wait_for vk_botting.client.Client.attach_user_token
 #: vk_botting.client.Client.build_msg vk_botting.client.Client.get_group
 #: vk_botting.client.Client.get_groups vk_botting.client.Client.get_page
 #: vk_botting.client.Client.get_pages vk_botting.client.Client.get_user
 #: vk_botting.client.Client.get_users vk_botting.client.Client.run
 #: vk_botting.client.Client.send_message
 #: vk_botting.client.Client.upload_document
+#: vk_botting.client.Client.upload_image_to_server
 #: vk_botting.client.Client.upload_photo
 #: vk_botting.client.Client.user_vk_request vk_botting.client.Client.vk_request
 #: vk_botting.client.Client.wait_for vk_botting.commands.Command.add_check
@@ -783,15 +784,18 @@ msgstr "Переданная корутина на самом деле не ко
 #: vk_botting.bot.Bot.get_user:1 vk_botting.bot.Bot.get_users:1
 #: vk_botting.bot.Bot.invoke:1 vk_botting.bot.Bot.on_error:1
 #: vk_botting.bot.Bot.process_commands:1 vk_botting.bot.Bot.send_message:1
-#: vk_botting.bot.Bot.upload_document:1 vk_botting.bot.Bot.upload_photo:1
-#: vk_botting.bot.Bot.user_vk_request:1 vk_botting.bot.Bot.vk_request:1
-#: vk_botting.bot.Bot.wait_for:1 vk_botting.client.Client.attach_user_token:1
+#: vk_botting.bot.Bot.upload_document:1
+#: vk_botting.bot.Bot.upload_image_to_server:1
+#: vk_botting.bot.Bot.upload_photo:1 vk_botting.bot.Bot.user_vk_request:1
+#: vk_botting.bot.Bot.vk_request:1 vk_botting.bot.Bot.wait_for:1
+#: vk_botting.client.Client.attach_user_token:1
 #: vk_botting.client.Client.get_group:1 vk_botting.client.Client.get_groups:1
 #: vk_botting.client.Client.get_own_page:1 vk_botting.client.Client.get_page:1
 #: vk_botting.client.Client.get_pages:1 vk_botting.client.Client.get_user:1
 #: vk_botting.client.Client.get_users:1 vk_botting.client.Client.on_error:1
 #: vk_botting.client.Client.send_message:1
 #: vk_botting.client.Client.upload_document:1
+#: vk_botting.client.Client.upload_image_to_server:1
 #: vk_botting.client.Client.upload_photo:1
 #: vk_botting.client.Client.user_vk_request:1
 #: vk_botting.client.Client.vk_request:1 vk_botting.client.Client.wait_for:1
@@ -810,12 +814,16 @@ msgstr "|coro|"
 msgid ""
 "Attaches user token to the bot, enabling it to execute API calls "
 "available to users only."
-msgstr "Присоединяет к боту токен пользователя, что позволяет выполнять запросы к API которые доступны только пользователям."
+msgstr ""
+"Присоединяет к боту токен пользователя, что позволяет выполнять запросы к"
+" API которые доступны только пользователям."
 
 #: of vk_botting.bot.Bot.attach_user_token:5
 #: vk_botting.client.Client.attach_user_token:5
 msgid "Also puts :class:`.User` object corresponding to the token into self.user"
-msgstr "Также помещает в self.user экземпляр класса :class:`.User` соответствующий предоставленному токену"
+msgstr ""
+"Также помещает в self.user экземпляр класса :class:`.User` "
+"соответствующий предоставленному токену"
 
 #: of vk_botting.bot.Bot.attach_user_token:7
 #: vk_botting.client.Client.attach_user_token:7
@@ -933,14 +941,16 @@ msgstr ":class:`dict`, представляющий объект сообщен�
 #: vk_botting.bot.Bot.get_pages vk_botting.bot.Bot.get_prefix
 #: vk_botting.bot.Bot.get_user vk_botting.bot.Bot.get_users
 #: vk_botting.bot.Bot.remove_command vk_botting.bot.Bot.send_message
-#: vk_botting.bot.Bot.upload_document vk_botting.bot.Bot.upload_photo
-#: vk_botting.bot.Bot.user_vk_request vk_botting.bot.Bot.vk_request
-#: vk_botting.bot.Bot.wait_for vk_botting.client.Client.build_msg
-#: vk_botting.client.Client.get_group vk_botting.client.Client.get_groups
-#: vk_botting.client.Client.get_own_page vk_botting.client.Client.get_page
-#: vk_botting.client.Client.get_pages vk_botting.client.Client.get_user
-#: vk_botting.client.Client.get_users vk_botting.client.Client.send_message
+#: vk_botting.bot.Bot.upload_document vk_botting.bot.Bot.upload_image_to_server
+#: vk_botting.bot.Bot.upload_photo vk_botting.bot.Bot.user_vk_request
+#: vk_botting.bot.Bot.vk_request vk_botting.bot.Bot.wait_for
+#: vk_botting.client.Client.build_msg vk_botting.client.Client.get_group
+#: vk_botting.client.Client.get_groups vk_botting.client.Client.get_own_page
+#: vk_botting.client.Client.get_page vk_botting.client.Client.get_pages
+#: vk_botting.client.Client.get_user vk_botting.client.Client.get_users
+#: vk_botting.client.Client.send_message
 #: vk_botting.client.Client.upload_document
+#: vk_botting.client.Client.upload_image_to_server
 #: vk_botting.client.Client.upload_photo
 #: vk_botting.client.Client.user_vk_request vk_botting.client.Client.vk_request
 #: vk_botting.client.Client.wait_for vk_botting.commands.Command.can_run
@@ -1012,14 +1022,16 @@ msgstr "Экземпляр :class:`.Message`, представляющий из�
 #: vk_botting.bot.Bot.get_pages vk_botting.bot.Bot.get_prefix
 #: vk_botting.bot.Bot.get_user vk_botting.bot.Bot.get_users
 #: vk_botting.bot.Bot.remove_command vk_botting.bot.Bot.send_message
-#: vk_botting.bot.Bot.upload_document vk_botting.bot.Bot.upload_photo
-#: vk_botting.bot.Bot.user_vk_request vk_botting.bot.Bot.vk_request
-#: vk_botting.bot.Bot.wait_for vk_botting.client.Client.build_msg
-#: vk_botting.client.Client.get_group vk_botting.client.Client.get_groups
-#: vk_botting.client.Client.get_own_page vk_botting.client.Client.get_page
-#: vk_botting.client.Client.get_pages vk_botting.client.Client.get_user
-#: vk_botting.client.Client.get_users vk_botting.client.Client.send_message
+#: vk_botting.bot.Bot.upload_document vk_botting.bot.Bot.upload_image_to_server
+#: vk_botting.bot.Bot.upload_photo vk_botting.bot.Bot.user_vk_request
+#: vk_botting.bot.Bot.vk_request vk_botting.bot.Bot.wait_for
+#: vk_botting.client.Client.build_msg vk_botting.client.Client.get_group
+#: vk_botting.client.Client.get_groups vk_botting.client.Client.get_own_page
+#: vk_botting.client.Client.get_page vk_botting.client.Client.get_pages
+#: vk_botting.client.Client.get_user vk_botting.client.Client.get_users
+#: vk_botting.client.Client.send_message
 #: vk_botting.client.Client.upload_document
+#: vk_botting.client.Client.upload_image_to_server
 #: vk_botting.client.Client.upload_photo
 #: vk_botting.client.Client.user_vk_request vk_botting.client.Client.vk_request
 #: vk_botting.client.Client.wait_for vk_botting.commands.Command.can_run
@@ -2046,7 +2058,9 @@ msgstr "Id сообщений, которые надо переслать."
 #: of vk_botting.bot.Bot.send_message:28
 #: vk_botting.client.Client.send_message:28
 msgid "If message should be sent as user (using attached user token)."
-msgstr "Должно ли сообщение быть отправлено от имени пользователя (с использованием присоединенного токена)"
+msgstr ""
+"Должно ли сообщение быть отправлено от имени пользователя (с "
+"использованием присоединенного токена)"
 
 # 287c84218031442a861036fc3b1ff0c6
 # 2f716e3afc71412b9cdbef24c4959d60
@@ -2136,6 +2150,89 @@ msgstr "Экземпляр :class:`.Attachment`, представляющий з
 msgid ":class:`.Attachment`"
 msgstr ":class:`.Attachment`"
 
+#: of vk_botting.bot.Bot.upload_image_to_server:3
+#: vk_botting.client.Client.upload_image_to_server:3
+msgid "Upload an image to some VK upload server."
+msgstr "Загружает изображение на какой-то сервер ВК."
+
+#: of vk_botting.bot.Bot.upload_image_to_server:5
+#: vk_botting.client.Client.upload_image_to_server:5
+msgid "Returns dict representation of server response."
+msgstr "Возвращает dict, представляющий собой ответ сервера."
+
+#: of vk_botting.bot.Bot.upload_image_to_server:7
+#: vk_botting.client.Client.upload_image_to_server:7
+msgid ""
+"Upload server url. Can be requested from API methods like "
+"photos.getUploadServer."
+msgstr "Url сервера для загрузки. Может быть получен от API с помощью методов подобных photos.getUploadServer."
+
+#: of vk_botting.bot.Bot.upload_image_to_server:9
+#: vk_botting.bot.Bot.upload_photo:9
+#: vk_botting.client.Client.upload_image_to_server:9
+#: vk_botting.client.Client.upload_photo:9
+msgid "Path to image to upload. Can be relative."
+msgstr "Путь к изображению, которое надо загрузить. Может быть относительным."
+
+#: of vk_botting.bot.Bot.upload_image_to_server:11
+#: vk_botting.bot.Bot.upload_photo:11
+#: vk_botting.client.Client.upload_image_to_server:11
+#: vk_botting.client.Client.upload_photo:11
+msgid ""
+"Url of image to upload. Should be a direct url to supported image format,"
+" otherwise wont work."
+msgstr ""
+"Ссылка на изображение, которое надо загрузить. Это должна быть прямая "
+"ссылка на поддерживаемый формат изображений, иначе не сработает."
+
+#: of vk_botting.bot.Bot.upload_image_to_server:13
+#: vk_botting.bot.Bot.upload_photo:13
+#: vk_botting.client.Client.upload_image_to_server:13
+#: vk_botting.client.Client.upload_photo:13
+msgid "Raw bytes of image to upload. If used, format has to be provided."
+msgstr ""
+"Сырые байты изображения, которое надо загрузить. Если используется, надо "
+"передать параметр format."
+
+#: of vk_botting.bot.Bot.upload_image_to_server:15
+#: vk_botting.bot.Bot.upload_photo:15
+#: vk_botting.client.Client.upload_image_to_server:15
+#: vk_botting.client.Client.upload_photo:15
+msgid "Extension of image to upload. Should be used only alongside raw data."
+msgstr ""
+"Расширение загружаемого изображения. Должно быть использовано только "
+"вместе с сырыми байтами."
+
+# 1633b48610da444b92c349e7b7d10d48
+# 1e669bbe3d6d4352ab64d4b7a3c81ce6
+#: of vk_botting.bot.Bot.upload_image_to_server:18
+#: vk_botting.client.Client.upload_image_to_server:18
+msgid ":class:`dict` representation of server response."
+msgstr ":class:`dict`, представляющий собой ответ сервера."
+
+# 8b28ecb17a0145b1b29c53d0869f15db
+# ee33dbc92af04871bbc9ab8f9da59288
+# 3010eff7359d4286b7548aa84e5a3bf3
+# d2a1743620f347ee8cd4fed488ca580f
+# 45b8d83395924f87b0f0736447a14914
+# bc7f343877504301b3cc69a32c4bd9de
+# 4658c3f375d14732893fe9eed990d653
+# 9716b362ad12486caa0e208522a39f38
+# 7b9727654e1e4c6fa4c52dd913f47d54
+# d8454f7081c648cdbae4d9fc52d697a9
+#: of vk_botting.abstract.Messageable.trigger_typing:12
+#: vk_botting.bot.Bot.upload_image_to_server:19
+#: vk_botting.bot.Bot.user_vk_request:17 vk_botting.bot.Bot.vk_request:17
+#: vk_botting.client.Client.upload_image_to_server:19
+#: vk_botting.client.Client.user_vk_request:17
+#: vk_botting.client.Client.vk_request:17 vk_botting.commands.GroupMixin:8
+#: vk_botting.context.Context:35 vk_botting.context.Context.trigger_typing:12
+#: vk_botting.group.Group:37 vk_botting.message.Message:67
+#: vk_botting.message.Message.trigger_typing:12
+#: vk_botting.user.User.trigger_typing:12
+msgid ":class:`dict`"
+msgstr ":class:`dict`"
+
 #: of vk_botting.bot.Bot.upload_photo:3 vk_botting.client.Client.upload_photo:3
 msgid "Upload a photo to conversation with given peer_id."
 msgstr "Загружает изображение в диалог с данным peer_id"
@@ -2148,33 +2245,6 @@ msgstr ""
 "Peer_id назначения. Загруженное изображение нельзя использовать вне "
 "данного диалога"
 
-#: of vk_botting.bot.Bot.upload_photo:9 vk_botting.client.Client.upload_photo:9
-msgid "Path to image to upload. Can be relative."
-msgstr "Путь к изображению, которое надо загрузить. Может быть относительным."
-
-#: of vk_botting.bot.Bot.upload_photo:11
-#: vk_botting.client.Client.upload_photo:11
-msgid ""
-"Url of image to upload. Should be a direct url to supported image format,"
-" otherwise wont work."
-msgstr ""
-"Ссылка на изображение, которое надо загрузить. Это должна быть прямая "
-"ссылка на поддерживаемый формат изображений, иначе не сработает."
-
-#: of vk_botting.bot.Bot.upload_photo:13
-#: vk_botting.client.Client.upload_photo:13
-msgid "Raw bytes of image to upload. If used, format has to be provided."
-msgstr ""
-"Сырые байты изображения, которое надо загрузить. Если используется, надо "
-"передать параметр format."
-
-#: of vk_botting.bot.Bot.upload_photo:15
-#: vk_botting.client.Client.upload_photo:15
-msgid "Extension of image to upload. Should be used only alongside raw data."
-msgstr ""
-"Расширение загружаемого изображения. Должно быть использовано только "
-"вместе с сырыми байтами."
-
 #: of vk_botting.bot.Bot.upload_photo:18
 #: vk_botting.client.Client.upload_photo:18
 msgid ":class:`.Attachment` instance representing uploaded photo."
@@ -2185,7 +2255,9 @@ msgstr "Экземпляр :class:`.Attachment`, представляющий з
 #: of vk_botting.bot.Bot.user_vk_request:3
 #: vk_botting.client.Client.user_vk_request:3
 msgid "Implements abstract VK Api method request with attached User token."
-msgstr "Реализует абстрактный запрос к методам VK Api с помощью прикрепленного токена пользователя."
+msgstr ""
+"Реализует абстрактный запрос к методам VK Api с помощью прикрепленного "
+"токена пользователя."
 
 # 1e7ecca0f7c6415ea07fe6d2ef8e57c8
 # df7ca981b0d940be8d2c03e79db328d8
@@ -2248,27 +2320,6 @@ msgstr ""
 #: vk_botting.client.Client.vk_request:16
 msgid "Dict representation of json response received from the server"
 msgstr "Ответ от сервера, представленный в виде :class:`dict`"
-
-# 8b28ecb17a0145b1b29c53d0869f15db
-# ee33dbc92af04871bbc9ab8f9da59288
-# 3010eff7359d4286b7548aa84e5a3bf3
-# d2a1743620f347ee8cd4fed488ca580f
-# 45b8d83395924f87b0f0736447a14914
-# bc7f343877504301b3cc69a32c4bd9de
-# 4658c3f375d14732893fe9eed990d653
-# 9716b362ad12486caa0e208522a39f38
-# 7b9727654e1e4c6fa4c52dd913f47d54
-# d8454f7081c648cdbae4d9fc52d697a9
-#: of vk_botting.abstract.Messageable.trigger_typing:12
-#: vk_botting.bot.Bot.user_vk_request:17 vk_botting.bot.Bot.vk_request:17
-#: vk_botting.client.Client.user_vk_request:17
-#: vk_botting.client.Client.vk_request:17 vk_botting.commands.GroupMixin:8
-#: vk_botting.context.Context:35 vk_botting.context.Context.trigger_typing:12
-#: vk_botting.group.Group:37 vk_botting.message.Message:67
-#: vk_botting.message.Message.trigger_typing:12
-#: vk_botting.user.User.trigger_typing:12
-msgid ":class:`dict`"
-msgstr ":class:`dict`"
 
 # 70c025c8f7624753a38dba8b11fb0ad1
 # d5da4136344b4c808f3ba82cd1faf469

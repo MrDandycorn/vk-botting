@@ -505,6 +505,55 @@ class Client:
         if 'response' in user and len(user.get('response')) == 1:
             return User(user.get('response')[0])
 
+    async def upload_image_to_server(self, server, filename=None, url=None, raw=None, format=None):
+        """|coro|
+
+        Upload an image to some VK upload server.
+
+        Returns dict representation of server response.
+
+        Parameters
+        ----------
+        server: :class:`str`
+            Upload server url. Can be requested from API methods like photos.getUploadServer.
+        filename: :class:`str`
+            Path to image to upload. Can be relative.
+        url: :class:`str`
+            Url of image to upload. Should be a direct url to supported image format, otherwise wont work.
+        raw: :class:`bytes`
+            Raw bytes of image to upload. If used, format has to be provided.
+        format: :class:`str`
+            Extension of image to upload. Should be used only alongside raw data.
+
+        Returns
+        -------
+        :class:`dict`
+            :class:`dict` representation of server response.
+        """
+        if not (filename or url or raw):
+            raise VKException('No image source provided')
+        if (filename and url) or (filename and raw) or (url and raw):
+            raise VKException('Can only upload one image at a time')
+        if raw and not format:
+            raise VKException('Format has to be provided when using raw data')
+        if filename:
+            files = {'photo': open(filename, 'rb')}
+        elif url:
+            imbts = await self.session.get(url)
+            cnt = imbts.content_type
+            if not cnt.startswith('image/'):
+                raise TypeError('URL passed does not lead to an image')
+            ext = cnt[6:]
+            imbts = await imbts.read()
+            files = aiohttp.FormData()
+            files.add_field('photo', imbts, filename='temp.{}'.format(ext))
+        else:
+            files = aiohttp.FormData()
+            files.add_field('photo', raw, filename='temp.{}'.format(format.lower()))
+        server_response = await self.session.post(server, data=files)
+        response_json = await server_response.json(content_type=None)
+        return response_json
+
     async def upload_document(self, peer_id, file, type=DocType.DOCUMENT, title=None):
         """|coro|
 
@@ -568,32 +617,11 @@ class Client:
         :class:`.Attachment`
             :class:`.Attachment` instance representing uploaded photo.
         """
-        if not (filename or url or raw):
-            raise VKException('No image source provided')
-        if (filename and url) or (filename and raw) or (url and raw):
-            raise VKException('Can only upload one image at a time')
-        if raw and not format:
-            raise VKException('Format has to be provided when using raw data')
-        r = await self.vk_request('photos.getMessagesUploadServer', peer_id=peer_id)
-        imurl = r['response']['upload_url']
-        if filename:
-            files = {'photo': open(filename, 'rb')}
-        elif url:
-            imbts = await self.session.get(url)
-            cnt = imbts.content_type
-            if not cnt.startswith('image/'):
-                raise TypeError('URL passed does not lead to an image')
-            ext = cnt[6:]
-            imbts = await imbts.read()
-            files = aiohttp.FormData()
-            files.add_field('photo', imbts, filename='temp.{}'.format(ext))
-        else:
-            files = aiohttp.FormData()
-            files.add_field('photo', raw, filename='temp.{}'.format(format.lower()))
-        r = await self.session.post(imurl, data=files)
-        r = await r.json(content_type='text/html')
-        r = await self.vk_request('photos.saveMessagesPhoto', **r)
-        doc = r['response'][0]
+        upload_server = await self.vk_request('photos.getMessagesUploadServer', peer_id=peer_id)
+        upload_server_url = upload_server['response']['upload_url']
+        uploaded_photo = await self.upload_image_to_server(upload_server_url, filename, url, raw, format)
+        saved_photo = await self.vk_request('photos.saveMessagesPhoto', **uploaded_photo)
+        doc = saved_photo['response'][0]
         return Attachment(doc['owner_id'], doc['id'], AttachmentType.PHOTO)
 
     def build_msg(self, msg):
