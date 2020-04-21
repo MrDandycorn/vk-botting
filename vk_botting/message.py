@@ -71,7 +71,7 @@ class Message(Messageable):
         List of forwarded messages
     reply_message: :class:`.Message`
         Message that this message replied to
-    action: :class:`dict`
+    action: Union[:class:`.MessageAction`, :class:`NoneType`]
         Action payload
     """
 
@@ -79,6 +79,7 @@ class Message(Messageable):
         return self.peer_id
 
     def __init__(self, data):
+        self.original_data = data
         self._unpack(data)
 
     def _unpack(self, data):
