@@ -22,6 +22,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from copy import deepcopy
+
 
 async def get_post(bot, obj):
     post = Post(obj)
@@ -123,7 +125,7 @@ class Group:
     """
 
     def __init__(self, data):
-        self.original_data = data
+        self.original_data = deepcopy(data)
         self._unpack(data)
 
     def _unpack(self, data):

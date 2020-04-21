@@ -22,6 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from copy import deepcopy
 from random import randint
 from datetime import datetime
 
@@ -79,7 +80,7 @@ class Message(Messageable):
         return self.peer_id
 
     def __init__(self, data):
-        self.original_data = data
+        self.original_data = deepcopy(data)
         self._unpack(data)
 
     def _unpack(self, data):
