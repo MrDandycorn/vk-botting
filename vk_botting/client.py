@@ -307,7 +307,7 @@ class Client:
         if 'error' in users.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**users['error']))
         users = users.get('response')
-        return [User(user) for user in users]
+        return [User(self, user) for user in users]
 
     async def get_groups(self, *gids):
         """|coro|
@@ -498,12 +498,12 @@ class Client:
         if not user.get('response'):
             group = await self.vk_request('groups.getById')
             return Group(group.get('response')[0])
-        return User(user.get('response')[0])
+        return User(self, user.get('response')[0])
 
     async def get_own_user_page(self):
         user = await self.user_vk_request('users.get')
         if 'response' in user and len(user.get('response')) == 1:
-            return User(user.get('response')[0])
+            return User(self, user.get('response')[0])
 
     async def upload_image_to_server(self, server, filename=None, url=None, raw=None, format=None):
         """|coro|
@@ -786,12 +786,12 @@ class Client:
         return self.dispatch(t, deleted)
 
     async def handle_group_leave(self, t, obj):
-        user = await self.get_pages(obj['user_id'])
-        return self.dispatch(t, user)
+        user = await self.get_page(obj['user_id'])
+        return self.dispatch(t, user, bool(obj.get('self', 1)))
 
     async def handle_group_join(self, t, obj):
-        user = await self.get_pages(obj['user_id'])
-        return self.dispatch(t, user)
+        user = await self.get_page(obj['user_id'])
+        return self.dispatch(t, user, obj.get('join_type', 'join'))
 
     async def handle_user_block(self, t, obj):
         blocked = await get_blocked_user(self, obj)

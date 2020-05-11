@@ -63,7 +63,8 @@ class User(Messageable):
     async def _get_conversation(self):
         return self.id
 
-    def __init__(self, data):
+    def __init__(self, bot, data):
+        self.bot = bot
         self.original_data = data
         self._unpack(data)
 
