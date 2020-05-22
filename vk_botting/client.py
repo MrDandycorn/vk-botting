@@ -238,7 +238,7 @@ class Client:
             String representation of method name (e.g. 'users.get')
         post: :class:`bool`
             If request should be POST. Defaults to true. Changing this is not recommended
-        kwargs: :class:`dict`
+        kwargs: :class:`Any`
             Payload arguments to send along with request
 
             .. note::
@@ -263,7 +263,7 @@ class Client:
             String representation of method name (e.g. 'users.get')
         post: :class:`bool`
             If request should be POST. Defaults to true. Changing this is not recommended
-        kwargs: :class:`dict`
+        kwargs: :class:`Any`
             Payload arguments to send along with request
 
             .. note::
