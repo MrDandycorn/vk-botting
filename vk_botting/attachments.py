@@ -42,26 +42,6 @@ class DocType(Enum):
     GRAFFITI = 'graffiti'
 
 
-async def get_photo(bot, obj):
-    photo = Photo(obj)
-    photo.author, photo.owner = await bot.get_pages(photo.user_id, photo.owner_id)
-    return photo
-
-
-async def get_video(bot, obj):
-    video = Video(obj)
-    owner = await bot.get_pages(video.owner_id)
-    video.owner = owner[0]
-    return video
-
-
-async def get_audio(bot, obj):
-    audio = Audio(obj)
-    owner = await bot.get_pages(audio.owner_id)
-    audio.owner = owner[0]
-    return audio
-
-
 def get_attachment(obj):
     t = obj['type']
     if t == 'audio_message':

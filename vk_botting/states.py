@@ -23,11 +23,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 
-async def get_state(obj):
-    state = State(obj)
-    return state
-
-
 class State:
 
     def __init__(self, data):

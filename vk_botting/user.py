@@ -25,18 +25,6 @@ DEALINGS IN THE SOFTWARE.
 from vk_botting.abstract import Messageable
 
 
-async def get_blocked_user(bot, obj):
-    blocked = BlockedUser(obj)
-    blocked.admin, blocked.user = await bot.get_pages(blocked.admin_id, blocked.user_id)
-    return blocked
-
-
-async def get_unblocked_user(bot, obj):
-    unblocked = UnblockedUser(obj)
-    unblocked.admin, unblocked.user = await bot.get_pages(unblocked.admin_id, unblocked.user_id)
-    return unblocked
-
-
 class User(Messageable):
     """Represents a VK User.
 

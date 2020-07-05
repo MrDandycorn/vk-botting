@@ -23,24 +23,25 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import asyncio
-import sys
-import traceback
-import textwrap
-import aiohttp
 import enum
 import os
-from random import getrandbits
+import sys
+import textwrap
+import traceback
 from collections.abc import Iterable
+from random import getrandbits
 
-from vk_botting.user import get_blocked_user, get_unblocked_user, User
-from vk_botting.group import get_post, get_board_comment, get_market_comment, get_photo_comment, get_video_comment, get_wall_comment, get_deleted_photo_comment,\
-    get_deleted_video_comment, get_deleted_board_comment, get_deleted_market_comment, get_deleted_wall_comment, get_officers_edit, get_poll_vote, Group
-from vk_botting.attachments import get_photo, get_video, get_audio
-from vk_botting.message import Message, UserMessage
+import aiohttp
+
+from vk_botting.attachments import Photo, Video, Audio
 from vk_botting.attachments import get_attachment, get_user_attachments, DocType, Attachment, AttachmentType
-from vk_botting.states import get_state
 from vk_botting.exceptions import VKApiError, LoginError, VKException
 from vk_botting.general import convert_params
+from vk_botting.group import *
+from vk_botting.message import Message, UserMessage
+from vk_botting.states import State
+from vk_botting.user import BlockedUser, UnblockedUser, User
+from vk_botting.utils import maybe_coroutine
 
 
 class UserMessageFlags(enum.IntFlag):
@@ -103,10 +104,48 @@ class Client:
             self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout, headers=headers))
         else:
             self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout))
-        self._implemented_events = ['message_new', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
+        self._all_events = ['message_new', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
         self.extra_events = []
         self.token = None
         self.user_token = None
+        self.event_handlers = {
+            'message_reply': self.handle_message_reply,
+            'message_edit': self.handle_message_edit,
+            'message_typing_state': self.handle_message_typing_state,
+            'message_allow': self.handle_message_allow,
+            'message_deny': self.handle_message_allow,
+            'photo_new': self.handle_photo_new,
+            'photo_comment_new': self.handle_photo_comment_new,
+            'photo_comment_edit': self.handle_photo_comment_new,
+            'photo_comment_restore': self.handle_photo_comment_new,
+            'photo_comment_delete': self.handle_photo_comment_delete,
+            'audio_new': self.handle_audio_new,
+            'video_new': self.handle_video_new,
+            'video_comment_new': self.handle_video_comment_new,
+            'video_comment_edit': self.handle_video_comment_new,
+            'video_comment_restore': self.handle_video_comment_new,
+            'video_comment_delete': self.handle_video_comment_delete,
+            'wall_post_new': self.handle_wall_post_new,
+            'wall_repost': self.handle_wall_post_new,
+            'wall_reply_new': self.handle_wall_reply_new,
+            'wall_reply_edit': self.handle_wall_reply_new,
+            'wall_reply_restore': self.handle_wall_reply_new,
+            'wall_reply_delete': self.handle_wall_reply_delete,
+            'board_post_new': self.handle_board_post_new,
+            'board_post_edit': self.handle_board_post_new,
+            'board_post_restore': self.handle_board_post_new,
+            'board_post_delete': self.handle_board_post_delete,
+            'market_comment_new': self.handle_market_comment_new,
+            'market_comment_edit': self.handle_market_comment_new,
+            'market_comment_restore': self.handle_market_comment_new,
+            'market_comment_delete': self.handle_market_comment_delete,
+            'group_leave': self.handle_group_leave,
+            'group_join': self.handle_group_join,
+            'user_block': self.handle_user_block,
+            'user_unblock': self.handle_user_unblock,
+            'poll_vote_new': self.handle_poll_vote_new,
+            'group_officers_edit': self.handle_group_officers_edit,
+        }
 
     def Payload(self, **kwargs):
         kwargs['access_token'] = self.token
@@ -653,7 +692,7 @@ class Client:
         return res
 
     async def enable_longpoll(self):
-        events = dict([(event, 1) for event in self._implemented_events])
+        events = dict([(event, 1) for event in self._all_events])
         res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.120', **events)
         return res
 
@@ -721,68 +760,69 @@ class Client:
         msg = self.build_msg(obj)
         return self.dispatch(t, msg)
 
-    async def handle_message_typing_state(self, t, obj):
-        state = await get_state(obj)
+    def handle_message_typing_state(self, t, obj):
+        state = State(obj)
         return self.dispatch(t, state)
 
     async def handle_message_allow(self, t, obj):
-        user = await self.get_pages(obj)
+        user_id = obj['user_id']
+        user = await self.get_page(user_id)
         return self.dispatch(t, user)
 
-    async def handle_photo_new(self, t, obj):
-        photo = await get_photo(self, obj)
+    def handle_photo_new(self, t, obj):
+        photo = Photo(obj)
         return self.dispatch(t, photo)
 
-    async def handle_photo_comment_new(self, t, obj):
-        comment = await get_photo_comment(self, obj)
+    def handle_photo_comment_new(self, t, obj):
+        comment = PhotoComment(obj)
         return self.dispatch(t, comment)
 
-    async def handle_photo_comment_delete(self, t, obj):
-        deleted = await get_deleted_photo_comment(self, obj)
+    def handle_photo_comment_delete(self, t, obj):
+        deleted = DeletedPhotoComment(obj)
         return self.dispatch(t, deleted)
 
-    async def handle_audio_new(self, t, obj):
-        audio = await get_audio(self, obj)
+    def handle_audio_new(self, t, obj):
+        audio = Audio(obj)
         return self.dispatch(t, audio)
 
-    async def handle_video_new(self, t, obj):
-        video = await get_video(self, obj)
+    def handle_video_new(self, t, obj):
+        video = Video(obj)
         return self.dispatch(t, video)
 
     def handle_video_comment_new(self, t, obj):
-        comment = get_video_comment(self, obj)
+        comment = VideoComment(obj)
         return self.dispatch(t, comment)
 
-    async def handle_video_comment_delete(self, t, obj):
-        deleted = await get_deleted_video_comment(self, obj)
+    def handle_video_comment_delete(self, t, obj):
+        deleted = DeletedVideoComment(obj)
         return self.dispatch(t, deleted)
 
-    async def handle_wall_post_new(self, t, obj):
-        post = await get_post(self, obj)
+    def handle_wall_post_new(self, t, obj):
+        post = Post(obj)
         return self.dispatch(t, post)
 
-    async def handle_wall_reply_new(self, t, obj):
-        comment = await get_wall_comment(self, obj)
+    def handle_wall_reply_new(self, t, obj):
+        comment = WallComment(obj)
         return self.dispatch(t, comment)
 
-    async def handle_wall_reply_delete(self, t, obj):
-        deleted = await get_deleted_wall_comment(self, obj)
+    def handle_wall_reply_delete(self, t, obj):
+        deleted = DeletedWallComment(obj)
         return self.dispatch(t, deleted)
 
-    async def handle_board_post_new(self, t, obj):
-        comment = await get_board_comment(self, obj)
+    def handle_board_post_new(self, t, obj):
+        comment = BoardComment(obj)
         return self.dispatch(t, comment)
 
-    async def handle_board_post_delete(self, t, obj):
-        deleted = await get_deleted_board_comment(self, obj)
+    def handle_board_post_delete(self, t, obj):
+        deleted = DeletedBoardComment(obj)
         return self.dispatch(t, deleted)
 
-    async def handle_market_comment_new(self, t, obj):
-        comment = await get_market_comment(self, obj)
+    def handle_market_comment_new(self, t, obj):
+        comment = MarketComment(obj)
         return self.dispatch(t, comment)
 
-    async def handle_market_comment_delete(self, t, obj):
-        deleted = await get_deleted_market_comment(self, obj)
+    def handle_market_comment_delete(self, t, obj):
+        deleted = DeletedMarketComment(obj)
         return self.dispatch(t, deleted)
 
     async def handle_group_leave(self, t, obj):
@@ -793,20 +833,20 @@ class Client:
         user = await self.get_page(obj['user_id'])
         return self.dispatch(t, user, obj.get('join_type', 'join'))
 
-    async def handle_user_block(self, t, obj):
-        blocked = await get_blocked_user(self, obj)
+    def handle_user_block(self, t, obj):
+        blocked = BlockedUser(obj)
         return self.dispatch(t, blocked)
 
-    async def handle_user_unblock(self, t, obj):
-        unblocked = await get_unblocked_user(self, obj)
+    def handle_user_unblock(self, t, obj):
+        unblocked = UnblockedUser(obj)
         return self.dispatch(t, unblocked)
 
-    async def handle_poll_vote_new(self, t, obj):
-        vote = await get_poll_vote(self, obj)
+    def handle_poll_vote_new(self, t, obj):
+        vote = PollVote(obj)
         return self.dispatch(t, vote)
 
-    async def handle_group_officers_edit(self, t, obj):
-        edit = await get_officers_edit(self, obj)
+    def handle_group_officers_edit(self, t, obj):
+        edit = OfficersEdit(obj)
         return self.dispatch(t, edit)
 
     def handle_update(self, update):
@@ -816,58 +856,9 @@ class Client:
         obj = update['object']
         if t == 'message_reply' and 'on_message_reply' in self.extra_events:
             return self.handle_message_reply(t, obj)
-        elif t == 'message_edit' and 'on_message_edit' in self.extra_events:
-            return self.handle_message_edit(t, obj)
-        elif t == 'message_typing_state' and 'on_message_typing_state' in self.extra_events:
-            return self.loop.create_task(self.handle_message_typing_state(t, obj))
-        elif t in ['message_allow', 'message_deny'] and any(event in self.extra_events for event in ['on_message_allow', 'on_message_deny']):
-            return self.loop.create_task(self.handle_message_allow(t, obj))
-        elif t == 'photo_new' and 'on_photo_new' in self.extra_events:
-            return self.loop.create_task(self.handle_photo_new(t, obj))
-        elif t in ['photo_comment_new', 'photo_comment_edit', 'photo_comment_restore'] and any(
-                event in self.extra_events for event in ['on_photo_comment_new', 'on_photo_comment_edit', 'on_photo_comment_restore']):
-            return self.loop.create_task(self.handle_photo_comment_new(t, obj))
-        elif t == 'photo_comment_delete' and 'on_photo_comment_delete' in self.extra_events:
-            return self.loop.create_task(self.handle_photo_comment_delete(t, obj))
-        elif t == 'audio_new' and 'on_audio_new' in self.extra_events:
-            return self.loop.create_task(self.handle_audio_new(t, obj))
-        elif t == 'video_new' and 'on_video_new' in self.extra_events:
-            return self.loop.create_task(self.handle_video_new(t, obj))
-        elif t in ['video_comment_new', 'video_comment_edit', 'video_comment_restore'] and any(
-                event in self.extra_events for event in ['on_video_comment_new', 'on_video_comment_edit', 'on_video_comment_restore']):
-            return self.handle_video_comment_new(t, obj)
-        elif t == 'video_comment_delete' and 'on_video_comment_delete' in self.extra_events:
-            return self.loop.create_task(self.handle_video_comment_delete(t, obj))
-        elif t in ['wall_post_new', 'wall_repost'] and any(event in self.extra_events for event in ['on_wall_post_new', 'on_wall_repost']):
-            return self.loop.create_task(self.handle_wall_post_new(t, obj))
-        elif t in ['wall_reply_new', 'wall_reply_edit', 'wall_reply_restore'] and any(
-                event in self.extra_events for event in ['on_wall_reply_new', 'on_wall_reply_edit', 'on_wall_reply_restore']):
-            return self.loop.create_task(self.handle_wall_reply_new(t, obj))
-        elif t == 'wall_reply_delete' and 'on_wall_reply_delete' in self.extra_events:
-            return self.loop.create_task(self.handle_wall_reply_delete(t, obj))
-        elif t in ['board_post_new', 'board_post_edit', 'board_post_restore'] and any(
-                event in self.extra_events for event in ['on_board_post_new', 'on_board_post_edit', 'on_board_post_restore']):
-            return self.loop.create_task(self.handle_board_post_new(t, obj))
-        elif t == 'board_post_delete' and 'on_board_post_delete' in self.extra_events:
-            return self.loop.create_task(self.handle_board_post_delete(t, obj))
-        elif t in ['market_comment_new', 'market_comment_edit', 'market_comment_restore'] and any(
-                event in self.extra_events for event in ['on_market_comment_new', 'on_market_comment_edit', 'on_market_comment_restore']):
-            return self.loop.create_task(self.handle_market_comment_new(t, obj))
-        elif t == 'market_comment_delete' and 'on_market_comment_delete' in self.extra_events:
-            return self.loop.create_task(self.handle_market_comment_delete(t, obj))
-        elif t == 'group_leave' and 'on_group_leave' in self.extra_events:
-            return self.loop.create_task(self.handle_group_leave(t, obj))
-        elif t == 'group_join' and 'on_group_join' in self.extra_events:
-            return self.loop.create_task(self.handle_group_join(t, obj))
-        elif t == 'user_block' and 'on_user_block' in self.extra_events:
-            return self.loop.create_task(self.handle_user_block(t, obj))
-        elif t == 'user_unblock' and 'on_user_unblock' in self.extra_events:
-            return self.loop.create_task(self.handle_user_unblock(t, obj))
-        elif t == 'poll_vote_new' and 'on_poll_vote_new' in self.extra_events:
-            return self.loop.create_task(self.handle_poll_vote_new(t, obj))
-        elif t == 'group_officers_edit' and 'on_group_officers_edit' in self.extra_events:
-            return self.loop.create_task(self.handle_group_officers_edit(t, obj))
-        elif t not in self._implemented_events and 'on_unknown' in self.extra_events:
+        elif t in self.event_handlers and 'on_' + t in self.extra_events:
+            return self.loop.create_task(maybe_coroutine(self.event_handlers[t], t, obj))
+        elif t not in self.event_handlers and 'on_unknown' in self.extra_events:
             return self.dispatch('unknown', update)
 
     def dispatch(self, event, *args, **kwargs):
