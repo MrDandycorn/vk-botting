@@ -654,7 +654,7 @@ class Client:
 
     async def enable_longpoll(self):
         events = dict([(event, 1) for event in self._implemented_events])
-        res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.103', **events)
+        res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.120', **events)
         return res
 
     async def print_warnings(self):
@@ -666,7 +666,7 @@ class Client:
             print('WARNING:  message_new event is disabled. Commands will not function until message_new is enabled', file=sys.stderr)
         api_ver = res.get('response').get('api_version')
         minor = int(api_ver.split('.')[1])
-        if minor < 103:
+        if minor < 120:
             print('WARNING:  You are using old LongPoll API version, consider upgrading to newer one', file=sys.stderr)
 
     async def get_longpoll_server(self):
