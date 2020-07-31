@@ -851,11 +851,9 @@ class Client:
 
     def handle_update(self, update):
         t = update['type']
-        if t == 'message_new':
-            return self.handle_message(update['object']['message'])
         obj = update['object']
-        if t == 'message_reply' and 'on_message_reply' in self.extra_events:
-            return self.handle_message_reply(t, obj)
+        if t == 'message_new':
+            return self.handle_message(obj['message'])
         elif t in self.event_handlers and 'on_' + t in self.extra_events:
             return self.loop.create_task(maybe_coroutine(self.event_handlers[t], t, obj))
         elif t not in self.event_handlers and 'on_unknown' in self.extra_events:
