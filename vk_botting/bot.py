@@ -903,6 +903,8 @@ class Bot(BotBase, Client):
 
     force: :class:`bool`
         If bot should force optimal longpoll settings automatically
+    lang: :class:`str`
+        Lang parameter for API requests
     """
     pass
 
@@ -960,5 +962,7 @@ class UserBot(BotBase, UserClient):
 
     force: :class:`bool`
         If bot should force optimal longpoll settings automatically
+    lang: :class:`str`
+        Lang parameter for API requests
     """
     pass

@@ -89,6 +89,7 @@ class Client:
     def __init__(self, **kwargs):
         self.v = kwargs.get('v', '5.999')
         self.force = kwargs.get('force', False)
+        self.lang = kwargs.get('lang', None)
         self.loop = asyncio.get_event_loop()
         self.group = None
         self.user = None
@@ -150,6 +151,7 @@ class Client:
     def Payload(self, **kwargs):
         kwargs['access_token'] = self.token
         kwargs['v'] = self.v
+        kwargs['lang'] = self.lang
         return kwargs
 
     def UserPayload(self, **kwargs):
@@ -157,6 +159,7 @@ class Client:
             raise VKException('User Token not attached. Use Bot.attach_user_token to attach it.')
         kwargs['access_token'] = self.user_token
         kwargs['v'] = self.v
+        kwargs['lang'] = self.lang
         return kwargs
 
     class botCommandException(Exception):
