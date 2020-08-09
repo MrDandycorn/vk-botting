@@ -13,7 +13,7 @@ __title__ = 'vk_botting'
 __author__ = 'MrDandycorn'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2019-2020 MrDandycorn'
-__version__ = '0.9.3'
+__version__ = '0.9.4'
 
 from collections import namedtuple
 import logging
@@ -26,11 +26,10 @@ from vk_botting.commands import *
 from vk_botting.keyboard import *
 from vk_botting.message import Message, Messageable
 from vk_botting.exceptions import *
-from vk_botting.auth import TokenReceiverKate, TokenReceiverOfficial
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 
-version_info = VersionInfo(major=0, minor=9, micro=3, releaselevel='development', serial=0)
+version_info = VersionInfo(major=0, minor=9, micro=4, releaselevel='development', serial=0)
 
 try:
     from logging import NullHandler

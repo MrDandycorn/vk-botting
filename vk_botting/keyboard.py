@@ -84,7 +84,7 @@ class Keyboard(object):
         ----------
         label: :class:`str`
             Button label to be displayed
-        color: :class:`str`
+        color: :class:Union[`str`, `KeyboardColor`]
             Button color. Can be value from :class:`.KeyboardColor` enum
         payload: :class:`dict`
             Optional. Should be used for some buttons
