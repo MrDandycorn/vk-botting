@@ -29,7 +29,7 @@ from vk_botting.exceptions import *
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 
-version_info = VersionInfo(major=0, minor=9, micro=4, releaselevel='development', serial=0)
+version_info = VersionInfo(major=0, minor=9, micro=5, releaselevel='development', serial=0)
 
 try:
     from logging import NullHandler
