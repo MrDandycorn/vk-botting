@@ -13,7 +13,7 @@ __title__ = 'vk_botting'
 __author__ = 'MrDandycorn'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2019-2020 MrDandycorn'
-__version__ = '0.9.4'
+__version__ = '0.9.5'
 
 from collections import namedtuple
 import logging
