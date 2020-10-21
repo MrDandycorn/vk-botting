@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  vk-botting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-18 13:11+0300\n"
+"POT-Creation-Date: 2020-10-21 19:09+0300\n"
 "PO-Revision-Date: 2020-04-15 16:03+0300\n"
-"Last-Translator: MrDandycorn\n"
+"Last-Translator: Sovamorco\n"
 "Language: ru\n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
@@ -246,15 +246,15 @@ msgstr ""
 "Если ``True``, бот будет слушать только команды, вызванные им же самим. "
 "Если ``False`` (по умолчанию), то бот будет себя игнорировать"
 
-# c2be9485e0244ca880527175b5cc70e8
 #: of vk_botting.bot.Bot:53
-msgid "VK API version. Defaults to '5.999' (current latest)"
-msgstr "Версия VK API. По умолчанию '5.999' (последняя)"
+msgid "VK API version. Defaults to '5.124' (latest currently supported)"
+msgstr "Версия VK API. По умолчанию '5.124' (последняя поддерживаемая библиотекой)"
 
-# b467bc6b72a3478b8a7ded00c05d9d7c
 #: of vk_botting.bot.Bot:57
-msgid "Library is not intended to use with API Version lower than '5.103'"
-msgstr "Библиотека не будет работать с версиями API ниже '5.103'"
+msgid ""
+"Library is not intended to be used with API Version lower than '5.103' or"
+" higher than '5.124"
+msgstr "Библиотека не предназначена для работы с версиями API ниже '5.103' и выше '5.124'"
 
 # 4ab92cda256e4d1a8c7c31b3405add9d
 # 6aa908bc22564c88a8c8fe74ac3ab583
@@ -283,7 +283,8 @@ msgstr "Библиотека не будет работать с версиям�
 # 2c2a98bf7ab3433d9d0265b26f7a67c0
 # 9b46fa1babea4977a309e6cd1f5627b7
 #: of vk_botting.attachments.Attachment:21 vk_botting.bot.Bot:59
-#: vk_botting.commands.Command:10 vk_botting.commands.Command.cog_name:3
+#: vk_botting.bot.Bot:71 vk_botting.commands.Command:10
+#: vk_botting.commands.Command.cog_name:3
 #: vk_botting.commands.Command.full_parent_name:6
 #: vk_botting.commands.Command.qualified_name:7 vk_botting.context.Context:41
 #: vk_botting.context.Context:53
@@ -303,6 +304,10 @@ msgstr ":class:`str`"
 #: of vk_botting.bot.Bot:63
 msgid "If bot should force optimal longpoll settings automatically"
 msgstr "Должен ли бот автоматически устанавливать оптимальные настройки LongPoll"
+
+#: of vk_botting.bot.Bot:69
+msgid "Lang parameter for API requests"
+msgstr "Параметр lang для запросов к API"
 
 # 289028a804394f98b9775887c06ec73d
 #: of vk_botting.bot.Bot.add_check:1
@@ -2165,7 +2170,9 @@ msgstr "Возвращает dict, представляющий собой от�
 msgid ""
 "Upload server url. Can be requested from API methods like "
 "photos.getUploadServer."
-msgstr "Url сервера для загрузки. Может быть получен от API с помощью методов подобных photos.getUploadServer."
+msgstr ""
+"Url сервера для загрузки. Может быть получен от API с помощью методов "
+"подобных photos.getUploadServer."
 
 #: of vk_botting.bot.Bot.upload_image_to_server:9
 #: vk_botting.bot.Bot.upload_photo:9
@@ -2227,8 +2234,7 @@ msgstr ":class:`dict`, представляющий собой ответ сер
 #: vk_botting.client.Client.user_vk_request:17
 #: vk_botting.client.Client.vk_request:17 vk_botting.commands.GroupMixin:8
 #: vk_botting.context.Context:35 vk_botting.context.Context.trigger_typing:12
-#: vk_botting.group.Group:37 vk_botting.message.Message:67
-#: vk_botting.message.Message.trigger_typing:12
+#: vk_botting.group.Group:37 vk_botting.message.Message.trigger_typing:12
 #: vk_botting.user.User.trigger_typing:12
 msgid ":class:`dict`"
 msgstr ":class:`dict`"
@@ -4136,6 +4142,10 @@ msgstr "Сообщение, в ответ на которое было отпр�
 #: of vk_botting.message.Message:65
 msgid "Action payload"
 msgstr "Информация о действии"
+
+#: of vk_botting.message.Message:67
+msgid "Union[:class:`.MessageAction`, :class:`NoneType`]"
+msgstr "Union[:class:`.MessageAction`, :class:`NoneType`]"
 
 # 52daa14c1a5346c3acf8a90cfcb9b0e8
 #: of vk_botting.message.Message.edit:3
