@@ -29,6 +29,7 @@ import sys
 import textwrap
 import traceback
 from collections.abc import Iterable
+from json import dumps
 from random import getrandbits
 
 import aiohttp
@@ -928,7 +929,7 @@ class Client:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
 
-    async def send_message(self, peer_id=None, message=None, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None, **kwargs):
+    async def send_message(self, peer_id=None, message=None, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None, forward=None, **kwargs):
         """|coro|
 
         Sends a message to the given destination with the text given.
@@ -958,6 +959,8 @@ class Client:
             A message id to reply to.
         forward_messages: Union[List[:class:`int`], List[:class:`str`]]
             Message ids to be forwarded along with message.
+        forward: :class:`dict`
+            Check docs for more details on this one.
         as_user: :class:`bool`
             If message should be sent as user (using attached user token).
 
@@ -980,6 +983,8 @@ class Client:
             attachment = ','.join(map(str, attachment))
         else:
             attachment = str(attachment)
+        if forward:
+            forward = dumps(forward)
         if message:
             message = str(message)
             if len(message) > 4096:
@@ -988,10 +993,13 @@ class Client:
                 for message in messages[:-1]:
                     await self.send_message(peer_id, message, **kwargs)
                 return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, **kwargs)
-        params = {'random_id': getrandbits(64), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
-                  'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard}
-        if not as_user:
+        params = {'random_id': getrandbits(64), 'message': message, 'attachment': attachment,
+                  'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard, 'forward': forward}
+        if self.is_group and not as_user:
             params['group_id'] = self.group.id
+            params['peer_ids'] = peer_id
+        else:
+            params['peer_id'] = peer_id
         res = await self.vk_request('messages.send', **params) if not as_user else await self.user_vk_request('messages.send', **params)
         if 'error' in res.keys():
             if res['error'].get('error_code') == 9:
@@ -999,11 +1007,15 @@ class Client:
                 return await self.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id,
                                                keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, **kwargs)
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
-        params['id'] = res['response']
         if self.is_group and not as_user:
             params['from_id'] = -self.group.id
+            params['conversation_message_id'] = res['response'][0]['conversation_message_id']
+            params['id'] = res['response'][0]['message_id']
+            params['peer_id'] = peer_id
+            params.pop('peer_ids')
         else:
             params['from_id'] = self.user.id
+            params['id'] = res['response']
         return self.build_msg(params)
 
     async def add_user_token(self, token):

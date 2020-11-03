@@ -102,15 +102,12 @@ class Message(Messageable):
         self.reply_message = data.get('reply_message')
         action = data.get('action')
         self.action = MessageAction(action) if action else None
+        self.conversation_message_id = data.get('conversation_message_id')
 
-    async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
+    async def edit(self, message=None, *, attachment=None, keep_forward_messages=1, keep_snippets=1):
         """|coro|
 
         Coroutine to edit the message. Depends on message_id.
-
-        .. warning::
-
-            As it depends on message id, it does not work in group chats. At least as long as VK API does not provide message_id there
 
         Parameters
         ----------
@@ -133,23 +130,41 @@ class Message(Messageable):
         :class:`.Message`
             The message that was sent.
         """
-        if self.id == 0:
-            raise VKApiError('I honestly don`t know but VK just doesn`t return message_id when message is sent into conversation\nIf you tried to edit message in conversation then this error is expected')
-        params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
-                  'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets}
+        params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment,
+                  'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets,
+                  'conversation_message_id' if self.conversation_message else 'message_id': self.message_id}
         res = await self.bot.vk_request('messages.edit', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         return res
 
-    async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
+    async def delete(self, delete_for_all=1):
+        """|coro|
+
+        Coroutine to delete the message. Depends on message_id.
+
+        Parameters
+        ----------
+        delete_for_all: :class:`bool`
+            ``True`` if message should be deleted for all users. Defaults to ``True``
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+        """
+        if self.conversation_message:
+            raise VKApiError('Messages in chats are still not deletable!')
+        params = {'group_id': self.bot.group.id, 'delete_for_all': delete_for_all,
+                  'message_ids': self.message_id}
+        res = await self.bot.vk_request('messages.delete', **params)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+
+    async def reply(self, message=None, **kwargs):
         """|coro|
 
         Sends a message to the destination as a reply to original message.
-
-        .. warning::
-
-            As it depends on message id, it does not work in group chats. At least as long as VK API does not provide message_id there
 
         The content must be a type that can convert to a string through ``str(message)``.
 
@@ -182,7 +197,16 @@ class Message(Messageable):
             The message that was sent.
         """
         peer_id = await self._get_conversation()
-        return await self.bot.send_message(peer_id, message, attachment=attachment, reply_to=self.id, sticker_id=sticker_id, keyboard=keyboard)
+        if self.conversation_message:
+            forward = {
+                'peer_id': peer_id,
+                'is_reply': True,
+                'conversation_message_ids' if self.conversation_message_id else 'message_ids': self.message_id
+            }
+            kwargs['forward'] = forward
+        else:
+            kwargs['reply_to'] = self.message_id
+        return await self.bot.send_message(peer_id, message, **kwargs)
 
     async def get_user(self):
         """|coro|
@@ -208,6 +232,14 @@ class Message(Messageable):
         Alternative for :meth:`.Message.get_user`
         """
         return await self.get_user()
+
+    @property
+    def message_id(self):
+        return self.id or self.conversation_message_id
+
+    @property
+    def conversation_message(self):
+        return not self.id
 
 
 class UserMessage(Messageable):
