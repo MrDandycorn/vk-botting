@@ -17,6 +17,7 @@ Documentation Contents
    quickstart
    vk
    commands
+   cogs
    api
 
 
