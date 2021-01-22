@@ -514,6 +514,24 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :type payload: :class:`dict`
 
 
+.. _vk_api_cogs_api:
+
+Cogs
+------
+
+Cog
+~~~~
+
+.. autoclass:: vk_botting.cog.Cog
+    :members:
+
+CogMeta
+~~~~~~~~
+
+.. autoclass:: vk_botting.cog.CogMeta
+    :members:
+
+
 .. _vk_api_abcs:
 
 Abstract Base Classes
@@ -680,3 +698,5 @@ Additional Classes
 
 .. autoclass:: vk_botting.client.Client
     :members:
+
+.. autofunction:: vk_botting.commands.command
