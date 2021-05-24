@@ -895,11 +895,11 @@ class Bot(BotBase, Client):
         than ignoring itself. If ``False`` (the default) then the bot will ignore
         itself. This cannot be changed once initialised.
     v: :class:`str`
-        VK API version. Defaults to '5.124' (latest currently supported)
+        VK API version. Defaults to '5.131' (latest currently supported)
 
         .. warning::
 
-            Library is not intended to be used with API Version lower than '5.103' or higher than '5.124\
+            Library is not intended to be used with API Version lower than '5.131' or higher than '5.131\
 
     force: :class:`bool`
         If bot should force optimal longpoll settings automatically
@@ -954,11 +954,11 @@ class UserBot(BotBase, UserClient):
         than ignoring itself. If ``False`` (the default) then the bot will ignore
         itself. This cannot be changed once initialised.
     v: :class:`str`
-        VK API version. Defaults to '5.124' (latest currently supported)
+        VK API version. Defaults to '5.131' (latest currently supported)
 
         .. warning::
 
-            Library is not intended to be used with API Version lower than '5.103' or higher than '5.124'
+            Library is not intended to be used with API Version lower than '5.131' or higher than '5.131'
 
     force: :class:`bool`
         If bot should force optimal longpoll settings automatically

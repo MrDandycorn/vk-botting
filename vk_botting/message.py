@@ -130,9 +130,15 @@ class Message(Messageable):
         :class:`.Message`
             The message that was sent.
         """
-        params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment,
-                  'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets,
-                  'conversation_message_id' if self.conversation_message else 'message_id': self.message_id}
+        params = {
+            'group_id': self.bot.group.id,
+            'peer_id': self.peer_id,
+            'message': message,
+            'attachment': attachment,
+            'keep_forward_messages': keep_forward_messages,
+            'keep_snippets': keep_snippets,
+            'conversation_message_id': self.conversation_message_id
+        }
         res = await self.bot.vk_request('messages.edit', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
@@ -153,10 +159,12 @@ class Message(Messageable):
         vk_botting.VKApiError
             When error is returned by VK API.
         """
-        if self.conversation_message:
-            raise VKApiError('Messages in chats are still not deletable!')
-        params = {'group_id': self.bot.group.id, 'delete_for_all': delete_for_all,
-                  'message_ids': self.message_id}
+        params = {
+            'group_id': self.bot.group.id,
+            'delete_for_all': delete_for_all,
+            'peer_id': self.peer_id,
+            'conversation_message_ids': self.conversation_message_id,
+        }
         res = await self.bot.vk_request('messages.delete', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
@@ -196,17 +204,13 @@ class Message(Messageable):
         :class:`.Message`
             The message that was sent.
         """
-        peer_id = await self._get_conversation()
-        if self.conversation_message:
-            forward = {
-                'peer_id': peer_id,
-                'is_reply': True,
-                'conversation_message_ids' if self.conversation_message_id else 'message_ids': self.message_id
-            }
-            kwargs['forward'] = forward
-        else:
-            kwargs['reply_to'] = self.message_id
-        return await self.bot.send_message(peer_id, message, **kwargs)
+        forward = {
+            'peer_id': self.peer_id,
+            'is_reply': True,
+            'conversation_message_ids': self.conversation_message_id,
+        }
+        kwargs['forward'] = forward
+        return await self.bot.send_message(self.peer_id, message, **kwargs)
 
     async def get_user(self):
         """|coro|
@@ -232,14 +236,6 @@ class Message(Messageable):
         Alternative for :meth:`.Message.get_user`
         """
         return await self.get_user()
-
-    @property
-    def message_id(self):
-        return self.id or self.conversation_message_id
-
-    @property
-    def conversation_message(self):
-        return not self.id
 
 
 class UserMessage(Messageable):

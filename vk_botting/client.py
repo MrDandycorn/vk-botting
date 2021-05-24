@@ -88,7 +88,7 @@ class Client:
     """
 
     def __init__(self, **kwargs):
-        self.v = kwargs.get('v', '5.124')
+        self.v = kwargs.get('v', '5.131')
         self.force = kwargs.get('force', False)
         self.lang = kwargs.get('lang', None)
         self.loop = asyncio.get_event_loop()
@@ -697,7 +697,7 @@ class Client:
 
     async def enable_longpoll(self):
         events = dict([(event, 1) for event in self._all_events])
-        res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.124', **events)
+        res = await self.vk_request('groups.setLongPollSettings', group_id=self.group.id, enabled=1, api_version='5.131', **events)
         return res
 
     async def print_warnings(self):
