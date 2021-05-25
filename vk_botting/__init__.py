@@ -4,7 +4,7 @@ VK Botting Package
 
 A basic package for building async VK bots.
 
-:copyright: (c) 2019-2020 MrDandycorn
+:copyright: (c) 2019-2021 MrDandycorn
 :license: MIT, see LICENSE for more details.
 
 """
@@ -12,8 +12,8 @@ A basic package for building async VK bots.
 __title__ = 'vk_botting'
 __author__ = 'MrDandycorn'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2019-2020 MrDandycorn'
-__version__ = '0.10.0'
+__copyright__ = 'Copyright 2019-2021 MrDandycorn'
+__version__ = '0.10.1'
 
 from collections import namedtuple
 import logging
