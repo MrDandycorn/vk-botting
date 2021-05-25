@@ -23,29 +23,29 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import asyncio
+import collections
+import importlib
 import inspect
+import re
 import sys
 import traceback
-import asyncio
-import importlib
 import types
-import collections
-import re
 
-from vk_botting.commands import GroupMixin
-from vk_botting.utils import async_all, maybe_coroutine, find
-from vk_botting.exceptions import NoEntryPointError, ExtensionFailed, ExtensionAlreadyLoaded, ExtensionNotFound, ExtensionNotLoaded, CommandError, CommandNotFound
-from vk_botting.context import Context
-from vk_botting.view import StringView
 from vk_botting.client import Client, UserClient
 from vk_botting.cog import Cog
+from vk_botting.commands import GroupMixin
+from vk_botting.context import Context
+from vk_botting.exceptions import NoEntryPointError, ExtensionFailed, ExtensionAlreadyLoaded, ExtensionNotFound, ExtensionNotLoaded, CommandError, CommandNotFound
+from vk_botting.utils import async_all, maybe_coroutine, find
+from vk_botting.view import StringView
 
 
 def when_mentioned(bot, msg):
     r"""A callable that implements a command prefix equivalent to being mentioned.
     These are meant to be passed into the :attr:`.Bot.command_prefix` attribute.
     """
-    match = re.match(r'\[club{}\|[^\]]+\],? '.format(bot.group.id), msg.text)
+    match = re.match(r'\[club{}\|[^]]+],? '.format(bot.group.id), msg.text)
     if match and msg.text.startswith(match.group()):
         return [match.group()]
     return ['[club{0.group.id}|@{0.group.screen_name}] '.format(bot), '[club{0.group.id}|{0.group.name}] '.format(bot)]
@@ -80,6 +80,7 @@ def when_mentioned_or(*prefixes):
     :func:`.when_mentioned_or_pm`
     :func:`.when_mentioned_or_pm_or`
     """
+
     def inner(bot, msg):
         r = list(prefixes)
         r = when_mentioned(bot, msg) + r
@@ -106,8 +107,11 @@ def when_mentioned_or_pm():
     :func:`.when_mentioned_or`
     :func:`.when_mentioned_or_pm_or`
     """
+
     def inner(bot, msg):
-        r = when_mentioned(bot, msg) + [''] if msg.peer_id == msg.from_id else when_mentioned(bot, msg)
+        r = when_mentioned(bot, msg)
+        if msg.peer_id == msg.from_id:
+            r.append('')
         return r
 
     return inner
@@ -142,9 +146,11 @@ def when_mentioned_or_pm_or(*prefixes):
     :func:`.when_mentioned_or`
     :func:`.when_mentioned_or_pm`
     """
+
     def inner(bot, msg):
-        r = list(prefixes)
-        r = when_mentioned(bot, msg) + r + [''] if msg.peer_id == msg.from_id else when_mentioned(bot, msg) + r
+        r = when_mentioned(bot, msg) + list(prefixes)
+        if msg.peer_id == msg.from_id:
+            r.append('')
         return r
 
     return inner
@@ -452,6 +458,7 @@ class BotBase(GroupMixin):
         TypeError
             The function being listened to is not a coroutine.
         """
+
         def decorator(func):
             self.add_listener(func, name)
             return func
@@ -910,7 +917,7 @@ class Bot(BotBase, Client):
     pass
 
 
-class UserBot(BotBase, UserClient):    
+class UserBot(BotBase, UserClient):
     """Represents a VK user-bot.
     This class is a subclass of :class:`vk_botting.client.UserClient` and as a result
     anything that you can do with a :class:`vk_botting.client.UserClient` you can do with

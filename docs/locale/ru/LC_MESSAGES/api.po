@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  vk-botting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-25 22:42+0300\n"
+"POT-Creation-Date: 2021-05-25 13:11+0300\n"
 "PO-Revision-Date: 2020-04-15 16:03+0300\n"
 "Last-Translator: Sovamorco\n"
 "Language: ru\n"
@@ -202,7 +202,8 @@ msgstr "Должна ли команда быть нечуствительной
 #: vk_botting.exceptions.InvalidEndOfQuotedStringError
 #: vk_botting.exceptions.MissingRequiredArgument
 #: vk_botting.exceptions.UnexpectedQuoteError vk_botting.group.Group
-#: vk_botting.keyboard.Keyboard vk_botting.message.Message vk_botting.user.User
+#: vk_botting.keyboard.Keyboard vk_botting.message.Message
+#: vk_botting.message.MessageEvent vk_botting.user.User
 msgid "type"
 msgstr "тип"
 
@@ -248,16 +249,16 @@ msgstr ""
 "Если ``False`` (по умолчанию), то бот будет себя игнорировать"
 
 #: of vk_botting.bot.Bot:53
-msgid "VK API version. Defaults to '5.124' (latest currently supported)"
-msgstr "Версия VK API. По умолчанию '5.124' (последняя поддерживаемая библиотекой)"
+msgid "VK API version. Defaults to '5.131' (latest currently supported)"
+msgstr "Версия VK API. По умолчанию '5.131' (последняя поддерживаемая библиотекой)"
 
 #: of vk_botting.bot.Bot:57
 msgid ""
-"Library is not intended to be used with API Version lower than '5.103' or"
-" higher than '5.124"
+"Library is not intended to be used with API Version lower than '5.131' or"
+" higher than '5.131"
 msgstr ""
-"Библиотека не предназначена для работы с версиями API ниже '5.103' и выше"
-" '5.124'"
+"Библиотека не предназначена для работы с версиями API ниже '5.131' и выше"
+" '5.131'"
 
 # 4ab92cda256e4d1a8c7c31b3405add9d
 # 6aa908bc22564c88a8c8fe74ac3ab583
@@ -299,8 +300,8 @@ msgstr ""
 #: vk_botting.exceptions.InvalidEndOfQuotedStringError:10
 #: vk_botting.exceptions.UnexpectedQuoteError:9 vk_botting.group.Group:13
 #: vk_botting.group.Group:19 vk_botting.group.Group:31
-#: vk_botting.message.Message:43 vk_botting.user.User:17
-#: vk_botting.user.User:23
+#: vk_botting.message.Message:43 vk_botting.message.MessageEvent:25
+#: vk_botting.user.User:17 vk_botting.user.User:23
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
@@ -482,10 +483,14 @@ msgstr ""
 #: vk_botting.commands.GroupMixin.remove_command vk_botting.commands.command
 #: vk_botting.commands.cooldown vk_botting.context.Context.invoke
 #: vk_botting.context.Context.reinvoke vk_botting.keyboard.Keyboard.add_button
+#: vk_botting.keyboard.Keyboard.add_callback_button
 #: vk_botting.keyboard.Keyboard.add_location_button
 #: vk_botting.keyboard.Keyboard.add_vkapps_button
 #: vk_botting.keyboard.Keyboard.add_vkpay_button
-#: vk_botting.message.Message.edit vk_botting.message.Message.reply
+#: vk_botting.message.Message.delete vk_botting.message.Message.edit
+#: vk_botting.message.Message.reply vk_botting.message.MessageEvent.open_app
+#: vk_botting.message.MessageEvent.open_link
+#: vk_botting.message.MessageEvent.show_snackbar
 msgid "Parameters"
 msgstr "Параметры"
 
@@ -582,11 +587,17 @@ msgstr "Cog, который надо зарегистрировать боту"
 #: vk_botting.commands.Command.can_run vk_botting.commands.Command.error
 #: vk_botting.commands.GroupMixin.add_command vk_botting.commands.command
 #: vk_botting.keyboard.Keyboard.add_button
+#: vk_botting.keyboard.Keyboard.add_callback_button
 #: vk_botting.keyboard.Keyboard.add_line
 #: vk_botting.keyboard.Keyboard.add_location_button
 #: vk_botting.keyboard.Keyboard.add_vkapps_button
 #: vk_botting.keyboard.Keyboard.add_vkpay_button
-#: vk_botting.message.Message.edit vk_botting.message.Message.reply
+#: vk_botting.message.Message.delete vk_botting.message.Message.edit
+#: vk_botting.message.Message.reply
+#: vk_botting.message.MessageEvent.blank_answer
+#: vk_botting.message.MessageEvent.open_app
+#: vk_botting.message.MessageEvent.open_link
+#: vk_botting.message.MessageEvent.show_snackbar
 msgid "Raises"
 msgstr "Вызывает ошибки"
 
@@ -782,8 +793,12 @@ msgstr "Переданная корутина на самом деле не ко
 #: vk_botting.client.Client.user_vk_request:1
 #: vk_botting.client.Client.vk_request:1 vk_botting.client.Client.wait_for:1
 #: vk_botting.commands.Command.can_run:1 vk_botting.context.Context.invoke:1
-#: vk_botting.context.Context.reinvoke:1 vk_botting.message.Message.edit:1
-#: vk_botting.message.Message.reply:1
+#: vk_botting.context.Context.reinvoke:1 vk_botting.message.Message.delete:1
+#: vk_botting.message.Message.edit:1 vk_botting.message.Message.reply:1
+#: vk_botting.message.MessageEvent.blank_answer:1
+#: vk_botting.message.MessageEvent.open_app:1
+#: vk_botting.message.MessageEvent.open_link:1
+#: vk_botting.message.MessageEvent.show_snackbar:1
 msgid "|coro|"
 msgstr "|coro|"
 
@@ -925,6 +940,10 @@ msgstr ":class:`dict`, представляющий объект сообщен�
 #: vk_botting.commands.GroupMixin.get_command
 #: vk_botting.commands.GroupMixin.remove_command
 #: vk_botting.message.Message.edit vk_botting.message.Message.reply
+#: vk_botting.message.MessageEvent.blank_answer
+#: vk_botting.message.MessageEvent.open_app
+#: vk_botting.message.MessageEvent.open_link
+#: vk_botting.message.MessageEvent.show_snackbar
 msgid "Returns"
 msgstr "Возвращает"
 
@@ -995,6 +1014,10 @@ msgstr "Экземпляр :class:`.Message`, представляющий из�
 #: vk_botting.commands.GroupMixin.get_command
 #: vk_botting.commands.GroupMixin.remove_command
 #: vk_botting.message.Message.edit vk_botting.message.Message.reply
+#: vk_botting.message.MessageEvent.blank_answer
+#: vk_botting.message.MessageEvent.open_app
+#: vk_botting.message.MessageEvent.open_link
+#: vk_botting.message.MessageEvent.show_snackbar
 msgid "Return type"
 msgstr "Тип возвращаемого значения"
 
@@ -1013,9 +1036,9 @@ msgstr "Тип возвращаемого значения"
 # e2b6cda7c38c4bffacc68feacce68d1f
 #: of vk_botting.abstract.Messageable:6 vk_botting.abstract.Messageable.send:30
 #: vk_botting.client.Client.build_msg:9
-#: vk_botting.client.Client.send_message:34 vk_botting.context.Context:13
-#: vk_botting.message.Message:61 vk_botting.message.Message.edit:21
-#: vk_botting.message.Message.reply:30
+#: vk_botting.client.Client.send_message:36 vk_botting.context.Context:13
+#: vk_botting.message.Message:61 vk_botting.message.Message.edit:17
+#: vk_botting.message.Message.reply:26
 msgid ":class:`.Message`"
 msgstr ":class:`.Message`"
 
@@ -1268,8 +1291,12 @@ msgstr "Id группы, которую надо запросить"
 #: vk_botting.client.Client.get_own_page:5 vk_botting.client.Client.get_page:12
 #: vk_botting.client.Client.get_pages:12 vk_botting.client.Client.get_user:12
 #: vk_botting.client.Client.get_users:12
-#: vk_botting.client.Client.send_message:31 vk_botting.message.Message.edit:18
-#: vk_botting.message.Message.reply:27
+#: vk_botting.client.Client.send_message:33 vk_botting.message.Message.delete:8
+#: vk_botting.message.Message.edit:14 vk_botting.message.Message.reply:23
+#: vk_botting.message.MessageEvent.blank_answer:5
+#: vk_botting.message.MessageEvent.open_app:12
+#: vk_botting.message.MessageEvent.open_link:8
+#: vk_botting.message.MessageEvent.show_snackbar:8
 msgid "When error is returned by VK API."
 msgstr "Если VK API возвращает ошибку"
 
@@ -1829,7 +1856,7 @@ msgstr "Отправляет сообщение данному получате�
 # 51178187c6754a0d8a3feffd977dc5fa
 # d63ea39185014ba9adec13f5718ac076
 #: of vk_botting.abstract.Messageable.send:5
-#: vk_botting.client.Client.send_message:5 vk_botting.message.Message.reply:9
+#: vk_botting.client.Client.send_message:5 vk_botting.message.Message.reply:5
 msgid ""
 "The content must be a type that can convert to a string through "
 "``str(message)``."
@@ -1845,7 +1872,7 @@ msgstr ""
 # 4c005c18dc7340a2a3276c07f572c5bc
 # d8e9ea60148049409e4fe2799feca211
 #: of vk_botting.abstract.Messageable.send:7
-#: vk_botting.client.Client.send_message:7 vk_botting.message.Message.reply:11
+#: vk_botting.client.Client.send_message:7 vk_botting.message.Message.reply:7
 msgid ""
 "If the content is set to ``None`` (the default), then the ``attachment`` "
 "or ``sticker_id`` parameter must be provided."
@@ -1861,7 +1888,7 @@ msgstr ""
 # 644c9e6064464a73b54fff7d33454eac
 # ace0bce30ad44368a6ed43e35cf857e4
 #: of vk_botting.abstract.Messageable.send:10
-#: vk_botting.client.Client.send_message:10 vk_botting.message.Message.reply:14
+#: vk_botting.client.Client.send_message:10 vk_botting.message.Message.reply:10
 msgid ""
 "If the ``attachment`` parameter is provided, it must be :class:`str`, "
 "List[:class:`str`], :class:`.Attachment` or List[:class:`.Attachment`]"
@@ -1877,7 +1904,7 @@ msgstr ""
 # e0a6bec988364d80bd98c5c958ec747b
 # 23b6fae1b1bb4caba5efdbb3e3b1977b
 #: of vk_botting.abstract.Messageable.send:12
-#: vk_botting.client.Client.send_message:12 vk_botting.message.Message.reply:16
+#: vk_botting.client.Client.send_message:12 vk_botting.message.Message.reply:12
 msgid ""
 "If the ``keyboard`` parameter is provided, it must be :class:`str` or "
 ":class:`.Keyboard` (recommended)"
@@ -1899,7 +1926,7 @@ msgstr "Id получателя сообщения"
 # 8f9484e8aafe4819afff876df66f5e4c
 # f44b23706b5141298e2f41c19cf5e9b7
 #: of vk_botting.abstract.Messageable.send:14
-#: vk_botting.client.Client.send_message:16 vk_botting.message.Message.reply:18
+#: vk_botting.client.Client.send_message:16 vk_botting.message.Message.reply:14
 msgid "The text of the message to send."
 msgstr "Текст сообщения"
 
@@ -1911,7 +1938,7 @@ msgstr "Текст сообщения"
 # b192bfacf6af4c81812996d707a73607
 # e2c27ccf2959426382959e40fcabdcd7
 #: of vk_botting.abstract.Messageable.send:16
-#: vk_botting.client.Client.send_message:18 vk_botting.message.Message.reply:20
+#: vk_botting.client.Client.send_message:18 vk_botting.message.Message.reply:16
 msgid "The attachment to the message sent."
 msgstr "Приложение к сообщению"
 
@@ -1923,7 +1950,7 @@ msgstr "Приложение к сообщению"
 # 4ec9a0a762fa4cee92f5bdaa198d3f20
 # 112b3e6006a74d59a57910fe6c407c96
 #: of vk_botting.abstract.Messageable.send:18
-#: vk_botting.client.Client.send_message:20 vk_botting.message.Message.reply:22
+#: vk_botting.client.Client.send_message:20 vk_botting.message.Message.reply:18
 msgid "Sticker_id to be sent."
 msgstr "Id стикера, который надо отправить"
 
@@ -1935,7 +1962,7 @@ msgstr "Id стикера, который надо отправить"
 # f0b722ee8c374a2da01bff8f77be4663
 # bcd36335d1c04e8592abcdd5ce696207
 #: of vk_botting.abstract.Messageable.send:20
-#: vk_botting.client.Client.send_message:22 vk_botting.message.Message.reply:24
+#: vk_botting.client.Client.send_message:22 vk_botting.message.Message.reply:20
 msgid "The keyboard to send along message."
 msgstr "Клавиатура, которую надо отправить вместе с сообщением"
 
@@ -1962,6 +1989,10 @@ msgid "Message ids to be forwarded along with message."
 msgstr "Id сообщений, которые надо переслать."
 
 #: of vk_botting.client.Client.send_message:28
+msgid "Check docs for more details on this one."
+msgstr "Для дополнительной информации смотрите документацию."
+
+#: of vk_botting.client.Client.send_message:30
 msgid "If message should be sent as user (using attached user token)."
 msgstr ""
 "Должно ли сообщение быть отправлено от имени пользователя (с "
@@ -1976,8 +2007,8 @@ msgstr ""
 # 8f0d18a5794641369e9d2cbf79bd9bf0
 # 0c714438b8374e1f9b976f61ca817682
 #: of vk_botting.abstract.Messageable.send:29
-#: vk_botting.client.Client.send_message:33 vk_botting.message.Message.edit:20
-#: vk_botting.message.Message.reply:29
+#: vk_botting.client.Client.send_message:35 vk_botting.message.Message.edit:16
+#: vk_botting.message.Message.reply:25
 msgid "The message that was sent."
 msgstr "Сообщение, которое было отправлено"
 
@@ -2110,7 +2141,11 @@ msgstr ":class:`dict`, представляющий собой ответ сер
 #: vk_botting.client.Client.user_vk_request:17
 #: vk_botting.client.Client.vk_request:17 vk_botting.cog.CogMeta:54
 #: vk_botting.commands.GroupMixin:8 vk_botting.context.Context:35
-#: vk_botting.group.Group:37
+#: vk_botting.group.Group:37 vk_botting.message.MessageEvent:31
+#: vk_botting.message.MessageEvent.blank_answer:8
+#: vk_botting.message.MessageEvent.open_app:15
+#: vk_botting.message.MessageEvent.open_link:11
+#: vk_botting.message.MessageEvent.show_snackbar:11
 msgid ":class:`dict`"
 msgstr ":class:`dict`"
 
@@ -2926,188 +2961,198 @@ msgstr "Вызывается, когда бот получает сообщен�
 msgid "Received message."
 msgstr "Полученное сообщение"
 
-# 1c32069768eb46be8c17a1d792e722fe
+# 8e83407ad0f240148b2859987dd8be2f
 #: ../../api.rst:139
+msgid "Called when a callback button is pressed."
+msgstr "Вызывается, когда пользователь нажимает на callback-кнопку"
+
+# 79f2a6b577b444ce88296f56ad1476cf
+#: ../../api.rst:141
+msgid "Received event."
+msgstr "Полученное событие"
+
+# 1c32069768eb46be8c17a1d792e722fe
+#: ../../api.rst:147
 msgid "Called when bot replies with a message."
 msgstr "Вызывается, когда бот отвечает на сообщение"
 
 # 5947b5789190466b95f18488bb6b1ac6
-#: ../../api.rst:141
+#: ../../api.rst:149
 msgid "Sent message."
 msgstr "Отправленное сообщение"
 
 # 73a344aaa52243c88673c4c4265796cd
-#: ../../api.rst:147
+#: ../../api.rst:155
 msgid "Called when message is edited."
 msgstr "Вызывается, когда сообщение изменено"
 
 # a4f8df61cacd4440bdb6ba94a438b08b
-#: ../../api.rst:149
+#: ../../api.rst:157
 msgid "Edited message."
 msgstr "Измененное сообщение"
 
 # bfebde2f5be94332a55487af2511810c
-#: ../../api.rst:155
+#: ../../api.rst:163
 msgid "Called when typing state is changed (e.g. someone starts typing)."
 msgstr ""
 "Вызывается, когда изменяется состояние 'печатает' (к примеру кто-то начал"
 " печатать)"
 
 # 4a23ff94321148f193b64e6301260cbd
-#: ../../api.rst:157
+#: ../../api.rst:165
 msgid "New state."
 msgstr "Новое состояние"
 
-#: ../../api.rst:163
+#: ../../api.rst:171
 msgid "Called when user starts conversation using special button."
 msgstr ""
 "Вызывается, когда пользователь использует кнопку 'Начать' в диалоге с "
 "ботом"
 
-#: ../../api.rst:165
+#: ../../api.rst:173
 msgid "Message sent when conversation is started."
 msgstr "Сообщение, отправленное когда пользователь начал диалог"
 
 # 09f4bcce5c0942faad2d0ea284612564
-#: ../../api.rst:171
+#: ../../api.rst:179
 msgid "Called when user is kicked from the chat."
 msgstr "Вызывается при удалении пользователя из чата"
 
 # 9123c591842443eab72dc5cb3ea0e1bb
-#: ../../api.rst:173
+#: ../../api.rst:181
 msgid "Message sent when user is kicked."
 msgstr "Сообщение, отправленное, когда пользователь был удален"
 
 # a44f74cfef64474192378ceed0702e19
-#: ../../api.rst:179
+#: ../../api.rst:187
 msgid "Called when user is invited to the chat."
 msgstr "Вызывается при добавлении пользователя к чату"
 
 # 818949e4be3840c3a35be3a6afeee809
 # 884a78df5d7f449c84b65cd9956f579a
-#: ../../api.rst:181 ../../api.rst:189
+#: ../../api.rst:189 ../../api.rst:197
 msgid "Message sent when user is invited."
 msgstr "Сообщение, отправленное при приглашении пользователя"
 
 # 87d83c7f1e004068b797f41532062591
-#: ../../api.rst:187
+#: ../../api.rst:195
 msgid "Called when user is invited to the chat by link."
 msgstr ""
 "Вызывается при добавлении пользователя к чату посредством "
 "ссылки-приглашения"
 
 # 351b22f6a1384925834d62d02c770eb7
-#: ../../api.rst:195
+#: ../../api.rst:203
 msgid "Called when chat photo is updated."
 msgstr "Вызывается при обновлении фото чата"
 
 # 76f08374efdd4071b5b63877089227c6
-#: ../../api.rst:197
+#: ../../api.rst:205
 msgid "Message sent when photo is updated."
 msgstr "Сообщение, отправленное при смене фото"
 
 # 061b2a28631d452eb08b11e03dc9f281
-#: ../../api.rst:203
+#: ../../api.rst:211
 msgid "Called when chat photo is removed."
 msgstr "Вызывается при удалении фото чата"
 
 # cfe38bc5fbbc483698ce4baf55603ef2
-#: ../../api.rst:205
+#: ../../api.rst:213
 msgid "Message sent when photo is removed."
 msgstr "Сообщение, отправленное при удалении фото"
 
 # 54d6c66e41b94d8885323fd6af74056d
-#: ../../api.rst:211
+#: ../../api.rst:219
 msgid "Called when chat is created."
 msgstr "Вызывается при создании чата"
 
 # 4997fbb9cd324d05ab98aa569f884acd
-#: ../../api.rst:213
+#: ../../api.rst:221
 msgid "Message sent when chat is created."
 msgstr "Сообщение, отправленное при создании чата"
 
 # 0953b832ffaa4da48b5808699e39ee41
-#: ../../api.rst:219
+#: ../../api.rst:227
 msgid "Called when chat title is updated."
 msgstr "Вызывается при обновлении названия чата"
 
 # 46badbcb75ff4716abe76d50b7d17848
-#: ../../api.rst:221
+#: ../../api.rst:229
 msgid "Message sent when chat title is updated."
 msgstr "Сообщение, отправленное при смене названия чата"
 
 # 9d0cb5f51bad4dc69db4fbd0ea868415
-#: ../../api.rst:227
+#: ../../api.rst:235
 msgid "Called when message is pinned in chat."
 msgstr "Вызывается при закреплении сообщения в чате"
 
 # 594906943c7046169350e2d74be1f865
-#: ../../api.rst:229
+#: ../../api.rst:237
 msgid "Message sent when message is pinned in chat."
 msgstr "Сообщение, отправленное при закреплении сообщения в чате"
 
 # 25f1dac68bd14c86a4732e46d8a1c12b
-#: ../../api.rst:235
+#: ../../api.rst:243
 msgid "Called when message is unpinned in chat."
 msgstr "Вызывается при откреплении сообщения в чате"
 
 # f449bc2e5d664aca81142640d94835be
-#: ../../api.rst:237
+#: ../../api.rst:245
 msgid "Message sent when message is unpinned in chat."
 msgstr "Сообщение, отправленное при откреплении сообщения в чате"
 
 # 8dd505622d7448ec87091669332640a2
-#: ../../api.rst:243
+#: ../../api.rst:251
 msgid "Called when user allows getting messages from bot."
 msgstr "Вызывается, когда пользователь разрешает получение сообщений от бота"
 
 # 1daf2db2331b4e89a975887f8b11dfec
-#: ../../api.rst:245
+#: ../../api.rst:253
 msgid "User who allowed messages."
 msgstr "Пользователь, разрешивший получение сообщений"
 
 # 985312976df2472eb2fcc0a846fd2d6b
-#: ../../api.rst:251
+#: ../../api.rst:259
 msgid "Called when user denies getting messages from bot."
 msgstr "Вызывается, когда пользователь запрещает получение сообщения от бота"
 
 # 17d0ea4f10c54bab991bdc0542258779
-#: ../../api.rst:253
+#: ../../api.rst:261
 msgid "User who denied messages."
 msgstr "Пользователь, запретивший получение сообщений"
 
 # 257e7b523e6a49ba8984fa6cebd9c7d4
-#: ../../api.rst:259
+#: ../../api.rst:267
 msgid "Called when new photo is uploaded to bot group."
 msgstr "Вызывается, когда в группу бота загружено фото"
 
 # 85db08333575464695eb879392c4bfda
-#: ../../api.rst:261
+#: ../../api.rst:269
 msgid "Photo that got uploaded."
 msgstr "Загруженное фото"
 
 # ce9c1b9ff99c4055a63cc117ffe6cddf
-#: ../../api.rst:267
+#: ../../api.rst:275
 msgid "Called when new audio is uploaded to bot group."
 msgstr "Вызывается, когда в группу бота загружено аудио"
 
 # be05c41d7cab4dfe9028abe1a54efdfa
-#: ../../api.rst:269
+#: ../../api.rst:277
 msgid "Audio that got uploaded."
 msgstr "Загруженное аудио"
 
 # e8b825828db3492eb75e2f4f99fb461b
-#: ../../api.rst:275
+#: ../../api.rst:283
 msgid "Called when new video is uploaded to bot group."
 msgstr "Вызывается, когда в группу бота загружено видео"
 
 # a38be6a1ee48436497544477a4de23e3
-#: ../../api.rst:277
+#: ../../api.rst:285
 msgid "Video that got uploaded."
 msgstr "Загруженное видео"
 
 # 2eb1cf49ab3d44e9a729b21fa0755c11
-#: ../../api.rst:283
+#: ../../api.rst:291
 msgid "Called when new comment is added to photo."
 msgstr "Вызывается, когда к фото добавляется новый комментарий"
 
@@ -3115,12 +3160,12 @@ msgstr "Вызывается, когда к фото добавляется но
 # 2d19d6b85d1b4fcd9805943608b0caef
 # dcba4953810d4be6b4504a9d4c6ddbe7
 # ef7f98ea036b4b8f88ab180e8a872a2b
-#: ../../api.rst:285 ../../api.rst:317 ../../api.rst:349 ../../api.rst:429
+#: ../../api.rst:293 ../../api.rst:325 ../../api.rst:357 ../../api.rst:437
 msgid "Comment that got send."
 msgstr "Добавленный комментарий"
 
 # 2165ca134aff4f899cae8a6573d497eb
-#: ../../api.rst:291
+#: ../../api.rst:299
 msgid "Called when comment on photo gets edited."
 msgstr "Вызывается, когда под фото изменяется комментарий"
 
@@ -3128,12 +3173,12 @@ msgstr "Вызывается, когда под фото изменяется к
 # 7865211f3070470cbe61deb13f79f6cc
 # 36cd8c3b45874030900566e05289fd29
 # 89cfde8f7a4a40dc80ec078637adbef1
-#: ../../api.rst:293 ../../api.rst:325 ../../api.rst:357 ../../api.rst:437
+#: ../../api.rst:301 ../../api.rst:333 ../../api.rst:365 ../../api.rst:445
 msgid "Comment that got edited."
 msgstr "Измененный комментарий"
 
 # ac40dfa551e14caa90e17a4d67b5c470
-#: ../../api.rst:299
+#: ../../api.rst:307
 msgid "Called when comment on photo is restored."
 msgstr "Вызывается, когда под фото восстанавливается комментарий"
 
@@ -3141,12 +3186,12 @@ msgstr "Вызывается, когда под фото восстанавли�
 # 36ecebff8a1a465385feaedfc0acdb8b
 # f5bbb4ce0e0843619e19bb1c4a85ba2b
 # 75564fb1f4bf412694e573b3c75e3e77
-#: ../../api.rst:301 ../../api.rst:333 ../../api.rst:365 ../../api.rst:445
+#: ../../api.rst:309 ../../api.rst:341 ../../api.rst:373 ../../api.rst:453
 msgid "Comment that got restored."
 msgstr "Восстановленный комментарий"
 
 # 06f8acfd1d4147c287e6677f13761ba5
-#: ../../api.rst:307
+#: ../../api.rst:315
 msgid "Called when comment on photo is deleted."
 msgstr "Вызывается, когда под фото удаляется комментарий"
 
@@ -3154,141 +3199,141 @@ msgstr "Вызывается, когда под фото удаляется ко
 # 7932c0e0d1e6445289c10f8350f53e19
 # ffb32703fb8648878d9599c4d6f81e89
 # 70177267a576477e95c06609167c427d
-#: ../../api.rst:309 ../../api.rst:341 ../../api.rst:373 ../../api.rst:453
+#: ../../api.rst:317 ../../api.rst:349 ../../api.rst:381 ../../api.rst:461
 msgid "Comment that got deleted."
 msgstr "Удаленный комментарий"
 
 # c27010f1a0c8416a80318057cc89c348
-#: ../../api.rst:315
+#: ../../api.rst:323
 msgid "Called when new comment is added to video."
 msgstr "Вызывается, когда к видео добавляется новый комментарий"
 
 # f627e6ace8d64243b034cc24a18c6569
-#: ../../api.rst:323
+#: ../../api.rst:331
 msgid "Called when comment on video gets edited."
 msgstr "Вызывается, когда под видео изменяется комментарий"
 
 # 5d02edca81e641fa875d3ec1225b7abf
-#: ../../api.rst:331
+#: ../../api.rst:339
 msgid "Called when comment on video is restored."
 msgstr "Вызывается, когда под видео восстанавливается комментарий"
 
 # 08606ef9ed5d4e5ab1d9e56ccbf38f17
-#: ../../api.rst:339
+#: ../../api.rst:347
 msgid "Called when comment on video is deleted."
 msgstr "Вызывается, когда под видео удаляется комментарий"
 
 # 46fca122640c4e5c9227533c1aeafc78
-#: ../../api.rst:347
+#: ../../api.rst:355
 msgid "Called when new comment is added to market."
 msgstr "Вызывается, когда к товару добавляется новый комментарий"
 
 # d5629e6fca8948bcb47ef5a01a243808
-#: ../../api.rst:355
+#: ../../api.rst:363
 msgid "Called when comment on market gets edited."
 msgstr "Вызывается, когда под товаром изменяется комментарий"
 
 # 19971fd5d61f4878b1a99488ed216d1f
-#: ../../api.rst:363
+#: ../../api.rst:371
 msgid "Called when comment on market is restored."
 msgstr "Вызывается, когда под товаром восстанавливается комментарий"
 
 # 78e1745df1554323b67c4bbd9c0b8fa8
-#: ../../api.rst:371
+#: ../../api.rst:379
 msgid "Called when comment on market is deleted."
 msgstr "Вызывается, когда под товаром удаляется комментарий"
 
 # abc79ab170c94328b51f7e1060ab4a4b
-#: ../../api.rst:379
+#: ../../api.rst:387
 msgid "Called when new post is added to board."
 msgstr "Вызывается, когда к обсуждению добавляется новый комментарий"
 
-#: ../../api.rst:381
+#: ../../api.rst:389
 msgid "New post on the board."
 msgstr "Комментарий, добавленный к обсуждению"
 
 # 0261c226307d4ac3a7e707bf1db343c4
-#: ../../api.rst:387
+#: ../../api.rst:395
 msgid "Called when post on board gets edited."
 msgstr "Вызывается, когда в обсуждении изменяется комментарий"
 
 # 236d458c77c747959c39297726d59049
-#: ../../api.rst:389
+#: ../../api.rst:397
 msgid "Post that got edited."
 msgstr "Измененный комментарий"
 
 # 3ab227a9606544fbbf17a80a033bf83b
-#: ../../api.rst:395
+#: ../../api.rst:403
 msgid "Called when post on board is restored."
 msgstr "Вызывается, когда в обсуждении восстанавливается комментарий"
 
 # 830117506e474d82a6394186769f0cdc
-#: ../../api.rst:397
+#: ../../api.rst:405
 msgid "Post that got restored."
 msgstr "Восстановленный комментарий"
 
 # d73024c804e04490a82177f4e81b553b
-#: ../../api.rst:403
+#: ../../api.rst:411
 msgid "Called when post on board is deleted."
 msgstr "Вызывается, когда в обсуждении удаляется комментарий"
 
 # 73b62fb6d30b422b9a61e533ff087c6b
-#: ../../api.rst:405
+#: ../../api.rst:413
 msgid "Post that got deleted."
 msgstr "Удаленный комментарий"
 
 # d74488ebeb3444bc9fbffc030c9a03da
-#: ../../api.rst:411
+#: ../../api.rst:419
 msgid "Called when new post in added to wall."
 msgstr "Вызывается, когда на стену добавляется пост"
 
 # 30afefd11c97478c838b3ce5b10c143f
-#: ../../api.rst:413
+#: ../../api.rst:421
 msgid "Post that got added."
 msgstr "Добавленный пост"
 
 # 8e83407ad0f240148b2859987dd8be2f
-#: ../../api.rst:419
+#: ../../api.rst:427
 msgid "Called when wall post is reposted."
 msgstr "Вызывается, когда пост со стены репостится"
 
 # f0c76ec666ba4ee7940e3f263ae52f06
-#: ../../api.rst:421
+#: ../../api.rst:429
 msgid "Post that got reposted."
 msgstr "Репостнутый пост"
 
 # 1dd76a433ae749d0af2df8480b7b9208
-#: ../../api.rst:427
+#: ../../api.rst:435
 msgid "Called when new comment is added to wall."
 msgstr "Вызывается, когда на стену добавляется новый комментарий"
 
 # 670880ac3a2b4908a4cc476e8f6aa147
-#: ../../api.rst:435
+#: ../../api.rst:443
 msgid "Called when comment on wall gets edited."
 msgstr "Вызывается, когда комментарий на стене изменяется"
 
 # e0774a8a904d4c9ab28d52e35c359cb1
-#: ../../api.rst:443
+#: ../../api.rst:451
 msgid "Called when comment on wall is restored."
 msgstr "Вызывается, когда комментарий на стене восстанавливается"
 
 # b45f9cc6078343ff90b6a7067e590084
-#: ../../api.rst:451
+#: ../../api.rst:459
 msgid "Called when comment on wall is deleted."
 msgstr "Вызывается, когда комментарий на стене удаляется"
 
 # b991fa038efd4ea08af1bdae5c1b74c2
-#: ../../api.rst:459
+#: ../../api.rst:467
 msgid "Called when user joins bot group."
 msgstr "Вызывается, когда пользователь присоединяется к группе"
 
 # e1c477be9de6411e9c2dd93ced4d1e61
-#: ../../api.rst:461
+#: ../../api.rst:469
 msgid "User that joined the group."
 msgstr "Пользователь, присоединившийся к группе"
 
 # 22e06a96871e44d98a11b6e2c03fa329
-#: ../../api.rst:463
+#: ../../api.rst:471
 msgid ""
 "User join type. Can be 'join' if user just joined, 'unsure' for events, "
 "'accepted' if user was invited, 'approved' if user join request was "
@@ -3300,75 +3345,75 @@ msgstr ""
 "пользователь запросил доступ в сообщество"
 
 # e3b82217b2d043df87d74fecc4427461
-#: ../../api.rst:469
+#: ../../api.rst:477
 msgid "Called when user leaves bot group."
 msgstr "Вызывается, когда пользователь покидает группу"
 
 # c1ba8ceb1dbe406796a9f035c838e047
-#: ../../api.rst:471
+#: ../../api.rst:479
 msgid "User that left the group."
 msgstr "Пользователь, покинувший группу"
 
 # 9f54fba7532a4ae8b721b543de5b8ebb
-#: ../../api.rst:473
+#: ../../api.rst:481
 msgid "If user left on their own (True) or was kicked (False)."
 msgstr "Покинул ли пользователь сам (True) или был исключен (False)"
 
 # ad96e9764b2f4ac08e5495cc9c6988c5
-#: ../../api.rst:479
+#: ../../api.rst:487
 msgid "Called when user is blocked in bot group."
 msgstr "Вызывается, когда пользователя блокируют в группе"
 
 # d117555353e44244939c7434ebaf97fe
-#: ../../api.rst:481
+#: ../../api.rst:489
 msgid "User that was blocked."
 msgstr "Пользователь, которого заблокировали"
 
 # d823a7ef9293474a81e3ad4ecbc70177
-#: ../../api.rst:487
+#: ../../api.rst:495
 msgid "Called when user is unblocked in bot group."
 msgstr "Вызывается, когда пользователя разблокируют в группе"
 
 # c7b5a9e428404b7182f39dc7e06b731c
-#: ../../api.rst:489
+#: ../../api.rst:497
 msgid "User that was unblocked."
 msgstr "Пользователь, которого разблокировали"
 
 # f693452abc6740e98275e0754e5281f2
-#: ../../api.rst:495
+#: ../../api.rst:503
 msgid "Called when new poll vote is received."
 msgstr "Вызывается, когда в опросе появляется новый голос"
 
 # f3dc54653fcf46039a3f6c466fb00067
-#: ../../api.rst:497
+#: ../../api.rst:505
 msgid "New vote."
 msgstr "Новый голос"
 
 # a3aed40548284c46ac213b00c8fb88ea
-#: ../../api.rst:503
+#: ../../api.rst:511
 msgid "Called when group officers are edited."
 msgstr "Вызывается, когда изменяются полномочия в группе"
 
 # aeff17f617944fbc99f8e016a7d63a26
-#: ../../api.rst:505
+#: ../../api.rst:513
 msgid "New edit."
 msgstr "Изменение"
 
 # be22b647dc2b47ce9e3b013583370eb0
-#: ../../api.rst:511
+#: ../../api.rst:519
 msgid "Called when unknown event is received."
 msgstr "Вызывается, когда получено неизвестное событие"
 
 # fa03882e560b4eb887541f93accaa864
-#: ../../api.rst:513
+#: ../../api.rst:521
 msgid "Json payload of the event."
 msgstr "Json события"
 
-#: ../../api.rst:520
+#: ../../api.rst:528
 msgid "Cogs"
 msgstr "Cog'и"
 
-#: ../../api.rst:523
+#: ../../api.rst:531
 msgid "Cog"
 msgstr "Cog"
 
@@ -3382,16 +3427,17 @@ msgid ""
 "group commands together. More information on them can be found on the "
 ":ref:`vk_api_cogs` page."
 msgstr ""
-"Cog - собрание команд, событий и переменных состояний, помогающий"
-" объединять команды в группы. Больше информации о них можно найти на странице"
-" :ref:`vk_api_cogs`."
+"Cog - собрание команд, событий и переменных состояний, помогающий "
+"объединять команды в группы. Больше информации о них можно найти на "
+"странице :ref:`vk_api_cogs`."
 
 #: of vk_botting.cog.Cog:7
 msgid ""
 "When inheriting from this class, the options shown in :class:`CogMeta` "
 "are equally valid here."
 msgstr ""
-"При наследовании этого класса, можно также указывать параметры, доступные в :class:`CogMeta`."
+"При наследовании этого класса, можно также указывать параметры, доступные"
+" в :class:`CogMeta`."
 
 #: of vk_botting.cog.Cog.qualified_name:1
 msgid "Returns the cog's specified name, not the class name."
@@ -3412,8 +3458,8 @@ msgid ""
 "Returns a :class:`list` of (name, function) listener pairs that are "
 "defined in this cog."
 msgstr ""
-"Возвращает :class:`list` вида (имя, функция), содержащий все события"
-" объявленные в этом cog'е."
+"Возвращает :class:`list` вида (имя, функция), содержащий все события "
+"объявленные в этом cog'е."
 
 #: of vk_botting.cog.Cog.listener:1
 msgid "A decorator that marks a function as a listener."
@@ -3436,7 +3482,8 @@ msgid ""
 "The function is not a coroutine function or a string was not passed as"
 "     the name."
 msgstr ""
-"Функция не является корутиной или же переданное название не является строкой."
+"Функция не является корутиной или же переданное название не является "
+"строкой."
 
 #: of vk_botting.cog.Cog.cog_unload:1
 msgid "A special method that is called when the cog gets removed."
@@ -3448,11 +3495,15 @@ msgstr "Эта функция **не может** быть корутиной. �
 
 #: of vk_botting.cog.Cog.cog_unload:6
 msgid "Subclasses must replace this if they want special unloading behaviour."
-msgstr "Сабклассы должны заменить эту функцию для изменения поведения при удалении cog'а."
+msgstr ""
+"Сабклассы должны заменить эту функцию для изменения поведения при "
+"удалении cog'а."
 
 #: of vk_botting.cog.Cog.bot_check:1 vk_botting.cog.Cog.bot_check_once:1
 msgid "A special method that registers as a :meth:`.Bot.check_once` check."
-msgstr "Особый метод который регистрирует проверку аналогично :meth:`.Bot.check_once`."
+msgstr ""
+"Особый метод который регистрирует проверку аналогично "
+":meth:`.Bot.check_once`."
 
 #: of vk_botting.cog.Cog.bot_check:4 vk_botting.cog.Cog.bot_check_once:4
 #: vk_botting.cog.Cog.cog_check:4
@@ -3468,23 +3519,22 @@ msgid ""
 "A special method that registers as a :func:`commands.check` for every "
 "command and subcommand in this cog."
 msgstr ""
-"Особый метод, который добавляет :func:`commands.check`"
-" к каждой команде и подкоманде в этом cog'е."
+"Особый метод, который добавляет :func:`commands.check` к каждой команде и"
+" подкоманде в этом cog'е."
 
 #: of vk_botting.cog.Cog.cog_command_error:1
 msgid ""
 "A special method that is called whenever an error is dispatched inside "
 "this cog."
-msgstr ""
-"Особый метод, который вызывается когда внутри cog'а происходит ошибка."
+msgstr "Особый метод, который вызывается когда внутри cog'а происходит ошибка."
 
 #: of vk_botting.cog.Cog.cog_command_error:4
 msgid ""
 "This is similar to :func:`.on_command_error` except only applying to the "
 "commands inside this cog."
 msgstr ""
-"Он похож на :func:`.on_command_error`, за исключением того что применяется"
-" он только к командам внутри cog'а."
+"Он похож на :func:`.on_command_error`, за исключением того что "
+"применяется он только к командам внутри cog'а."
 
 #: of vk_botting.cog.Cog.cog_command_error:7
 msgid "This function **can** be a coroutine."
@@ -3503,8 +3553,8 @@ msgid ""
 "A special method that acts as a cog local pre-invoke hook. This is "
 "similar to :meth:`.Command.before_invoke`."
 msgstr ""
-"Особый метод, который выступает как локальный, действующий только на cog"
-" аналог :meth:`.Command.before_invoke`."
+"Особый метод, который выступает как локальный, действующий только на cog "
+"аналог :meth:`.Command.before_invoke`."
 
 #: of vk_botting.cog.Cog.cog_after_invoke:4
 #: vk_botting.cog.Cog.cog_before_invoke:4
@@ -3516,10 +3566,10 @@ msgid ""
 "A special method that acts as a cog local post-invoke hook. This is "
 "similar to :meth:`.Command.after_invoke`."
 msgstr ""
-"Особый метод, который выступает как локальный, действующий только на cog"
-" аналог :meth:`.Command.after_invoke`."
+"Особый метод, который выступает как локальный, действующий только на cog "
+"аналог :meth:`.Command.after_invoke`."
 
-#: ../../api.rst:529
+#: ../../api.rst:537
 msgid "CogMeta"
 msgstr "CogMeta"
 
@@ -3534,18 +3584,18 @@ msgid ""
 "intermix with other metaclasses such as the :class:`abc.ABCMeta` "
 "metaclass."
 msgstr ""
-"Важно заметить, что этот класс не предназначен для использования напрямую. "
-"Он представлен тут исключительно для полноты документации. В случае необходимости"
-" есть возможность создания собственных метаклассов для смеси этого с другими метаклассами,"
-" к примеру :class:`abc.ABCMeta`."
+"Важно заметить, что этот класс не предназначен для использования "
+"напрямую. Он представлен тут исключительно для полноты документации. В "
+"случае необходимости есть возможность создания собственных метаклассов "
+"для смеси этого с другими метаклассами, к примеру :class:`abc.ABCMeta`."
 
 #: of vk_botting.cog.CogMeta:7
 msgid ""
 "For example, to create an abstract cog mixin class, the following would "
 "be done."
 msgstr ""
-"К примеру, для создания своего абстрактного класса, смешивающего cog с чем-то еще,"
-"можно сделать следующее."
+"К примеру, для создания своего абстрактного класса, смешивающего cog с "
+"чем-то еще,можно сделать следующее."
 
 #: of vk_botting.cog.CogMeta:21
 msgid ""
@@ -3553,16 +3603,15 @@ msgid ""
 "that you must pass it as a keyword-only argument to the class creation "
 "like the following example:"
 msgstr ""
-"При передаче аттрибута метакласса, задокументированного ниже, важно заметить "
-"необходимость передачи его именно как аргумент с ключевым словом "
-"при создании класса, например:"
+"При передаче аттрибута метакласса, задокументированного ниже, важно "
+"заметить необходимость передачи его именно как аргумент с ключевым словом"
+" при создании класса, например:"
 
 #: of vk_botting.cog.CogMeta:32
 msgid ""
 "The cog name. By default, it is the name of the class with no "
 "modification."
-msgstr ""
-"Название cog'а. По умолчанию - название класса без изменений."
+msgstr "Название cog'а. По умолчанию - название класса без изменений."
 
 #: of vk_botting.cog.CogMeta:38
 msgid ""
@@ -3573,17 +3622,17 @@ msgid ""
 "For example:"
 msgstr ""
 "Список свойств, которые передаются каждой команде внутри этого cog'а. "
-"Словарь передается в ``__init__`` класса :class:`Command` (или его сабкласса). "
-"Если указать свойства при объявлении команды внутри класса, то они перезапишут"
-"свойства, указанные в данном параметре. Например:"
+"Словарь передается в ``__init__`` класса :class:`Command` (или его "
+"сабкласса). Если указать свойства при объявлении команды внутри класса, "
+"то они перезапишутсвойства, указанные в данном параметре. Например:"
 
 # 0da4461cb8f240d0bf452610ceedd611
-#: ../../api.rst:538
+#: ../../api.rst:546
 msgid "Abstract Base Classes"
 msgstr "Абстрактные классы"
 
 # 8d796632904e4f96af7e32dc1b739dff
-#: ../../api.rst:540
+#: ../../api.rst:548
 msgid ""
 "An :term:`py:abstract base class` (also known as an ``abc``) is a class "
 "that models can inherit to get their behaviour. The Python implementation"
@@ -3599,7 +3648,7 @@ msgstr ""
 ":func:`py:isinstance` и :func:`py:issubclass`"
 
 # d9bb5e2ae1de4753959c63b4cbc2233a
-#: ../../api.rst:545
+#: ../../api.rst:553
 msgid ""
 "This library has a module related to abstract base classes, some of which"
 " are actually from the :doc:`abc <py:library/abc>` standard module, "
@@ -3626,12 +3675,12 @@ msgid ":class:`.UserMessage`"
 msgstr ":class:`.UserMessage`"
 
 # d6b378586dee46f9b2b61677f2decdcd
-#: ../../api.rst:557
+#: ../../api.rst:565
 msgid "Utility Classes"
 msgstr "Дополнительные классы"
 
 # 1704f34910764c6b99519a29a2080694
-#: ../../api.rst:560
+#: ../../api.rst:568
 msgid "Attachment"
 msgstr "Attachment"
 
@@ -3707,7 +3756,9 @@ msgstr ""
 #: of vk_botting.attachments.Attachment:9 vk_botting.attachments.Attachment:15
 #: vk_botting.group.Group:7 vk_botting.message.Message:13
 #: vk_botting.message.Message:31 vk_botting.message.Message:37
-#: vk_botting.user.User:11 vk_botting.user.User:41
+#: vk_botting.message.MessageEvent:7 vk_botting.message.MessageEvent:13
+#: vk_botting.message.MessageEvent:19 vk_botting.user.User:11
+#: vk_botting.user.User:41
 msgid ":class:`int`"
 msgstr ":class:`int`"
 
@@ -3722,7 +3773,7 @@ msgid "Type of an attachment. Can be value from :class:`.AttachmentType` enum."
 msgstr "Тип приложения. Может быть значением из :class:`.AttachmentType`"
 
 # 1c5497802cd844999279b3099418bb43
-#: ../../api.rst:569
+#: ../../api.rst:577
 msgid "Keyboard"
 msgstr "Keyboard"
 
@@ -3796,17 +3847,20 @@ msgstr "Добавляет кнопку на текущую строку"
 # 18c304db729f4a6ca1566ef392d6fdc0
 # 87d8231a99f94ab2b0c53b13de9f9887
 #: of vk_botting.keyboard.Keyboard.add_button:3
+#: vk_botting.keyboard.Keyboard.add_callback_button:3
 #: vk_botting.keyboard.Keyboard.add_vkapps_button:7
 msgid "Button label to be displayed"
 msgstr "Название кнопки"
 
 # 81649c63485540ddbe9aeef8ee0ae17f
 #: of vk_botting.keyboard.Keyboard.add_button:5
+#: vk_botting.keyboard.Keyboard.add_callback_button:5
 msgid "Button color. Can be value from :class:`.KeyboardColor` enum"
 msgstr "Цвет кнопки. Может быть значением из :class:`.KeyboardColor`"
 
 # 6e68f77b0b1e4f32b36e89c1f9d1e67e
 #: of vk_botting.keyboard.Keyboard.add_button:7
+#: vk_botting.keyboard.Keyboard.add_callback_button:7
 msgid "Optional. Should be used for some buttons"
 msgstr "Опционально. Используется для некоторых кнопок"
 
@@ -3815,11 +3869,18 @@ msgstr "Опционально. Используется для некоторы
 # fcf50af633f8423a94e86e45eddfef41
 # bec595397d944f7289a530b6759c8870
 #: of vk_botting.keyboard.Keyboard.add_button:10
+#: vk_botting.keyboard.Keyboard.add_callback_button:10
 #: vk_botting.keyboard.Keyboard.add_location_button:6
 #: vk_botting.keyboard.Keyboard.add_vkapps_button:14
 #: vk_botting.keyboard.Keyboard.add_vkpay_button:8
 msgid "When there are already too many buttons on one line"
 msgstr "Когда на строке уже слишком много кнопок"
+
+#: of vk_botting.keyboard.Keyboard.add_callback_button:1
+msgid "Adds a callback button (https://vk.com/dev/bots_docs_5) to current line"
+msgstr ""
+"Добавляет callback-кнопку (https://vk.com/dev/bots_docs_5) на текущую "
+"строку"
 
 # 729c6938a5fc4c038fc1806512fe5514
 #: of vk_botting.keyboard.Keyboard.add_location_button:1
@@ -3872,7 +3933,7 @@ msgid "When there are already too many lines in a keyboard"
 msgstr "Когда на клавиатуре уже слишком много кнопок"
 
 # 17bfa24d5da844238aeb6eedce7f683e
-#: ../../api.rst:578 of vk_botting.exceptions.CommandOnCooldown:9
+#: ../../api.rst:586 of vk_botting.exceptions.CommandOnCooldown:9
 msgid "Cooldown"
 msgstr "Кулдаун"
 
@@ -3987,12 +4048,12 @@ msgstr ""
 "диалоге, и это будет считаться в другой бакет."
 
 # 06af5d11a53d44858b8e9f8fcf98c677
-#: ../../api.rst:588
+#: ../../api.rst:596
 msgid "VK Models"
 msgstr "Модели VK"
 
 # 253ad0e597584c5fb59f23d3bd198f2e
-#: ../../api.rst:590
+#: ../../api.rst:598
 msgid ""
 "Models are classes that are received from VK and are not meant to be "
 "created by the user of the library."
@@ -4001,14 +4062,14 @@ msgstr ""
 "пользователем"
 
 # a5dc893d682642a78ede78ebe755ee1d
-#: ../../api.rst:595
+#: ../../api.rst:603
 msgid ""
 "The classes listed below are **not intended to be created by users** and "
 "are also **read-only**."
 msgstr "Классы ниже **только для чтения**"
 
 # 02f8cf07f20242eea59c46bfbe885c43
-#: ../../api.rst:598
+#: ../../api.rst:606
 msgid ""
 "For example, this means that you should not make your own :class:`User` "
 "instances nor should you modify the :class:`User` instance yourself."
@@ -4017,7 +4078,7 @@ msgstr ""
 "класса :class:`User`"
 
 # 3b9b13cf46ca47ae91da87157700cd5c
-#: ../../api.rst:603
+#: ../../api.rst:611
 msgid "User"
 msgstr "User"
 
@@ -4073,7 +4134,7 @@ msgid "1 for female, 2 for male, 0 for not specified"
 msgstr "1 - женский, 2 - мужской, 0 - не определен"
 
 # 755462880cd249179c2a0124fa3de1ab
-#: ../../api.rst:615
+#: ../../api.rst:623
 msgid "Group"
 msgstr "Group"
 
@@ -4113,7 +4174,7 @@ msgid "Has group photo urls with different sizes"
 msgstr "Разные размеры фото группы"
 
 # 39cda7b3f0e641879a19297f78ab2240
-#: ../../api.rst:622
+#: ../../api.rst:630
 msgid "Message"
 msgstr "Message"
 
@@ -4128,7 +4189,7 @@ msgid "Should only be created using :meth:`.Bot.build_msg`"
 msgstr "Должно создаваться только через :meth:`.Bot.build_msg`"
 
 # b268d81f141b48229501a4805d4e3e5c
-#: of vk_botting.message.Message:7
+#: of vk_botting.message.Message:7 vk_botting.message.MessageEvent:5
 msgid "Id of the message in conversation"
 msgstr "Id сообщения в диалоге"
 
@@ -4158,7 +4219,7 @@ msgid "Datetime when message was updated"
 msgstr "Дата/время изменения сообщения"
 
 # ce720db48aad48bfa8f0e3257ab8cef5
-#: of vk_botting.message.Message:29
+#: of vk_botting.message.Message:29 vk_botting.message.MessageEvent:17
 msgid "Id of conversation where message was sent"
 msgstr "Id диалога, где отправлено сообщение"
 
@@ -4208,36 +4269,40 @@ msgstr "Union[:class:`.MessageAction`, :class:`NoneType`]"
 
 # 52daa14c1a5346c3acf8a90cfcb9b0e8
 #: of vk_botting.message.Message.edit:3
-msgid "Coroutine to edit the message. Depends on message_id."
+msgid "Coroutine to edit the message."
 msgstr "Корутина для изменения сообщения"
 
-#: of vk_botting.message.Message.edit:7 vk_botting.message.Message.reply:7
-msgid ""
-"As it depends on message id, it does not work in group chats. At least as"
-" long as VK API does not provide message_id there"
-msgstr ""
-"Так как он зависит от id сообщения, он не работает в групповых чатах. По "
-"крайней мере пока вк не начнет возвращать id сообщения для них"
-
 # 8c288eb4ad07409c8c358e3f6dec7346
-#: of vk_botting.message.Message.edit:9
+#: of vk_botting.message.Message.edit:5
 msgid "New text of the message."
 msgstr "Новый текст сообщения"
 
 # 05b7636143a846cfba902d2eed0b9037
-#: of vk_botting.message.Message.edit:11
+#: of vk_botting.message.Message.edit:7
 msgid "New attachment to the message."
 msgstr "Новые приложения к сообщению"
 
 # 8782cd3c4dd442e89901ae3f58174833
-#: of vk_botting.message.Message.edit:13
+#: of vk_botting.message.Message.edit:9
 msgid "``True`` if fwd_messages should be kept. Defaults to ``True``"
 msgstr "``True`` если стоит сохранить пересланные сообщения. По умолчанию ``True``"
 
 # de1f59a076624cf18d35f1de933c4730
-#: of vk_botting.message.Message.edit:15
+#: of vk_botting.message.Message.edit:11
 msgid "``True`` if snippets should be kept. Defaults to ``True``"
 msgstr "``True`` если стоит сохранить сниппеты. По умолчанию ``True``"
+
+# 52daa14c1a5346c3acf8a90cfcb9b0e8
+#: of vk_botting.message.Message.delete:3
+msgid "Coroutine to delete the message."
+msgstr "Корутина для удаления сообщения"
+
+# 8782cd3c4dd442e89901ae3f58174833
+#: of vk_botting.message.Message.delete:5
+msgid "``True`` if message should be deleted for all users. Defaults to ``True``"
+msgstr ""
+"``True`` если стоит удалить сообщение для всех пользователей. По "
+"умолчанию ``True``"
 
 # d257544b396044da9fe349543853f5af
 #: of vk_botting.message.Message.reply:3
@@ -4253,8 +4318,86 @@ msgstr "Отправляет сообщение как ответ к изнач�
 msgid "|coro| Alternative for :meth:`.Message.get_user`"
 msgstr "|coro| Альтернатива для :meth:`.Message.get_user`"
 
+# 39cda7b3f0e641879a19297f78ab2240
+#: ../../api.rst:642
+msgid "MessageEvent"
+msgstr "MessageEvent"
+
+#: of vk_botting.message.MessageEvent:1
+msgid "Represents a message event (https://vk.com/dev/bots_docs_5)."
+msgstr "Представляет собой событие сообщения (https://vk.com/dev/bots_docs_5)"
+
+#: of vk_botting.message.MessageEvent:11
+msgid "Id of the user that triggered the event"
+msgstr "Id пользователя, вызвавшего событие"
+
+#: of vk_botting.message.MessageEvent:23
+msgid "Unique id of the event (can only be used once within 60 seconds)"
+msgstr ""
+"Уникальное id события (может быть использовано только один раз и только в"
+" течении следующей минуты)"
+
+#: of vk_botting.message.MessageEvent:29
+msgid "Payload sent along with the button. Can be None"
+msgstr "Payload, отправленный вместе с кнопкой. Может быть None"
+
+#: of vk_botting.message.MessageEvent.blank_answer:3
+msgid ""
+"Coroutine to send a blank answer to the event (stops loading animation on"
+" the button)."
+msgstr ""
+"Корутина, которая отправляет пустой ответ на событие (чтобы убрать "
+"анимацию загрузки на кнопке)"
+
+#: of vk_botting.message.MessageEvent.blank_answer:7
+#: vk_botting.message.MessageEvent.open_app:14
+#: vk_botting.message.MessageEvent.open_link:10
+#: vk_botting.message.MessageEvent.show_snackbar:10
+msgid "Server answer"
+msgstr "Ответ сервера"
+
+#: of vk_botting.message.MessageEvent.show_snackbar:3
+msgid ""
+"Coroutine to send a show_snackbar answer to the event (shows a snackbar "
+"to a user)."
+msgstr ""
+"Корутина для отправки ответа типа show_snackbar (показывает пользователю "
+"всплывающее уведомление)"
+
+#: of vk_botting.message.MessageEvent.show_snackbar:5
+msgid "Text to be displayed on a snackbar"
+msgstr "Текст, который отобразится в уведомлении"
+
+#: of vk_botting.message.MessageEvent.open_link:3
+msgid "Coroutine to send an open_link answer to the event (opens certain link)."
+msgstr ""
+"Корутина для отправки ответа типа open_link (открывает у пользователя "
+"ссылку)"
+
+#: of vk_botting.message.MessageEvent.open_link:5
+msgid "Link to be opened"
+msgstr "Ссылка, которую необходимо открыть"
+
+#: of vk_botting.message.MessageEvent.open_app:3
+msgid "Coroutine to send an open_app answer to the event (opens certain VK App)."
+msgstr ""
+"Корутина для отправки ответа типа open_app (открывает у пользователя "
+"мини-приложение ВК)"
+
+#: of vk_botting.message.MessageEvent.open_app:5
+msgid "Id of an app to be opened"
+msgstr "Id нужного приложения"
+
+#: of vk_botting.message.MessageEvent.open_app:7
+msgid "owner_id of said app"
+msgstr "owner_id этого приложения"
+
+#: of vk_botting.message.MessageEvent.open_app:9
+msgid "I don't actually know what this one is for (read vk docs)"
+msgstr "Если честно, я не знаю для чего этот параметр (читайте доки вк)"
+
 # 4029a25e89934a69a7463e78dd94bd5d
-#: ../../api.rst:635
+#: ../../api.rst:651
 msgid "Exceptions"
 msgstr "Ошибки"
 
@@ -4636,7 +4779,7 @@ msgstr ""
 "по какой-то причине"
 
 # 81fb1159601741818e6f167fd7b33f86
-#: ../../api.rst:689
+#: ../../api.rst:705
 msgid "Additional Classes"
 msgstr "Дополнительные классы"
 
@@ -5087,30 +5230,32 @@ msgid ""
 "decorator."
 msgstr ""
 "Все проверки, добавленные с помощью :func:`.check` и подобных, "
-"привязываются к функции. Через сам этот декоратор нельзя передать проверки."
+"привязываются к функции. Через сам этот декоратор нельзя передать "
+"проверки."
 
 #: of vk_botting.commands.command:7
 msgid ""
 "The name to create the command with. By default this uses the function "
 "name unchanged."
 msgstr ""
-"Название, с которым надо создать команду. По умолчанию - название функции без изменений."
+"Название, с которым надо создать команду. По умолчанию - название функции"
+" без изменений."
 
 #: of vk_botting.commands.command:10
 msgid ""
 "The class to construct with. By default this is :class:`.Command`. You "
 "usually do not change this."
 msgstr ""
-"Класс, с помощью которого надо создать команду. По умолчанию - класс :class:`.Command`. "
-"Обычно этот параметр менять не стоит."
+"Класс, с помощью которого надо создать команду. По умолчанию - класс "
+":class:`.Command`. Обычно этот параметр менять не стоит."
 
 #: of vk_botting.commands.command:12
 msgid ""
 "Keyword arguments to pass into the construction of the class denoted by "
 "``cls``."
 msgstr ""
-"Аргументы с ключевыми словами, которые передаются при создании класса, указанного в "
-"``cls``."
+"Аргументы с ключевыми словами, которые передаются при создании класса, "
+"указанного в ``cls``."
 
 #: of vk_botting.commands.command:15
 msgid "If the function is not a coroutine or is already a command."

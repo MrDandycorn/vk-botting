@@ -38,7 +38,7 @@ class Messageable(metaclass=abc.ABCMeta):
         - :class:`.UserMessage`
         - :class:`.Context`
         """
-    __slots__ = ()
+    __slots__ = ('bot',)
 
     @abc.abstractmethod
     async def _get_conversation(self):

@@ -25,8 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from enum import Enum
 
-from vk_botting.utils import to_json
 from vk_botting.exceptions import VKApiError
+from vk_botting.utils import to_json
 
 
 class KeyboardColor(Enum):
@@ -40,6 +40,7 @@ class KeyboardColor(Enum):
 class KeyboardButton(Enum):
     """Represents Keyboard button type"""
     TEXT = "text"           #: Text type (default)
+    CALLBACK = "callback"   #: Callback type
     LOCATION = "location"   #: Location type
     VKPAY = "vkpay"         #: VKPay type
     VKAPPS = "open_app"     #: Open App type
@@ -78,6 +79,23 @@ class Keyboard(object):
         keyboard.keyboard['buttons'] = []
         return keyboard
 
+    def _add_button(self, button_type, label, color, payload):
+        current_line = self.lines[-1]
+
+        if len(current_line) > 4:
+            raise VKApiError('Max 5 buttons on a line')
+        color_value = color
+        if isinstance(color, KeyboardColor):
+            color_value = color_value.value
+        current_line.append({
+            'color': color_value,
+            'action': {
+                'type': button_type,
+                'payload': payload,
+                'label': label,
+            }
+        })
+
     def add_button(self, label, color=KeyboardColor.PRIMARY, payload=None):
         """Adds button to current line
 
@@ -95,24 +113,28 @@ class Keyboard(object):
         vk_botting.VKApiError
             When there are already too many buttons on one line
         """
-        current_line = self.lines[-1]
+        self._add_button(KeyboardButton.TEXT.value, label, color, payload)
 
-        if len(current_line) > 4:
-            raise VKApiError('Max 5 buttons on a line')
-        color_value = color
-        if isinstance(color, KeyboardColor):
-            color_value = color_value.value
-        if payload is not None and not isinstance(payload, str):
-            payload = to_json(payload)
-        button_type = KeyboardButton.TEXT.value
-        current_line.append({
-            'color': color_value,
-            'action': {
-                'type': button_type,
-                'payload': payload,
-                'label': label,
-            }
-        })
+    def add_callback_button(self, label, color=KeyboardColor.PRIMARY, payload=None):
+        """Adds a callback button (https://vk.com/dev/bots_docs_5) to current line
+
+        Parameters
+        ----------
+        label: :class:`str`
+            Button label to be displayed
+        color: :class:Union[`str`, `KeyboardColor`]
+            Button color. Can be value from :class:`.KeyboardColor` enum
+        payload: :class:`dict`
+            Optional. Should be used for some buttons
+
+        Raises
+        ------
+        vk_botting.VKApiError
+            When there are already too many buttons on one line
+        """
+        if not self.inline:
+            raise VKApiError('Cannot add a callback button to non-inline keyboard')
+        self._add_button(KeyboardButton.CALLBACK.value, label, color, payload)
 
     def add_location_button(self, payload=None):
         """Adds location button to current line
@@ -143,12 +165,12 @@ class Keyboard(object):
             }
         })
 
-    def add_vkpay_button(self, hash, payload=None):
+    def add_vkpay_button(self, _hash, payload=None):
         """Adds button to current line
 
         Parameters
         ----------
-        hash: :class:`str`
+        _hash: :class:`str`
             Hash for a VKPay button
         payload: :class:`dict`
             Payload for a VKPay button
@@ -172,11 +194,11 @@ class Keyboard(object):
             'action': {
                 'type': button_type,
                 'payload': payload,
-                'hash': hash
+                'hash': _hash
             }
         })
 
-    def add_vkapps_button(self, app_id, owner_id, label, hash, payload=None):
+    def add_vkapps_button(self, app_id, owner_id, label, _hash, payload=None):
         """Adds button to current line
 
         Parameters
@@ -187,7 +209,7 @@ class Keyboard(object):
             Id of VK App owner
         label: :class:`str`
             Button label to be displayed
-        hash: :class:`str`
+        _hash: :class:`str`
             Hash for a VK App button
         payload: :class:`dict`
             Optional. Should be used for some button types
@@ -214,7 +236,7 @@ class Keyboard(object):
                 'owner_id': owner_id,
                 'label': label,
                 'payload': payload,
-                'hash': hash
+                'hash': _hash
             }
         })
 

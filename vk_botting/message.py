@@ -24,11 +24,144 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from copy import deepcopy
-from random import randint
 from datetime import datetime
+from random import randint
 
 from vk_botting.abstract import Messageable
 from vk_botting.exceptions import VKApiError
+
+
+class MessageEvent:
+    """Represents a message event (https://vk.com/dev/bots_docs_5).
+
+    Attributes
+    ----------
+    conversation_message_id: :class:`int`
+        Id of the message in conversation
+    user_id: :class:`int`
+        Id of the user that triggered the event
+    peer_id: :class:`int`
+        Id of conversation where message was sent
+    event_id: :class:`str`
+        Unique id of the event (can only be used once within 60 seconds)
+    payload: :class:`dict`
+        Payload sent along with the button. Can be None
+    """
+    __slots__ = ('bot', 'conversation_message_id', 'user_id', 'peer_id', 'event_id', 'payload')
+
+    def __init__(self, data):
+        self._unpack(data)
+
+    def _unpack(self, data):
+        self.conversation_message_id = data.get('conversation_message_id')
+        self.user_id = data.get('user_id')
+        self.peer_id = data.get('peer_id')
+        self.event_id = data.get('event_id')
+        self.payload = data.get('payload')
+
+    async def _answer(self, event_data):
+        res = await self.bot.vk_request('messages.sendMessageEventAnswer', event_id=self.event_id, user_id=self.user_id, peer_id=self.peer_id, event_data=event_data)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+        return res
+
+    async def blank_answer(self):
+        """|coro|
+
+        Coroutine to send a blank answer to the event (stops loading animation on the button).
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer(None)
+
+    async def show_snackbar(self, text):
+        """|coro|
+
+        Coroutine to send a show_snackbar answer to the event (shows a snackbar to a user).
+
+        Parameters
+        ----------
+        text: :class:`str`
+            Text to be displayed on a snackbar
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer({
+            'type': 'show_snackbar',
+            'text': text,
+        })
+
+    async def open_link(self, link):
+        """|coro|
+
+        Coroutine to send an open_link answer to the event (opens certain link).
+
+        Parameters
+        ----------
+        link: :class:`str`
+            Link to be opened
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer({
+            'type': 'open_link',
+            'link': link,
+        })
+
+    async def open_app(self, app_id, owner_id, _hash):
+        """|coro|
+
+        Coroutine to send an open_app answer to the event (opens certain VK App).
+
+        Parameters
+        ----------
+        app_id: :class:`int`
+            Id of an app to be opened
+        owner_id: :class:`Optional[int]`
+            owner_id of said app
+        _hash: :class:`str`
+            I don't actually know what this one is for (read vk docs)
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer({
+            'type': 'open_app',
+            'app_id': app_id,
+            'owner_id': owner_id,
+            'hash': _hash,
+        })
 
 
 class MessageAction:
@@ -108,7 +241,7 @@ class Message(Messageable):
     async def edit(self, message=None, *, attachment=None, keep_forward_messages=1, keep_snippets=1):
         """|coro|
 
-        Coroutine to edit the message. Depends on message_id.
+        Coroutine to edit the message.
 
         Parameters
         ----------
@@ -148,7 +281,7 @@ class Message(Messageable):
     async def delete(self, delete_for_all=1):
         """|coro|
 
-        Coroutine to delete the message. Depends on message_id.
+        Coroutine to delete the message.
 
         Parameters
         ----------

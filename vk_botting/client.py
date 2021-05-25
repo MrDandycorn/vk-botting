@@ -40,10 +40,10 @@ from vk_botting.attachments import get_attachment, get_user_attachments, DocType
 from vk_botting.exceptions import VKApiError, LoginError, VKException
 from vk_botting.general import convert_params
 from vk_botting.group import *
-from vk_botting.message import Message, UserMessage
+from vk_botting.message import Message, UserMessage, MessageEvent
 from vk_botting.states import State
 from vk_botting.user import BlockedUser, UnblockedUser, User
-from vk_botting.utils import maybe_coroutine
+from vk_botting.utils import maybe_coroutine, to_json
 
 
 class UserMessageFlags(enum.IntFlag):
@@ -107,11 +107,12 @@ class Client:
             self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout, headers=headers))
         else:
             self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout))
-        self._all_events = ['message_new', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
+        self._all_events = ['message_new', 'message_event', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
         self.extra_events = []
         self.token = None
         self.user_token = None
         self.event_handlers = {
+            'message_event': self.handle_message_event,
             'message_reply': self.handle_message_reply,
             'message_edit': self.handle_message_edit,
             'message_typing_state': self.handle_message_typing_state,
@@ -237,7 +238,7 @@ class Client:
             self._listeners[ev] = listeners
 
         listeners.append((future, check))
-        return asyncio.wait_for(future, timeout, loop=self.loop)
+        return asyncio.wait_for(future, timeout)
 
     async def general_request(self, url, post=False, **params):
         params = convert_params(params)
@@ -258,6 +259,8 @@ class Client:
         for param in kwargs:
             if isinstance(kwargs[param], (list, tuple)):
                 kwargs[param] = ','.join(map(str, kwargs[param]))
+            elif isinstance(kwargs[param], dict):
+                kwargs[param] = to_json(kwargs[param])
         res = await self.general_request('https://api.vk.com/method/{}'.format(method), post=post, **kwargs)
         if isinstance(res, str):
             await asyncio.sleep(0.1)
@@ -757,6 +760,11 @@ class Client:
             return self.dispatch(action_type, msg)
         return self.dispatch('message_new', msg)
 
+    def handle_message_event(self, t, obj):
+        event = MessageEvent(obj)
+        event.bot = self
+        return self.dispatch(t, event)
+
     def handle_message_reply(self, t, obj):
         msg = self.build_msg(obj)
         return self.dispatch(t, msg)
@@ -857,11 +865,15 @@ class Client:
     def handle_update(self, update):
         t = update['type']
         obj = update['object']
+        on_t = 'on_{}'.format(t)
+        used = (t in self._listeners and self._listeners[t]) or (on_t in self.extra_events and self.extra_events[on_t])
+        unknown_used = ('unknown' in self._listeners and self._listeners['unknown']) or (
+                'on_unknown' in self.extra_events and self.extra_events['on_unknown'])
         if t == 'message_new':
             return self.handle_message(obj['message'])
-        elif t in self.event_handlers and 'on_' + t in self.extra_events:
+        elif t in self.event_handlers and used:
             return self.loop.create_task(maybe_coroutine(self.event_handlers[t], t, obj))
-        elif t not in self.event_handlers and 'on_unknown' in self.extra_events:
+        elif t not in self.event_handlers and unknown_used:
             return self.dispatch('unknown', update)
 
     def dispatch(self, event, *args, **kwargs):
@@ -984,8 +996,6 @@ class Client:
             attachment = ','.join(map(str, attachment))
         else:
             attachment = str(attachment)
-        if forward:
-            forward = dumps(forward)
         if message:
             message = str(message)
             if len(message) > 4096:
