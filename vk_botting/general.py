@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2019-2020 MrDandycorn
+Original work Copyright (c) 2015-present Rapptz
+Modified work Copyright (c) 2019-present MrDandycorn
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -45,4 +46,4 @@ async def general_request(url, post=False, **params):
 
 
 async def vk_request(method, token, post=False, **kwargs):
-    return await general_request('https://api.vk.com/method/{}'.format(method), post=post, access_token=token, v='5.124', **kwargs)
+    return await general_request('https://api.vk.com/method/{}'.format(method), post=post, access_token=token, v='5.131', **kwargs)

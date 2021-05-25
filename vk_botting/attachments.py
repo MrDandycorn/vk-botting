@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2019-2020 MrDandycorn
+Original work Copyright (c) 2015-present Rapptz
+Modified work Copyright (c) 2019-present MrDandycorn
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -43,46 +44,23 @@ class DocType(Enum):
 
 
 def get_attachment(obj):
-    t = obj['type']
-    if t == 'audio_message':
-        return AudioMessage(obj[t])
-    elif t == 'photo':
-        return Photo(obj[t])
-    elif t == 'sticker':
-        return Sticker(obj[t])
-    elif t == 'video':
-        return Video(obj[t])
-    elif t == 'audio':
-        return Audio(obj[t])
-    elif t == 'doc':
-        return Document(obj[t])
-    elif t == 'poll':
-        return Poll(obj[t])
-    else:
-        return t, obj[t]
+    t = obj.get('type')
+    if t in _attachment_classes:
+        return _attachment_classes[t](obj.get(t))
+    return t, obj.get(t)
 
 
 async def get_user_attachments(atts):
     res = []
-    for i in range(len(atts)//2):
+    for i in range(len(atts) // 2):
         t = atts.get('attach{}_type'.format(i))
         att = atts.get('attach{}'.format(i))
         if not att or t == 'sticker':
             continue
         oid, aid = att.split('_')
         obj = {'owner_id': oid, 'id': aid}
-        if t == 'audio_message':
-            res.append(AudioMessage(obj))
-        elif t == 'photo':
-            res.append(Photo(obj))
-        elif t == 'sticker':
-            res.append(Sticker(obj))
-        elif t == 'video':
-            res.append(Video(obj))
-        elif t == 'audio':
-            res.append(Audio(obj))
-        elif t == 'doc':
-            res.append(Document(obj))
+        if t in _attachment_classes:
+            res.append(_attachment_classes[t](obj))
         else:
             res.append(obj)
     return res
@@ -298,10 +276,22 @@ class Attachment:
     type: :class:`str`
         Type of an attachment. Can be value from :class:`.AttachmentType` enum.
     """
-    def __init__(self, owner_id, id, type):
-        self.id = id
+
+    def __init__(self, owner_id, _id, type):
+        self.id = _id
         self.owner_id = owner_id
         self.type = type.value if isinstance(type, AttachmentType) else type
 
     def __str__(self):
         return '{0.type}{0.owner_id}_{0.id}'.format(self)
+
+
+_attachment_classes = {
+    'audio_message': AudioMessage,
+    'photo': Photo,
+    'sticker': Sticker,
+    'video': Video,
+    'audio': Audio,
+    'doc': Document,
+    'poll': Poll,
+}

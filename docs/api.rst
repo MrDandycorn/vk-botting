@@ -133,6 +133,14 @@ to handle it, which defaults to print a traceback and ignoring the exception.
     :param message: Received message.
     :type message: :class:`message.Message`
 
+.. function:: on_message_event(event)
+    :module:
+
+    Called when a callback button is pressed.
+
+    :param event: Received event.
+    :type message: :class:`message.MessageEvent`
+
 .. function:: on_message_reply(message)
     :module:
 
@@ -628,6 +636,14 @@ Message
 
     .. automethod:: typing
         :async-with:
+
+
+MessageEvent
+~~~~~~~~~~~~
+
+.. autoclass:: vk_botting.message.MessageEvent
+    :members:
+
 
 .. _vk_api_errors:
 

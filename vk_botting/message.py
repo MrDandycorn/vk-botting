@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2019-2020 MrDandycorn
+Original work Copyright (c) 2015-present Rapptz
+Modified work Copyright (c) 2019-present MrDandycorn
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -23,11 +24,144 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from copy import deepcopy
-from random import randint
 from datetime import datetime
+from random import randint
 
 from vk_botting.abstract import Messageable
 from vk_botting.exceptions import VKApiError
+
+
+class MessageEvent:
+    """Represents a message event (https://vk.com/dev/bots_docs_5).
+
+    Attributes
+    ----------
+    conversation_message_id: :class:`int`
+        Id of the message in conversation
+    user_id: :class:`int`
+        Id of the user that triggered the event
+    peer_id: :class:`int`
+        Id of conversation where message was sent
+    event_id: :class:`str`
+        Unique id of the event (can only be used once within 60 seconds)
+    payload: :class:`dict`
+        Payload sent along with the button. Can be None
+    """
+    __slots__ = ('bot', 'conversation_message_id', 'user_id', 'peer_id', 'event_id', 'payload')
+
+    def __init__(self, data):
+        self._unpack(data)
+
+    def _unpack(self, data):
+        self.conversation_message_id = data.get('conversation_message_id')
+        self.user_id = data.get('user_id')
+        self.peer_id = data.get('peer_id')
+        self.event_id = data.get('event_id')
+        self.payload = data.get('payload')
+
+    async def _answer(self, event_data):
+        res = await self.bot.vk_request('messages.sendMessageEventAnswer', event_id=self.event_id, user_id=self.user_id, peer_id=self.peer_id, event_data=event_data)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+        return res
+
+    async def blank_answer(self):
+        """|coro|
+
+        Coroutine to send a blank answer to the event (stops loading animation on the button).
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer(None)
+
+    async def show_snackbar(self, text):
+        """|coro|
+
+        Coroutine to send a show_snackbar answer to the event (shows a snackbar to a user).
+
+        Parameters
+        ----------
+        text: :class:`str`
+            Text to be displayed on a snackbar
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer({
+            'type': 'show_snackbar',
+            'text': text,
+        })
+
+    async def open_link(self, link):
+        """|coro|
+
+        Coroutine to send an open_link answer to the event (opens certain link).
+
+        Parameters
+        ----------
+        link: :class:`str`
+            Link to be opened
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer({
+            'type': 'open_link',
+            'link': link,
+        })
+
+    async def open_app(self, app_id, owner_id, _hash):
+        """|coro|
+
+        Coroutine to send an open_app answer to the event (opens certain VK App).
+
+        Parameters
+        ----------
+        app_id: :class:`int`
+            Id of an app to be opened
+        owner_id: :class:`Optional[int]`
+            owner_id of said app
+        _hash: :class:`str`
+            I don't actually know what this one is for (read vk docs)
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+
+        Returns
+        ---------
+        :class:`dict`
+            Server answer
+        """
+        return await self._answer({
+            'type': 'open_app',
+            'app_id': app_id,
+            'owner_id': owner_id,
+            'hash': _hash,
+        })
 
 
 class MessageAction:
@@ -102,15 +236,12 @@ class Message(Messageable):
         self.reply_message = data.get('reply_message')
         action = data.get('action')
         self.action = MessageAction(action) if action else None
+        self.conversation_message_id = data.get('conversation_message_id')
 
-    async def edit(self, message=None, *, attachment=None, keep_forward_messages='true', keep_snippets='true'):
+    async def edit(self, message=None, *, attachment=None, keep_forward_messages=1, keep_snippets=1):
         """|coro|
 
-        Coroutine to edit the message. Depends on message_id.
-
-        .. warning::
-
-            As it depends on message id, it does not work in group chats. At least as long as VK API does not provide message_id there
+        Coroutine to edit the message.
 
         Parameters
         ----------
@@ -133,23 +264,49 @@ class Message(Messageable):
         :class:`.Message`
             The message that was sent.
         """
-        if self.id == 0:
-            raise VKApiError('I honestly don`t know but VK just doesn`t return message_id when message is sent into conversation\nIf you tried to edit message in conversation then this error is expected')
-        params = {'group_id': self.bot.group.id, 'peer_id': self.peer_id, 'message': message, 'attachment': attachment, 'message_id': self.id,
-                  'keep_forward_messages': keep_forward_messages, 'keep_snippets': keep_snippets}
+        params = {
+            'group_id': self.bot.group.id,
+            'peer_id': self.peer_id,
+            'message': message,
+            'attachment': attachment,
+            'keep_forward_messages': keep_forward_messages,
+            'keep_snippets': keep_snippets,
+            'conversation_message_id': self.conversation_message_id
+        }
         res = await self.bot.vk_request('messages.edit', **params)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         return res
 
-    async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
+    async def delete(self, delete_for_all=1):
+        """|coro|
+
+        Coroutine to delete the message.
+
+        Parameters
+        ----------
+        delete_for_all: :class:`bool`
+            ``True`` if message should be deleted for all users. Defaults to ``True``
+
+        Raises
+        --------
+        vk_botting.VKApiError
+            When error is returned by VK API.
+        """
+        params = {
+            'group_id': self.bot.group.id,
+            'delete_for_all': delete_for_all,
+            'peer_id': self.peer_id,
+            'conversation_message_ids': self.conversation_message_id,
+        }
+        res = await self.bot.vk_request('messages.delete', **params)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+
+    async def reply(self, message=None, **kwargs):
         """|coro|
 
         Sends a message to the destination as a reply to original message.
-
-        .. warning::
-
-            As it depends on message id, it does not work in group chats. At least as long as VK API does not provide message_id there
 
         The content must be a type that can convert to a string through ``str(message)``.
 
@@ -181,8 +338,13 @@ class Message(Messageable):
         :class:`.Message`
             The message that was sent.
         """
-        peer_id = await self._get_conversation()
-        return await self.bot.send_message(peer_id, message, attachment=attachment, reply_to=self.id, sticker_id=sticker_id, keyboard=keyboard)
+        forward = {
+            'peer_id': self.peer_id,
+            'is_reply': True,
+            'conversation_message_ids': self.conversation_message_id,
+        }
+        kwargs['forward'] = forward
+        return await self.bot.send_message(self.peer_id, message, **kwargs)
 
     async def get_user(self):
         """|coro|

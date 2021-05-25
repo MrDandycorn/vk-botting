@@ -1,7 +1,8 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2019-2020 MrDandycorn
+Original work Copyright (c) 2015-present Rapptz
+Modified work Copyright (c) 2019-present MrDandycorn
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -37,7 +38,7 @@ class Messageable(metaclass=abc.ABCMeta):
         - :class:`.UserMessage`
         - :class:`.Context`
         """
-    __slots__ = ()
+    __slots__ = ('bot',)
 
     @abc.abstractmethod
     async def _get_conversation(self):
