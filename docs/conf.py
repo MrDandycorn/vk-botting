@@ -23,7 +23,7 @@ sys.path.append(os.path.abspath('extensions'))
 # -- Project information -----------------------------------------------------
 
 project = 'vk-botting'
-copyright = '2019, MrDandycorn'
+copyright = '2019-present, Rapptz, MrDandycorn'
 author = 'MrDandycorn'
 
 version = ''
