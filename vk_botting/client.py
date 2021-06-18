@@ -107,7 +107,12 @@ class Client:
             self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout, headers=headers))
         else:
             self.session = kwargs.get('session', aiohttp.ClientSession(timeout=timeout))
-        self._all_events = ['message_new', 'message_event', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new', 'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new', 'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete', 'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new', 'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings', 'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
+        self._all_events = ['message_new', 'message_event', 'message_reply', 'message_allow', 'message_deny', 'message_edit', 'message_typing_state', 'photo_new', 'audio_new',
+                            'video_new', 'wall_reply_new', 'wall_reply_edit', 'wall_reply_delete', 'wall_reply_restore', 'wall_post_new', 'wall_repost', 'board_post_new',
+                            'board_post_edit', 'board_post_restore', 'board_post_delete', 'photo_comment_new', 'photo_comment_edit', 'photo_comment_delete',
+                            'photo_comment_restore', 'video_comment_new', 'video_comment_edit', 'video_comment_delete', 'video_comment_restore', 'market_comment_new',
+                            'market_comment_edit', 'market_comment_delete', 'market_comment_restore', 'poll_vote_new', 'group_join', 'group_leave', 'group_change_settings',
+                            'group_change_photo', 'group_officers_edit', 'user_block', 'user_unblock']
         self.extra_events = []
         self.token = None
         self.user_token = None
@@ -228,6 +233,7 @@ class Client:
         if check is None:
             def _check(*_):
                 return True
+
             check = _check
 
         ev = event.lower()
@@ -250,8 +256,8 @@ class Client:
                         return await r.json()
                     return await r.text()
             except Exception as e:
-                print('Got exception in request: {}\nRetrying in {} seconds'.format(e, tries*2+1), file=sys.stderr)
-                await asyncio.sleep(tries*2+1)
+                print('Got exception in request: {}\nRetrying in {} seconds'.format(e, tries * 2 + 1), file=sys.stderr)
+                await asyncio.sleep(tries * 2 + 1)
 
     async def _vk_request(self, method, post, calln=1, **kwargs):
         if calln > 10:
@@ -264,14 +270,14 @@ class Client:
         res = await self.general_request('https://api.vk.com/method/{}'.format(method), post=post, **kwargs)
         if isinstance(res, str):
             await asyncio.sleep(0.1)
-            return await self._vk_request(method, post, calln+1, **kwargs)
+            return await self._vk_request(method, post, calln + 1, **kwargs)
         error = res.get('error', None)
         if error and error.get('error_code', None) == 6:
             await asyncio.sleep(1)
-            return await self._vk_request(method, post, calln+1, **kwargs)
+            return await self._vk_request(method, post, calln + 1, **kwargs)
         elif error and error.get('error_code', None) == 10 and 'could not check access_token now' in error.get('error_msg', ''):
             await asyncio.sleep(0.1)
-            return await self._vk_request(method, post, calln+1, **kwargs)
+            return await self._vk_request(method, post, calln + 1, **kwargs)
         return res
 
     async def vk_request(self, method, post=True, **kwargs):
@@ -942,7 +948,8 @@ class Client:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
 
-    async def send_message(self, peer_id=None, message=None, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None, forward=None, **kwargs):
+    async def send_message(self, peer_id=None, message=None, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None, forward=None, as_user=False,
+                           **kwargs):
         """|coro|
 
         Sends a message to the given destination with the text given.
@@ -987,7 +994,6 @@ class Client:
         :class:`.Message`
             The message that was sent.
         """
-        as_user = kwargs.pop('as_user', False)
         if kwargs:
             print('Unknown parameters passed to send_message: {}'.format(', '.join(kwargs.keys())), file=sys.stderr)
         if isinstance(attachment, str) or attachment is None:
@@ -1002,12 +1008,12 @@ class Client:
                 w = textwrap.TextWrapper(width=4096, replace_whitespace=False)
                 messages = w.wrap(message)
                 for message in messages[:-1]:
-                    await self.send_message(peer_id, message, **kwargs)
-                return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, **kwargs)
+                    await self.send_message(peer_id, message, as_user=as_user, **kwargs)
+                return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to,
+                                               forward_messages=forward_messages, as_user=as_user, **kwargs)
         params = {'random_id': getrandbits(64), 'message': message, 'attachment': attachment,
                   'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard, 'forward': forward}
         if self.is_group and not as_user:
-            params['group_id'] = self.group.id
             params['peer_ids'] = peer_id
         else:
             params['peer_id'] = peer_id
@@ -1016,12 +1022,16 @@ class Client:
             if res['error'].get('error_code') == 9:
                 await asyncio.sleep(1)
                 return await self.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id,
-                                               keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, **kwargs)
+                                               keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, as_user=as_user, **kwargs)
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         if self.is_group and not as_user:
+            msg = res['response'][0]
+            if 'error' in msg.keys():
+                raise VKApiError('[{code}] {description}'.format(**msg['error']))
+
             params['from_id'] = -self.group.id
-            params['conversation_message_id'] = res['response'][0]['conversation_message_id']
-            params['id'] = res['response'][0]['message_id']
+            params['conversation_message_id'] = msg['conversation_message_id']
+            params['id'] = msg['message_id']
             params['peer_id'] = peer_id
             params.pop('peer_ids')
         else:
