@@ -33,7 +33,7 @@ def convert_params(params):
         elif not isinstance(params[param], (str, int)):
             params[param] = str(params[param])
         elif isinstance(params[param], bool):
-            params[param] = str(params[param])
+            params[param] = int(params[param])
     return params
 
 

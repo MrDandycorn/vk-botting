@@ -30,7 +30,6 @@ import sys
 import textwrap
 import traceback
 from collections.abc import Iterable
-from json import dumps
 from random import getrandbits
 
 import aiohttp
@@ -948,7 +947,7 @@ class Client:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return _ClientEventTask(original_coro=coro, event_name=event_name, coro=wrapped, loop=self.loop)
 
-    async def send_message(self, peer_id=None, message=None, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None, forward=None, as_user=False,
+    async def send_message(self, peer_id=None, message=None, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None, forward=None, disable_mentions=False, as_user=False,
                            **kwargs):
         """|coro|
 
@@ -981,6 +980,8 @@ class Client:
             Message ids to be forwarded along with message.
         forward: :class:`dict`
             Check docs for more details on this one.
+        disable_mentions: :class:`bool`
+            Disables mentions from sent message.
         as_user: :class:`bool`
             If message should be sent as user (using attached user token).
 
@@ -1008,11 +1009,11 @@ class Client:
                 w = textwrap.TextWrapper(width=4096, replace_whitespace=False)
                 messages = w.wrap(message)
                 for message in messages[:-1]:
-                    await self.send_message(peer_id, message, as_user=as_user, **kwargs)
+                    await self.send_message(peer_id, message, disable_mentions=disable_mentions, as_user=as_user, **kwargs)
                 return await self.send_message(peer_id, messages[-1], attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to,
-                                               forward_messages=forward_messages, as_user=as_user, **kwargs)
-        params = {'random_id': getrandbits(64), 'message': message, 'attachment': attachment,
-                  'reply_to': reply_to, 'forward_messages': forward_messages, 'sticker_id': sticker_id, 'keyboard': keyboard, 'forward': forward}
+                                               forward_messages=forward_messages, forward=forward, disable_mentions=disable_mentions, as_user=as_user, **kwargs)
+        params = {'random_id': getrandbits(64), 'message': message, 'attachment': attachment, 'reply_to': reply_to, 'forward_messages': forward_messages,
+                  'sticker_id': sticker_id, 'keyboard': keyboard, 'forward': forward, 'disable_mentions': disable_mentions}
         if self.is_group and not as_user:
             params['peer_ids'] = peer_id
         else:
@@ -1021,8 +1022,8 @@ class Client:
         if 'error' in res.keys():
             if res['error'].get('error_code') == 9:
                 await asyncio.sleep(1)
-                return await self.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id,
-                                               keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages, as_user=as_user, **kwargs)
+                return await self.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to,
+                                               forward_messages=forward_messages, forward=forward, disable_mentions=disable_mentions, as_user=as_user, **kwargs)
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         if self.is_group and not as_user:
             msg = res['response'][0]
