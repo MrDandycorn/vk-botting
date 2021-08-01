@@ -13,7 +13,7 @@ __title__ = 'vk_botting'
 __author__ = 'MrDandycorn'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2019-2021 MrDandycorn'
-__version__ = '0.11.2'
+__version__ = '0.11.3'
 
 from collections import namedtuple
 import logging
@@ -29,7 +29,7 @@ from vk_botting.exceptions import *
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
 
-version_info = VersionInfo(major=0, minor=11, micro=2, releaselevel='development', serial=0)
+version_info = VersionInfo(major=0, minor=11, micro=3, releaselevel='development', serial=0)
 
 try:
     from logging import NullHandler

@@ -182,10 +182,10 @@ class Context(Messageable):
             self.invoked_subcommand = invoked_subcommand
             self.subcommand_passed = subcommand_passed
 
-    async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
+    async def reply(self, *args, **kwargs):
         """|coro|
         Shorthand for :meth:`.Message.reply`"""
-        return await self.message.reply(message, attachment=attachment, sticker_id=sticker_id, keyboard=keyboard)
+        return await self.message.reply(*args, **kwargs)
 
     async def get_user(self, fields=None, name_case=None):
         """|coro|
