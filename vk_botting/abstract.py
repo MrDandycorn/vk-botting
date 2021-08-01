@@ -44,7 +44,7 @@ class Messageable(metaclass=abc.ABCMeta):
     async def _get_conversation(self):
         raise NotImplementedError
 
-    async def send(self, message=None, *, attachment=None, sticker_id=None, keyboard=None, reply_to=None, forward_messages=None):
+    async def send(self, *args, **kwargs):
         """|coro|
 
         Sends a message to the destination with the text given.
@@ -84,7 +84,7 @@ class Messageable(metaclass=abc.ABCMeta):
             The message that was sent.
         """
         peer_id = await self._get_conversation()
-        return await self.bot.send_message(peer_id, message, attachment=attachment, sticker_id=sticker_id, keyboard=keyboard, reply_to=reply_to, forward_messages=forward_messages)
+        return await self.bot.send_message(peer_id, *args, **kwargs)
 
     async def trigger_typing(self):
         """|coro|
