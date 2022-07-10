@@ -52,6 +52,12 @@ class MessageEvent:
     def __init__(self, data):
         self._unpack(data)
 
+    async def edit_message(self, text, attachment=None, keyboard=None):
+        res = await self.bot.vk_request('messages.edit', peer_id=self.peer_id, message=text, attachment=attachment,
+                                        conversation_message_id=self.conversation_message_id, keyboard=keyboard)
+        if 'error' in res.keys():
+            raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
+
     def _unpack(self, data):
         self.conversation_message_id = data.get('conversation_message_id')
         self.user_id = data.get('user_id')
@@ -60,7 +66,8 @@ class MessageEvent:
         self.payload = data.get('payload')
 
     async def _answer(self, event_data):
-        res = await self.bot.vk_request('messages.sendMessageEventAnswer', event_id=self.event_id, user_id=self.user_id, peer_id=self.peer_id, event_data=event_data)
+        res = await self.bot.vk_request('messages.sendMessageEventAnswer', event_id=self.event_id, user_id=self.user_id,
+                                        peer_id=self.peer_id, event_data=event_data)
         if 'error' in res.keys():
             raise VKApiError('[{error_code}] {error_msg}'.format(**res['error']))
         return res
@@ -402,7 +409,8 @@ class UserMessage(Messageable):
 
     async def reply(self, message=None, *, attachment=None, sticker_id=None, keyboard=None):
         peer_id = await self._get_conversation()
-        params = {'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message, 'attachment': attachment,
+        params = {'random_id': randint(-2 ** 63, 2 ** 63 - 1), 'peer_id': peer_id, 'message': message,
+                  'attachment': attachment,
                   'reply_to': self.id, 'sticker_id': sticker_id, 'keyboard': keyboard}
         res = await self.bot.vk_request('messages.send', **params)
         if 'error' in res.keys():
